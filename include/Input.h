@@ -6,5 +6,5 @@ class Input
 {
 public:
 	static void updateInput();
-	static void handleSDLEvent(SDL_Event event);
+	static void handleSDLEvent(const SDL_Event& event);
 };
