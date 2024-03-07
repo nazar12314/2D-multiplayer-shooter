@@ -1,33 +1,40 @@
 #include "Object.h"
 
-Object::Object(const glm::vec3 pos, glm::quat rot) : pos(pos), rot(rot)
+// -- Global --
+void Object::addObject(Object* obj)
 {
-	//Scene::objects.emplace_back(this);
+	objects.emplace_back(obj);
+	onObjectAdded(obj);
+}
+void Object::removeObject(Object* obj)
+{
+	objects.erase(std::ranges::find(objects, obj));
+	onObjectRemoved(obj);
 }
 
-void Object::setPos(glm::vec3 pos) { this->pos = pos; }
-void Object::setRot(glm::quat rot) { this->rot = rot; }
-void Object::translate(const glm::vec3& v)
+void Object::startAll()
 {
-	setPos(pos + v);
+	for (const auto obj : objects)
+		obj->start();
 }
-void Object::rotate(const glm::vec3& degrees)
+void Object::updateAll()
 {
-	//setRot(glm::quat(eulerAngles(rot) + degrees * DEG_TO_RAD));
+	for (const auto obj : objects)
+		obj->update();
 }
+void Object::destroyAll()
+{
+	for (const auto obj : objects)
+		obj->onDestroy();
+}
+// -- Global --
 
-glm::vec3 Object::forward() const { return rot * glm::vec3(0, 1, 0); }
-glm::vec3 Object::backward() const { return rot * glm::vec3(0, -1, 0); }
-glm::vec3 Object::up() const { return rot * glm::vec3(0, 0, 1); }
-glm::vec3 Object::down() const { return rot * glm::vec3(0, 0, -1); }
-glm::vec3 Object::left() const { return rot * glm::vec3(-1, 0, 0); }
-glm::vec3 Object::right() const { return rot * glm::vec3(1, 0, 0); }
-
-glm::vec3 Object::localToGlobalPos(const glm::vec3& localPos) const
+Object::Object(glm::vec2 pos, float rot) : Transform(pos, rot)
 {
-	return rot * localPos + pos;
+	addObject(this);
+	enabled = true;
 }
-glm::vec3 Object::globalToLocalPos(const glm::vec3& globalPos) const
+Object::~Object()
 {
-	return -rot * globalPos - pos;
+	removeObject(this);
 }

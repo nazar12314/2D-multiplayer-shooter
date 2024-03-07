@@ -1,14 +1,11 @@
 #include "SDLHandler.h"
+#include "MyTime.h"
 
 int main(int argv, char* args[])
 {
-	SDLHandler::initialize(500, 500);
+	SDLHandler::init(500, 500);
 
-	while (true)
-	{
-		if (!SDLHandler::update())
-			break;
-	}
+	SDLHandler::loop();
 
 	SDLHandler::quit();
 	return 0;

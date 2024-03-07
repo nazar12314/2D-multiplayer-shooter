@@ -1,33 +1,36 @@
+// ReSharper disable CppMemberFunctionMayBeStatic
 #pragma once
 
-#include <glm/gtc/quaternion.hpp>
-#include <glm/vec3.hpp>
+#include <vector>
 
-class Object
+#include "Action.h"
+#include "Transform.h"
+
+class Object : public Transform
 {
-protected:
-	glm::vec3 pos;
-	glm::quat rot;
+public:
+	// -- Global --
+	inline static std::vector<Object*> objects {};
 
-	virtual ~Object() = default;
-	Object(glm::vec3 pos, glm::quat rot = {1, 0, 0, 0});
+	inline static Action<Object*> onObjectAdded {};
+	inline static Action<Object*> onObjectRemoved {};
+
+	static void addObject(Object* obj);
+	static void removeObject(Object* obj);
+
+	static void startAll();
+	static void updateAll();
+	static void destroyAll();
+	// -- Global --
 
 public:
-	glm::vec3 getPos() const { return pos; }
-	glm::quat getRot() const { return rot; }
-	virtual void setPos(glm::vec3 pos);
-	virtual void setRot(glm::quat rot);
+	bool enabled;
 
-	void translate(const glm::vec3& v);
-	void rotate(const glm::vec3& degrees);
+	Object(glm::vec2 pos, float rot = 0);
+	virtual ~Object();
 
-	glm::vec3 forward() const;
-	glm::vec3 backward() const;
-	glm::vec3 up() const;
-	glm::vec3 down() const;
-	glm::vec3 left() const;
-	glm::vec3 right() const;
+	void start() {}
+	void update() {}
+	void onDestroy() {}
 
-	glm::vec3 localToGlobalPos(const glm::vec3& localPos) const;
-	glm::vec3 globalToLocalPos(const glm::vec3& globalPos) const;
 };
