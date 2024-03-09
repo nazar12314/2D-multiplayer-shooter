@@ -10,8 +10,8 @@ public:
 	int size;
 	int priority = 0;
 
-	Camera(const glm::vec2& pos, float rot, int size);
-
+	Camera(int size, const glm::vec2& pos = {0, 0}, float rot = 0);
+	~Camera() override;
 	void render() const;
 
 	static void renderMain();

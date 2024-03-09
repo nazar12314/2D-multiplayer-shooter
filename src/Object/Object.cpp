@@ -1,7 +1,8 @@
 #include "Object.h"
 
-#include "Renderer.h"
+#include "Component.h"
 #include "Texture.h"
+#include "glm/gtx/transform.hpp"
 
 // -- Global --
 void Object::addObject(Object* obj)
@@ -14,23 +15,26 @@ void Object::removeObject(Object* obj)
 	objects.erase(std::ranges::find(objects, obj));
 	onObjectRemoved(obj);
 }
-
 void Object::startAll()
 {
-	for (const auto obj : objects)
+	for (Object* obj : objects)
 		obj->start();
 }
 void Object::updateAll()
 {
-	for (const auto obj : objects)
+	for (Object* obj : objects)
+	{
+		if (!obj->enabled) continue;
 		obj->update();
+	}
 }
 void Object::destroyAll()
 {
-	for (const auto obj : objects)
-		obj->onDestroy();
+	for (Object* obj : objects)
+		obj->destroy();
 }
 // -- Global --
+
 
 Object::Object(glm::vec2 pos, float rot) : Transform(pos, rot)
 {
@@ -42,14 +46,18 @@ Object::~Object()
 	removeObject(this);
 }
 
-Graphical::Graphical(Texture* texture, glm::ivec2 size, const glm::vec2& pos, float rot) : Object(pos, rot), texture(texture), size {size} {}
-
-void Graphical::draw(const glm::ivec2& cameraPos, int cameraSize) const
+void Object::start() const
 {
-	Renderer::renderTex(texture, pos, size);
+	for (Component* component : components)
+		component->start();
 }
-
-void Graphical::setNativeSize()
+void Object::update() const
 {
-	SDL_QueryTexture(texture->texture, nullptr, nullptr, &this->size.x, &this->size.y);
+	for (Component* component : components)
+		component->update();
+}
+void Object::destroy() const
+{
+	for (Component* component : components)
+		component->destroy();
 }

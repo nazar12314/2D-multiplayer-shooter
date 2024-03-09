@@ -10,19 +10,31 @@ set(ENABLE_FAST_MATH ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADDITIONAL_CFLAGS} -g")
 
 include_directories(include)
+include_directories(include/Core)
+include_directories(include/Object)
+include_directories(include/Component)
+include_directories(include/Component/Custom)
+include_directories(include/Utils)
+
 include_directories(libs)
 
 add_executable(${PROJECT_NAME} 
 	 "src/main.cpp"
-	 "src/Input.cpp"
-	 "src/Object.cpp"
+	 "src/Core/Input.cpp"
+	 "src/Object/Object.cpp"
 	 "src/Application.cpp"
-	 "src/Transform.cpp"
-	 "include/MyTime.h"
-	 "src/Renderer.cpp"
+	 "src/Object/Transform.cpp"
+	 "include/Core/MyTime.h"
+	 "src/Core/Renderer.cpp"
 	 "include/Texture.h"
-	 "src/Camera.cpp"
-	 "src/SDLHandler.cpp")
+	 "src/Object/Camera.cpp"
+	 "src/Core/SDLHandler.cpp"
+	 "src/Object/Graphical.cpp"
+	 "src/Component/Component.cpp"
+	 "src/Component/Custom/CameraMover.cpp"
+	 
+	 "src/BoxCollider.cpp"
+	 )
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

@@ -6,6 +6,8 @@
 
 void SDLHandler::handleEvents()
 {
+	Input::clear();
+
 	SDL_Event e {};
 	while (SDL_PollEvent(&e))
 	{

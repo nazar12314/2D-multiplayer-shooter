@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 class Time
 {
 public:

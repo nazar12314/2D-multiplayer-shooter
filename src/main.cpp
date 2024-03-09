@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Camera.h"
+#include "CircleCollider.h"
 
 int main(int argv, char* args[])
 {

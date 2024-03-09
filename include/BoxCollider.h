@@ -1,27 +1,20 @@
-//
-// Created by Nazar Kononenko on 09.03.2024.
-//
+#pragma once
 
-#ifndef INC_2D_MULTIPLAYER_SHOOTER_BOXCOLLIDER_H
-#define INC_2D_MULTIPLAYER_SHOOTER_BOXCOLLIDER_H
+#include <bits/stl_pair.h>
 
 #include "Collider.h"
+#include "glm/vec2.hpp"
 
-
-class BoxCollider :  Collider {
-private:
-    glm::vec2 size;
-
+class BoxCollider : public Collider
+{
 public:
-    BoxCollider(double height, double width): size(height, width) {}
+	glm::vec2 size {0, 0};
 
-    bool collidesWith(const Collider* other) override;
-    static double findDistance(double startX, double startY, double endX, double endY);
-    static std::pair<glm::vec2, glm::vec2> getAxis(const BoxCollider* box);
+	explicit BoxCollider(Object* obj) : Collider(obj) {}
+	bool collidesWith(const Collider* other) override;
+	static double findDistance(double startX, double startY, double endX, double endY);
+	static std::pair<glm::vec2, glm::vec2> getAxis(const BoxCollider* box);
 
-    static float projectOntoAxis(const glm::vec2& pos, const glm::vec2& axisX, const glm::vec2& axisY, const glm::vec2& halfSize);
-    bool overlapOnAxis(const glm::vec2& sPos, const glm::vec2& oPos, const glm::vec2& axisX, const glm::vec2& axisY, const BoxCollider* box);
+	static float projectOntoAxis(const glm::vec2& pos, const glm::vec2& axisX, const glm::vec2& axisY, const glm::vec2& halfSize);
+	bool overlapOnAxis(const glm::vec2& sPos, const glm::vec2& oPos, const glm::vec2& axisX, const glm::vec2& axisY, const BoxCollider* box) const;
 };
-
-
-#endif //INC_2D_MULTIPLAYER_SHOOTER_BOXCOLLIDER_H

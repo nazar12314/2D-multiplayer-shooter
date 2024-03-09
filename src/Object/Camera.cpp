@@ -1,19 +1,23 @@
 #include "Camera.h"
 
 #include "Application.h"
+#include "Graphical.h"
 
-Camera::Camera(const glm::vec2& pos, float rot, int size): Object(pos, rot), size(size) {}
+Camera::Camera(int size, const glm::vec2& pos, float rot): Object(pos, rot), size(size)
+{
+	cameras.emplace_back(this);
+}
+Camera::~Camera()
+{
+	cameras.erase(std::ranges::find(cameras, this));
+}
 
 void Camera::render() const
 {
-	for (auto obj : objects)
+	for (auto obj : Graphical::graphicalObjects)
 	{
-		if (!obj->enabled)continue;
-
-		auto graphical = dynamic_cast<Graphical*>(obj);
-		if (graphical == nullptr) continue;
-
-		graphical->draw(pos, size);
+		if (!obj->enabled) continue;
+		obj->draw(pos, size);
 	}
 }
 

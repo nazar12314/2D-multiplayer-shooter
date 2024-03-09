@@ -1,21 +1,11 @@
-//
-// Created by Nazar Kononenko on 09.03.2024.
-//
-
-#ifndef INC_2D_MULTIPLAYER_SHOOTER_CIRCLECOLLIDER_H
-#define INC_2D_MULTIPLAYER_SHOOTER_CIRCLECOLLIDER_H
+#pragma once
 
 #include "Collider.h"
-#include "glm/vec2.hpp"
 
-class CircleCollider : Collider {
-private:
-    float radius;
-
+class CircleCollider : public Collider
+{
 public:
-    bool collidesWith(const Collider* collider) override;
-    float getRadius() const;
+	float radius = 0;
+
+	explicit CircleCollider(Object* obj) : Collider(obj) {}
 };
-
-
-#endif //INC_2D_MULTIPLAYER_SHOOTER_CIRCLECOLLIDER_H
