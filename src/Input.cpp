@@ -1,40 +1,25 @@
 #include "Input.h"
 
-#include "SDLHandler.h"
+#include "Application.h"
 
 void Input::updateInput()
 {
-	if (!SDLHandler::windowFocused) return;
+	if (!Application::windowFocused) return;
 }
 
-void Input::handleSDLEvents()
-{
-	SDL_Event e {};
-	while (SDL_PollEvent(&e))
-	{
-		if (e.type == SDL_QUIT)
-		{
-			SDLHandler::doQuit = true;
-			return;
-		}
-
-		handleSDLEvent(e);
-	}
-}
-
-void Input::handleSDLEvent(const SDL_Event& event)
+void Input::handleInputEvent(const SDL_Event& event)
 {
 	if (event.type == SDL_KEYDOWN)
 	{
 		if (event.key.keysym.sym == SDLK_F11)
 		{
-			SDLHandler::isFullscreen = !SDLHandler::isFullscreen;
-			SDL_SetWindowFullscreen(SDLHandler::window, SDLHandler::isFullscreen ? 1 : 0);
+			Application::isFullscreen = !Application::isFullscreen;
+			SDL_SetWindowFullscreen(Application::window, Application::isFullscreen ? 1 : 0);
 		}
 		if (event.key.keysym.sym == SDLK_ESCAPE)
 		{
-			SDLHandler::windowFocused = !SDLHandler::windowFocused;
-			if (SDLHandler::windowFocused)
+			Application::windowFocused = !Application::windowFocused;
+			if (Application::windowFocused)
 				SDL_SetRelativeMouseMode(SDL_TRUE);
 			else
 				SDL_SetRelativeMouseMode(SDL_FALSE);

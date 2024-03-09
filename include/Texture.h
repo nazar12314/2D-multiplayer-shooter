@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
-#include "SDL_image.h"
+
+#include "Application.h"
+#include <SDL_image.h>
 
 class Texture
 {
@@ -11,7 +13,7 @@ public:
 	Texture(const std::string& path)
 	{
 		SDL_Surface* surface = IMG_Load(path.data());
-		texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, surface);
+		texture = SDL_CreateTextureFromSurface(Application::renderer, surface);
 		SDL_FreeSurface(surface);
 	}
 };

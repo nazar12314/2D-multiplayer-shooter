@@ -16,15 +16,21 @@ add_executable(${PROJECT_NAME}
 	 "src/main.cpp"
 	 "src/Input.cpp"
 	 "src/Object.cpp"
-	 "src/SDLHandler.cpp"
+	 "src/Application.cpp"
 	 "src/Transform.cpp"
 	 "include/MyTime.h"
 	 "src/Renderer.cpp"
-	 "include/Texture.h")
+	 "include/Texture.h"
+	 "src/Camera.cpp"
+	 "src/SDLHandler.cpp")
 
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+
+message("${SDL2_INCLUDE_DIRS}")
 
 find_package(Boost 1.71.0 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})

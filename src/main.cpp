@@ -1,11 +1,12 @@
-#include "SDLHandler.h"
+#include "Application.h"
+#include "Camera.h"
 
 int main(int argv, char* args[])
 {
-	SDLHandler::init(500, 500);
+	Application::init({500, 500});
 
-	SDLHandler::loop();
+	Application::loop();
 
-	SDLHandler::quit();
+	Application::quit();
 	return 0;
 }
