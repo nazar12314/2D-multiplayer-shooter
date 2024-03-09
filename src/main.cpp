@@ -1,12 +1,17 @@
-#include "Application.h"
-#include "Camera.h"
+#include "Multiplayer.h"
+
 
 int main(int argv, char* args[])
 {
-	Application::init({500, 500});
+    int n;
+    std::cout << "Server(0/1): ";
+    std::cin >> n;
 
-	Application::loop();
-
-	Application::quit();
-	return 0;
+    if (n){
+        server();
+    }
+    else{
+        client();
+    }
+    return 0;
 }

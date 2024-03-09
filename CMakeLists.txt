@@ -22,15 +22,17 @@ add_executable(${PROJECT_NAME}
 	 "src/Renderer.cpp"
 	 "include/Texture.h"
 	 "src/Camera.cpp"
-	 "src/SDLHandler.cpp")
+	 "src/SDLHandler.cpp"
+	 "src/Multiplayer.cpp")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_net REQUIRED)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
 
-message("${SDL2_INCLUDE_DIRS}")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_net::SDL2_net)
 
 find_package(Boost 1.71.0 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
