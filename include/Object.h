@@ -1,7 +1,6 @@
 // ReSharper disable CppMemberFunctionMayBeStatic
 #pragma once
 
-#include <SDL_render.h>
 #include <vector>
 
 #include "Action.h"
@@ -29,7 +28,7 @@ public:
 public:
 	bool enabled;
 
-	Object(glm::vec2 pos, float rot = 0);
+	Object(glm::vec2 pos = {0, 0}, float rot = 0);
 	virtual ~Object();
 
 	void start() {}
@@ -44,9 +43,9 @@ class Graphical : public Object
 	glm::ivec2 size;
 
 public:
-	Graphical(const glm::vec2& pos, float rot, Texture* texture, glm::ivec2 size = {1, 1});
+	Graphical(Texture* texture, glm::ivec2 size = {1, 1}, const glm::vec2& pos = {0, 0}, float rot = 0);
 
-	void draw() const;
+	void draw(const glm::ivec2& cameraPos, int cameraSize) const;
 
 	void setNativeSize();
 };

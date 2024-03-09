@@ -6,8 +6,7 @@ class Input
 {
 public:
 	static void updateInput();
-	static void handleSDLEvents();
 
-private:
-	static void handleSDLEvent(const SDL_Event& event);
+public:
+	static void handleInputEvent(const SDL_Event& event);
 };

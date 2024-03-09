@@ -8,8 +8,8 @@ public:
 
 	static void tick()
 	{
-		auto new_time = (float)SDL_GetTicks() / 1000.0f;
-		deltaTime = new_time - time;
-		time = new_time;
+		auto currTime = (float)SDL_GetTicks() / 1000.0f;
+		deltaTime = currTime - time;
+		time = currTime;
 	}
 };

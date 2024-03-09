@@ -1,7 +1,6 @@
 #include "Object.h"
 
 #include "Renderer.h"
-#include "SDLHandler.h"
 #include "Texture.h"
 
 // -- Global --
@@ -43,11 +42,11 @@ Object::~Object()
 	removeObject(this);
 }
 
-Graphical::Graphical(const glm::vec2& pos, float rot, Texture* texture, glm::ivec2 size): Object(pos, rot), texture(texture), size {size} {}
+Graphical::Graphical(Texture* texture, glm::ivec2 size, const glm::vec2& pos, float rot) : Object(pos, rot), texture(texture), size {size} {}
 
-void Graphical::draw() const
+void Graphical::draw(const glm::ivec2& cameraPos, int cameraSize) const
 {
-	Renderer::drawTex(texture, pos, size);
+	Renderer::renderTex(texture, pos, size);
 }
 
 void Graphical::setNativeSize()
