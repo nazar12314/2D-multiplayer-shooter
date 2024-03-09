@@ -8,7 +8,6 @@ public:
 	inline static SDL_Renderer* renderer;
 	inline static SDL_Window* window;
 	inline static SDL_Surface* surface;
-	inline static SDL_Event event;
 
 	inline static bool doQuit;
 

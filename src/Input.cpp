@@ -7,6 +7,21 @@ void Input::updateInput()
 	if (!SDLHandler::windowFocused) return;
 }
 
+void Input::handleSDLEvents()
+{
+	SDL_Event e {};
+	while (SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_QUIT)
+		{
+			SDLHandler::doQuit = true;
+			return;
+		}
+
+		handleSDLEvent(e);
+	}
+}
+
 void Input::handleSDLEvent(const SDL_Event& event)
 {
 	if (event.type == SDL_KEYDOWN)

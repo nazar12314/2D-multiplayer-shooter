@@ -1,5 +1,9 @@
 #include "Object.h"
 
+#include "Renderer.h"
+#include "SDLHandler.h"
+#include "Texture.h"
+
 // -- Global --
 void Object::addObject(Object* obj)
 {
@@ -37,4 +41,16 @@ Object::Object(glm::vec2 pos, float rot) : Transform(pos, rot)
 Object::~Object()
 {
 	removeObject(this);
+}
+
+Graphical::Graphical(const glm::vec2& pos, float rot, Texture* texture, glm::ivec2 size): Object(pos, rot), texture(texture), size {size} {}
+
+void Graphical::draw() const
+{
+	Renderer::drawTex(texture, pos, size);
+}
+
+void Graphical::setNativeSize()
+{
+	SDL_QueryTexture(texture->texture, nullptr, nullptr, &this->size.x, &this->size.y);
 }

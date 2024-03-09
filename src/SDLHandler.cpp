@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "MyTime.h"
 #include "Object.h"
+#include "Renderer.h"
+#include "Texture.h"
 
 void SDLHandler::init(int width, int height)
 {
@@ -13,40 +15,34 @@ void SDLHandler::init(int width, int height)
 }
 void SDLHandler::initSDL(int width, int height)
 {
-	window = SDL_CreateWindow("Raytracer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
+	window = SDL_CreateWindow("2D Multiplayer Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	surface = SDL_GetWindowSurface(window);
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
-void SDLHandler::initScene() {}
+void SDLHandler::initScene()
+{
+	auto tex = new Texture("sprites/circle.png");
+	auto obj1 = new Graphical({50, 50}, 0, tex);
+}
 
 void SDLHandler::loop()
 {
 	int frame = 0;
 	while (true)
 	{
-		bool ok = update();
-		if (!ok) break;
+		Input::handleSDLEvents();
+		Time::tick();
+		Object::updateAll();
+
 		if (doQuit) break;
 
-		auto rect = new SDL_Rect {50, 50, 100, 100};
-		SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 122, 122, 122));
-		SDL_UpdateWindowSurface(window);
+		SDL_RenderClear(renderer);
+		Renderer::draw();
+		SDL_RenderPresent(renderer);
+
 		frame++;
 	}
-}
-
-bool SDLHandler::update()
-{
-	while (SDL_PollEvent(&event))
-	{
-		if (event.type == SDL_QUIT)
-			return false;
-
-		Input::handleSDLEvent(event);
-		Time::updateTime();
-		Object::updateAll();
-	}
-	return true;
 }
 
 void SDLHandler::quit()

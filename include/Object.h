@@ -1,10 +1,13 @@
 // ReSharper disable CppMemberFunctionMayBeStatic
 #pragma once
 
+#include <SDL_render.h>
 #include <vector>
 
 #include "Action.h"
 #include "Transform.h"
+
+class Texture;
 
 class Object : public Transform
 {
@@ -32,5 +35,18 @@ public:
 	void start() {}
 	void update() {}
 	void onDestroy() {}
+};
 
+
+class Graphical : public Object
+{
+	Texture* texture;
+	glm::ivec2 size;
+
+public:
+	Graphical(const glm::vec2& pos, float rot, Texture* texture, glm::ivec2 size = {1, 1});
+
+	void draw() const;
+
+	void setNativeSize();
 };

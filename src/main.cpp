@@ -1,5 +1,4 @@
 #include "SDLHandler.h"
-#include "MyTime.h"
 
 int main(int argv, char* args[])
 {
