@@ -35,16 +35,29 @@ bool BoxCollider::collidesWith(const Collider* other)
 			* (oPos.x - sPos.x) + std::cos(sRot)
 			* (oPos.y - sPos.y) + sPos.y;
 
-		double closestX = 0, closestY = 0;
+		double closestX, closestY;
 
-		if (unrotatedX < sPos.y)
-			closestX = sPos.y;
-		else if (unrotatedX > sPos.y + size.x)
-			closestY = sPos.y + size.x;
+        float rectX = sPos.x - (size.x / 2);
+        float rectY = sPos.y - (size.y / 2);
+
+        // Rectangle size as width x height
+
+		if (unrotatedX < rectX)
+			closestX = rectX;
+		else if (unrotatedX > rectX + size.x)
+			closestX = rectX + size.x;
 		else
-			closestY = unrotatedY;
+			closestX = unrotatedX;
+
+        if (unrotatedY < rectY)
+            closestY = rectY;
+        else if (unrotatedY > rectY + size.y)
+            closestY = rectY + size.y;
+        else
+            closestY = unrotatedY;
 
 		double distance = findDistance(unrotatedX, unrotatedY, closestX, closestY);
+
 		if (distance < circle->radius) return true;
 	}
 
@@ -56,7 +69,7 @@ double BoxCollider::findDistance(double startX, double startY, double endX, doub
 	double a = std::abs(startX - endX);
 	double b = std::abs(startY - endY);
 
-	return std::sqrt((long double)(a * a + b * b));
+	return std::sqrt(a * a + b * b);
 }
 
 std::pair<glm::vec2, glm::vec2> BoxCollider::getAxis(const BoxCollider* box)
