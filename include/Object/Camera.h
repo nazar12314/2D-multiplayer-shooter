@@ -1,18 +1,14 @@
 #pragma once
 
-#include "Object.h"
+#include "Component.h"
 
-class Camera : public Object
+class Camera : public Component
 {
-	inline static std::vector<Object*> cameras {};
+	Camera(Object* obj, int size = 10);
 
 public:
 	int size;
 	int priority = 0;
 
-	Camera(int size, const glm::vec2& pos = {0, 0}, float rot = 0);
-	~Camera() override;
-	void render() const;
-
-	static void renderMain();
+	friend class Object;
 };

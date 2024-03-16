@@ -5,6 +5,7 @@
 class Transform
 {
 protected:
+	Transform(glm::vec2 pos = {0, 0}, float rot = 0);
 	~Transform() = default;
 
 public:
@@ -12,7 +13,6 @@ public:
 	float rot;
 	glm::vec2 scale = {1, 1};
 
-	Transform(glm::vec2 pos = {0, 0}, float rot = 0);
 
 	glm::vec2 getPos() const { return pos; }
 	float getRot() const { return rot; }

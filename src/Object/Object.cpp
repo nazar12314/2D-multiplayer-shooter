@@ -5,15 +5,17 @@
 #include "glm/gtx/transform.hpp"
 
 // -- Global --
-void Object::addObject(Object* obj)
+Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 {
+	auto obj = new Object(name, pos, rot);
 	objects.emplace_back(obj);
-	onObjectAdded(obj);
+
+	return obj;
 }
-void Object::removeObject(Object* obj)
+void Object::destroy(Object* obj)
 {
 	objects.erase(std::ranges::find(objects, obj));
-	onObjectRemoved(obj);
+	delete obj;
 }
 void Object::startAll()
 {
@@ -36,15 +38,8 @@ void Object::destroyAll()
 // -- Global --
 
 
-Object::Object(glm::vec2 pos, float rot) : Transform(pos, rot)
-{
-	addObject(this);
-	enabled = true;
-}
-Object::~Object()
-{
-	removeObject(this);
-}
+Object::Object(const std::string& name, glm::vec2 pos, float rot) : Transform(pos, rot), name(name) {}
+Object::~Object() {}
 
 void Object::start() const
 {

@@ -4,6 +4,16 @@
 #include "Input.h"
 #include "SDL.h"
 
+void SDLHandler::init(const glm::ivec2& windowSize)
+{
+	SDLHandler::windowSize = windowSize;
+
+	window = SDL_CreateWindow("2D Multiplayer Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, SDL_WINDOW_RESIZABLE);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	surface = SDL_GetWindowSurface(window);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+}
+
 void SDLHandler::handleEvents()
 {
 	Input::clear();
@@ -20,8 +30,13 @@ void SDLHandler::handleEvents()
 		Input::handleInputEvent(e);
 
 		if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_RESIZED)
-		{
-			Application::windowSize = {e.window.data1, e.window.data2};
-		}
+			windowSize = {e.window.data1, e.window.data2};
 	}
+}
+
+void SDLHandler::uninit()
+{
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }

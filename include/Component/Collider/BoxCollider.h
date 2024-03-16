@@ -11,6 +11,7 @@ public:
 	glm::vec2 size {0, 0};
 
 	explicit BoxCollider(Object* obj) : Collider(obj) {}
+
 	bool collidesWith(const Collider* other) override;
 	static double findDistance(double startX, double startY, double endX, double endY);
 	static std::pair<glm::vec2, glm::vec2> getAxis(const BoxCollider* box);

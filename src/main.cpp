@@ -1,10 +1,9 @@
 #include "Application.h"
-#include "Camera.h"
-#include "CircleCollider.h"
+#include "SDL.h"
 
 int main(int argv, char* args[])
 {
-	Application::init({500, 500});
+	Application::start({800, 800});
 
 	Application::loop();
 

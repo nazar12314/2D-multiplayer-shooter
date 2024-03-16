@@ -1,19 +1,19 @@
 #pragma once
 
+#include "Component.h"
 #include "Object.h"
 
-class Graphical : public Object
+class Graphical : public Component
 {
 	Texture* texture;
 	glm::ivec2 size;
 
+	Graphical(Object* obj, Texture* texture, glm::ivec2 size = {1, 1});
+
 public:
-	inline static std::vector<Graphical*> graphicalObjects {};
-
-	Graphical(Texture* texture, glm::ivec2 size = {1, 1}, const glm::vec2& pos = {0, 0}, float rot = 0);
-	~Graphical() override;
-
 	void draw(const glm::vec2& cameraPos, int cameraSize) const;
 
 	void setNativeSize();
+
+	friend class Object;
 };

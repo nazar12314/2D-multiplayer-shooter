@@ -1,10 +1,12 @@
 // ReSharper disable CppMemberFunctionMayBeStatic
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "Action.h"
 #include "Transform.h"
+#include "glm/vec2.hpp"
 
 class Component;
 class Texture;
@@ -15,11 +17,11 @@ public:
 	// -- Global --
 	inline static std::vector<Object*> objects {};
 
-	inline static Action<Object*> onObjectAdded {};
-	inline static Action<Object*> onObjectRemoved {};
+	inline static Action<Component*> onComponentAdded;
+	inline static Action<Component*> onComponentRemoved;
 
-	static void addObject(Object* obj);
-	static void removeObject(Object* obj);
+	static Object* create(const std::string& name, glm::vec2 pos = {0, 0}, float rot = 0);
+	static void destroy(Object* obj);
 
 	static void startAll();
 	static void updateAll();
@@ -29,32 +31,46 @@ public:
 private:
 	std::vector<Component*> components {};
 
-public:
-	bool enabled;
-
-	Object(glm::vec2 pos = {0, 0}, float rot = 0);
+	Object(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
 	virtual ~Object();
 
-	template <typename T> T* addComponent();
-	template <typename T> T* getComponent();
+public:
+	std::string name;
+	bool enabled = true;
+
+	template <typename T, typename... Ts> T* addComponent(Ts... args);
 	template <typename T> void removeComponent();
+
+	template <typename T> bool hasComponent() const;
+	template <typename T> T* getComponent();
+	template <typename T> bool tryGetComponent(T*& component) const;
 
 	virtual void start() const;
 	virtual void update() const;
 	virtual void destroy() const;
 };
 
-
-template <typename T> T* Object::addComponent()
+template <typename T, typename... Ts> T* Object::addComponent(Ts... args)
 {
 	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
-	T* component = new T(this);
+	T* component = new T(this, args...);
 	components.push_back(component);
 
+	onComponentAdded(component);
 	component->start();
 	return component;
 }
-
+template <typename T> bool Object::hasComponent() const
+{
+	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
+	for (Component* component : components)
+	{
+		T* casted = dynamic_cast<T*>(component);
+		if (casted == nullptr) continue;
+		return true;
+	}
+	return false;
+}
 template <typename T> T* Object::getComponent()
 {
 	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
@@ -66,7 +82,18 @@ template <typename T> T* Object::getComponent()
 	}
 	return nullptr;
 }
-
+template <typename T> bool Object::tryGetComponent(T*& component) const
+{
+	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
+	for (Component* c : components)
+	{
+		T* casted = dynamic_cast<T*>(c);
+		if (casted == nullptr) continue;
+		component = casted;
+		return true;
+	}
+	return false;
+}
 template <typename T> void Object::removeComponent()
 {
 	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
@@ -77,6 +104,7 @@ template <typename T> void Object::removeComponent()
 		if (component == nullptr) continue;
 		component->destroy();
 
+		onComponentRemoved(component);
 		components.erase(it);
 		delete component;
 	}

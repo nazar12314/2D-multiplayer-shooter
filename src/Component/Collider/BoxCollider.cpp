@@ -7,10 +7,10 @@
 
 bool BoxCollider::collidesWith(const Collider* other)
 {
-	float sRot = glm::radians(object->getRot());
+	float sRot = glm::radians(obj->getRot());
 
-	glm::vec2 sPos = object->getPos();
-	glm::vec2 oPos = other->object->getPos();
+	glm::vec2 sPos = obj->getPos();
+	glm::vec2 oPos = other->obj->getPos();
 
 	if (const auto* box = dynamic_cast<const BoxCollider*>(other))
 	{
@@ -41,7 +41,6 @@ bool BoxCollider::collidesWith(const Collider* other)
         float rectY = sPos.y - (size.y / 2);
 
         // Rectangle size as width x height
-
 		if (unrotatedX < rectX)
 			closestX = rectX;
 		else if (unrotatedX > rectX + size.x)
@@ -77,7 +76,7 @@ std::pair<glm::vec2, glm::vec2> BoxCollider::getAxis(const BoxCollider* box)
 	glm::vec2 ox = {1, 0};
 	glm::vec2 oy = {0, 1};
 
-	float rot = box->object->getRot();
+	float rot = box->obj->getRot();
 
 	auto rotateX = [](glm::vec2 pos, float rot_) { return pos.x * std::cos(rot_) - pos.y * std::sin(rot_); };
 	auto rotateY = [](glm::vec2 pos, float rot_) { return pos.x * std::sin(rot_) + pos.y * std::cos(rot_); };

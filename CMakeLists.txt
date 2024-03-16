@@ -14,6 +14,8 @@ include_directories(include/Core)
 include_directories(include/Object)
 include_directories(include/Component)
 include_directories(include/Component/Custom)
+include_directories(include/Component/Collider)
+include_directories(include/Utils)
 include_directories(include/Utils)
 
 include_directories(libs)
@@ -33,8 +35,8 @@ add_executable(${PROJECT_NAME}
 	 "src/Component/Component.cpp"
 	 "src/Component/Custom/CameraMover.cpp"
 	 
-	 "src/BoxCollider.cpp"
-	 )
+	 "src/Component/Collider/BoxCollider.cpp"
+	  "src/Texture.cpp" "include/Scene.h" "src/Scene.cpp")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

@@ -19,5 +19,5 @@ void CameraMover::update()
 		dir.x += 1;
 
 	if (dir == glm::vec2(0, 0)) return;
-	object->setPos(object->pos + normalize(dir) * speed * Time::deltaTime);
+	obj->setPos(obj->pos + normalize(dir) * speed * Time::deltaTime);
 }
