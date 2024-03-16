@@ -9,49 +9,36 @@
 
 class PolygonCollider : public Collider
 {
+	void lateUpdate() override;
+
 public:
 	glm::vec2 size {0, 0};
-    std::vector<glm::vec2> edges;
+	std::vector<glm::vec2> edges;
 
-	PolygonCollider(Object* obj, glm::vec2 size) : Collider(obj), size(size) {
-        initEdges();
-        updateEdges(obj->getRot());
-
-//        obj->onRotChange += [this](float rot) {
-//            updateEdges(rot);
-//        };
-
-
-//        for (auto edge : edges) {
-//            std::cout << edge.x << " " << edge.y << std::endl;
-//        }
-//
-//        std::cout << "\n";
-    }
+	PolygonCollider(Object* obj, glm::vec2 size) : Collider(obj), size(size)
+	{
+		updateEdges();
+	}
 
 	bool collidesWith(Collider* other) override;
 	static double findDistance(double startX, double startY, double endX, double endY);
 
-private:
-    void initEdges() {
-        glm::vec2 sPos = obj->getPos();
+public:
+	void updateEdges()
+	{
+		glm::vec2 sPos = obj->pos();
+		float angle = glm::radians(obj->rot());
 
-        edges = {
-                {sPos.x - size.x / 2, sPos.y - size.y / 2}, // bottom left
-                {sPos.x - size.x / 2, sPos.y + size.y / 2}, // top left
-                {sPos.x + size.x / 2, sPos.y + size.y / 2}, // top right
-                {sPos.x + size.x / 2, sPos.y - size.y / 2}  // bottom right
-        };
-    }
+		edges = {
+			{sPos.x - size.x / 2, sPos.y - size.y / 2}, // bottom left
+			{sPos.x - size.x / 2, sPos.y + size.y / 2}, // top left
+			{sPos.x + size.x / 2, sPos.y + size.y / 2}, // top right
+			{sPos.x + size.x / 2, sPos.y - size.y / 2}  // bottom right
+		};
 
-    void updateEdges(float rotation = 0.0f) {
-        glm::vec2 sPos = obj->getPos();
-        float angle = glm::radians(rotation);
-
-        for (auto& edge : edges) {
-            auto edg = glm::rotate(edge - sPos, angle) + sPos;
-
-            std::cout << edg.x << " " << edg.y << std::endl;
-        }
-    }
+		for (auto& edge : edges)
+		{
+			edge = glm::rotate(edge - sPos, angle) + sPos;
+		}
+	}
 };

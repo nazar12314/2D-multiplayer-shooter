@@ -5,21 +5,24 @@
 
 class Transform
 {
+	glm::vec2 _pos;
+	float _rot;
+	glm::vec2 _scale = {1, 1};
+
 protected:
 	Transform(glm::vec2 pos = {0, 0}, float rot = 0);
-	~Transform() = default;
 
 public:
-	glm::vec2 pos;
-	float rot;
-	glm::vec2 scale = {1, 1};
+	bool transformChanged = false;
+
+	glm::vec2 pos() const { return _pos; }
+	float rot() const { return _rot; }
+	glm::vec2 scale() const { return _scale; }
 
     Action<float> onRotChange;
-
-	glm::vec2 getPos() const { return pos; }
-	float getRot() const { return rot; }
-	virtual void setPos(glm::vec2 pos);
-	virtual void setRot(float rot);
+	void setPos(glm::vec2 pos);
+	void setRot(float rot);
+	void setScale(glm::vec2 scale);
 
 	void translate(const glm::vec2& v);
 	void rotate(float degrees);

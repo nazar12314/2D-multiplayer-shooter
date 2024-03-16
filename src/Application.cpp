@@ -1,6 +1,5 @@
 #include "Application.h"
 
-#include "BoxCollider.h"
 #include "MyTime.h"
 #include "Object.h"
 #include "Renderer.h"
@@ -23,7 +22,10 @@ void Application::loop()
 	{
 		SDLHandler::handleEvents();
 		Time::tick();
+
+		Object::prepareAll();
 		Object::updateAll();
+		Object::lateUpdateAll();
 
 		if (doQuit) break;
 		Renderer::render();
@@ -36,4 +38,3 @@ void Application::quit()
 
 	SDLHandler::uninit();
 }
-

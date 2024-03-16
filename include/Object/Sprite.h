@@ -3,12 +3,12 @@
 #include "Component.h"
 #include "Object.h"
 
-class Graphical : public Component
+class Sprite : public Component
 {
 	Texture* texture;
 	glm::ivec2 size;
 
-	Graphical(Object* obj, Texture* texture, glm::ivec2 size = {1, 1});
+	Sprite(Object* obj, Texture* texture, glm::ivec2 size = {1, 1});
 
 public:
 	void draw(const glm::vec2& cameraPos, int cameraSize) const;

@@ -10,12 +10,12 @@ set(ENABLE_FAST_MATH ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADDITIONAL_CFLAGS} -g")
 
 include_directories(include)
-include_directories(include/Core)
-include_directories(include/Object)
 include_directories(include/Component)
 include_directories(include/Component/Custom)
 include_directories(include/Component/Collider)
-include_directories(include/Utils)
+include_directories(include/Core)
+include_directories(include/Object)
+include_directories(include/Other)
 include_directories(include/Utils)
 
 include_directories(libs)
@@ -28,14 +28,17 @@ add_executable(${PROJECT_NAME}
 	 "src/Object/Transform.cpp"
 	 "include/Core/MyTime.h"
 	 "src/Core/Renderer.cpp"
-	 "include/Texture.h"
+	 "include/Other/Texture.h"
 	 "src/Object/Camera.cpp"
 	 "src/Core/SDLHandler.cpp"
-	 "src/Object/Graphical.cpp"
+	 "src/Object/Sprite.cpp"
 	 "src/Component/Component.cpp"
-	 "src/Component/Custom/CameraMover.cpp"
-
-		"src/Texture.cpp" "include/Scene.h" "src/Scene.cpp" src/Component/Collider/PolygonCollider.cpp src/Component/Collider/CircleCollider.cpp)
+	 "src/Component/Custom/CameraFollow.cpp"
+	 "src/Other/Texture.cpp"
+	 "src/Scene.cpp"
+	 "src/Component/Custom/PlayerMovement.cpp"
+	 "src/Component/Collider/PolygonCollider.cpp" 
+	 "src/Component/Collider/CircleCollider.cpp")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

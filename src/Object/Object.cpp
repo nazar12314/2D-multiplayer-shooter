@@ -30,10 +30,24 @@ void Object::updateAll()
 		obj->update();
 	}
 }
+void Object::lateUpdateAll()
+{
+	for (Object* obj : objects)
+	{
+		if (!obj->enabled) continue;
+		obj->lateUpdate();
+	}
+}
 void Object::destroyAll()
 {
 	for (Object* obj : objects)
 		obj->destroy();
+}
+
+void Object::prepareAll()
+{
+	for (Object* obj : objects)
+		obj->transformChanged = false;
 }
 // -- Global --
 
@@ -50,6 +64,11 @@ void Object::update() const
 {
 	for (Component* component : components)
 		component->update();
+}
+void Object::lateUpdate() const
+{
+	for (Component* component : components)
+		component->lateUpdate();
 }
 void Object::destroy() const
 {

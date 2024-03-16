@@ -14,7 +14,7 @@ bool CircleCollider::collidesWith(Collider *other) {
     }
     if (auto* circle = dynamic_cast<CircleCollider*>(other))
     {
-        float distance = glm::distance(obj->getPos(), other->obj->getPos());
+        float distance = glm::distance(obj->pos(), other->obj->pos());
         return distance < radius + circle->radius;
     }
 

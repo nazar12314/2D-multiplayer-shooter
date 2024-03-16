@@ -25,8 +25,11 @@ public:
 
 	static void startAll();
 	static void updateAll();
+	static void lateUpdateAll();
 	static void destroyAll();
 	// -- Global --
+
+	static void prepareAll();
 
 private:
 	std::vector<Component*> components {};
@@ -47,6 +50,7 @@ public:
 
 	virtual void start() const;
 	virtual void update() const;
+	virtual void lateUpdate() const;
 	virtual void destroy() const;
 };
 
