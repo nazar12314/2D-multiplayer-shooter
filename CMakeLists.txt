@@ -26,19 +26,22 @@ add_executable(${PROJECT_NAME}
 	 "src/Object/Object.cpp"
 	 "src/Application.cpp"
 	 "src/Object/Transform.cpp"
-	 "include/Core/MyTime.h"
 	 "src/Core/Renderer.cpp"
 	 "include/Other/Texture.h"
-	 "src/Object/Camera.cpp"
+	 "src/Component/Camera.cpp"
 	 "src/Core/SDLHandler.cpp"
-	 "src/Object/Sprite.cpp"
+	 "src/Component/Sprite.cpp"
 	 "src/Component/Component.cpp"
 	 "src/Component/Custom/CameraFollow.cpp"
 	 "src/Other/Texture.cpp"
 	 "src/Scene.cpp"
-	 "src/Component/Custom/PlayerMovement.cpp"
+	 "src/Component/Custom/TankController.cpp"
 	 "src/Component/Collider/PolygonCollider.cpp" 
-	 "src/Component/Collider/CircleCollider.cpp")
+	 "src/Component/Collider/CircleCollider.cpp"
+	 "src/Component/Rigidbody.cpp"
+	 "src/Core/Physics.cpp"
+	 "src/Core/MyTime.cpp"
+	 "src/Component/Custom/Tank.cpp" "include/Utils/Math.h" "src/Utils/Math.cpp" "include/Component/Custom/Bullet.h" "src/Component/Custom/Bullet.cpp")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

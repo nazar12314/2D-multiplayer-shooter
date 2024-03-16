@@ -13,6 +13,8 @@ class Texture;
 
 class Object : public Transform
 {
+	inline static std::vector<Object*> objectsToAddTemp{};
+
 public:
 	// -- Global --
 	inline static std::vector<Object*> objects {};
@@ -26,6 +28,7 @@ public:
 	static void startAll();
 	static void updateAll();
 	static void lateUpdateAll();
+	static void fixedUpdateAll();
 	static void destroyAll();
 	// -- Global --
 
@@ -51,6 +54,7 @@ public:
 	virtual void start() const;
 	virtual void update() const;
 	virtual void lateUpdate() const;
+	virtual void fixedUpdate() const;
 	virtual void destroy() const;
 };
 

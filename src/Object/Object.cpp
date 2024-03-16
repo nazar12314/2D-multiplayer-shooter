@@ -1,5 +1,7 @@
 #include "Object.h"
 
+#include <iostream>
+
 #include "Component.h"
 #include "Texture.h"
 #include "glm/gtx/transform.hpp"
@@ -8,7 +10,7 @@
 Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 {
 	auto obj = new Object(name, pos, rot);
-	objects.emplace_back(obj);
+	objectsToAddTemp.emplace_back(obj);
 
 	return obj;
 }
@@ -38,6 +40,14 @@ void Object::lateUpdateAll()
 		obj->lateUpdate();
 	}
 }
+void Object::fixedUpdateAll()
+{
+	for (Object* obj : objects)
+	{
+		if (!obj->enabled) continue;
+		obj->fixedUpdate();
+	}
+}
 void Object::destroyAll()
 {
 	for (Object* obj : objects)
@@ -46,6 +56,9 @@ void Object::destroyAll()
 
 void Object::prepareAll()
 {
+	objects.insert(objects.end(), objectsToAddTemp.begin(), objectsToAddTemp.end());
+	objectsToAddTemp.clear();
+
 	for (Object* obj : objects)
 		obj->transformChanged = false;
 }
@@ -69,6 +82,11 @@ void Object::lateUpdate() const
 {
 	for (Component* component : components)
 		component->lateUpdate();
+}
+void Object::fixedUpdate() const
+{
+	for (Component* component : components)
+		component->fixedUpdate();
 }
 void Object::destroy() const
 {

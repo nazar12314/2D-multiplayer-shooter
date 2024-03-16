@@ -8,7 +8,7 @@ class CameraFollow : public Component
 
 	CameraFollow(Object* obj, float smoothness);
 
-	void lateUpdate() override;
+	void fixedUpdate() override;
 
 public:
 	float smoothness;

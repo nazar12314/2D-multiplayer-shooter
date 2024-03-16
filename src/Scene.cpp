@@ -1,14 +1,12 @@
 #include "Scene.h"
 
-#include <iostream>
-#include <ostream>
-
 #include "PolygonCollider.h"
 #include "Camera.h"
 #include "CameraFollow.h"
-#include "CircleCollider.h"
-#include "PlayerMovement.h"
+#include "TankController.h"
+#include "Rigidbody.h"
 #include "Sprite.h"
+#include "Tank.h"
 #include "Texture.h"
 
 void colliderTestScene()
@@ -35,16 +33,16 @@ void gameScene()
 	auto follow = cam->obj->addComponent<CameraFollow>(5);
 
 	auto player = Object::create("Player");
-	player->addComponent<Sprite>(squareTex, glm::ivec2(1, 1));
-	auto playerMov = player->addComponent<PlayerMovement>(3);
+	player->addComponent<Sprite>(new Texture("sprites/square.png", Color::hotPink()), glm::vec2(1, 1.2f));
 	player->addComponent<PolygonCollider>(glm::vec2(1, 1));
+	player->addComponent<RigidBody>(10, 25);
+	player->addComponent<Tank>();
+	player->addComponent<TankController>();
 
 	follow->setTarget(player);
 
 	auto wall1 = Object::create("Wall", {5, 1})->addComponent<Sprite>(squareTex, glm::ivec2(5, 1));
-	auto wall1Col = wall1->obj->addComponent<PolygonCollider>(glm::vec2(5, 1));
-
-	playerMov->col = wall1Col;
+	wall1->obj->addComponent<PolygonCollider>(glm::vec2(5, 1));
 }
 
 void Scene::init()

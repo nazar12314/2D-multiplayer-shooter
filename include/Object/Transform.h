@@ -27,6 +27,8 @@ public:
 	void translate(const glm::vec2& v);
 	void rotate(float degrees);
 
+	void lookAt(const glm::vec2& target);
+
 	glm::vec2 up() const;
 	glm::vec2 down() const;
 	glm::vec2 left() const;

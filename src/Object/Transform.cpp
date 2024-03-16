@@ -28,10 +28,15 @@ void Transform::rotate(float degrees)
 	setRot(_rot + degrees);
 }
 
-glm::vec2 Transform::up() const { return glm::rotate(glm::vec2(0, 1), _rot); }
-glm::vec2 Transform::down() const { return glm::rotate(glm::vec2(0, -1), _rot); }
-glm::vec2 Transform::left() const { return glm::rotate(glm::vec2(-1, 0), _rot); }
-glm::vec2 Transform::right() const { return glm::rotate(glm::vec2(1, 0), _rot); }
+void Transform::lookAt(const glm::vec2& target)
+{
+	setRot(glm::degrees(glm::atan(target.y - _pos.y, target.x - _pos.x)));
+}
+
+glm::vec2 Transform::up() const { return glm::rotate(glm::vec2(0, 1), glm::radians(-_rot)); }
+glm::vec2 Transform::down() const { return glm::rotate(glm::vec2(0, -1), glm::radians(-_rot)); }
+glm::vec2 Transform::left() const { return glm::rotate(glm::vec2(-1, 0), glm::radians(-_rot)); }
+glm::vec2 Transform::right() const { return glm::rotate(glm::vec2(1, 0), glm::radians(-_rot)); }
 
 glm::vec2 Transform::localToGlobalPos(const glm::vec2& localPos) const
 {

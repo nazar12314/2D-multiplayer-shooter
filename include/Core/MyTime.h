@@ -1,17 +1,19 @@
 #pragma once
 
-#include <SDL.h>
-
 class Time
 {
+	inline static float lastTickTime = 0;
+
 public:
 	inline static float time = 0;
 	inline static float deltaTime = 0;
+	inline static float fixedDeltaTime = 1 / 60.0f;
+	inline static int fixedUpdateCount = 0;
 
-	static void tick()
-	{
-		auto currTime = (float)SDL_GetTicks() / 1000.0f;
-		deltaTime = currTime - time;
-		time = currTime;
-	}
+	static void init();
+
+	static void tick();
+	static void fixedTick();
+
+	static float getRealTime();
 };

@@ -6,8 +6,8 @@
 
 CameraFollow::CameraFollow(Object* obj, float smoothness): Component(obj), smoothness(smoothness) {}
 
-void CameraFollow::lateUpdate()
+void CameraFollow::fixedUpdate()
 {
 	if (target == nullptr) return;
-	obj->setPos(mix(obj->pos(), target->pos(), smoothness * Time::deltaTime));
+	obj->setPos(mix(obj->pos(), target->pos(), smoothness * Time::fixedDeltaTime));
 }
