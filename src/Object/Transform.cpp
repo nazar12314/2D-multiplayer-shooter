@@ -5,7 +5,10 @@
 Transform::Transform(const glm::vec2 pos, float rot) : pos(pos), rot(rot) {}
 
 void Transform::setPos(glm::vec2 pos) { this->pos = pos; }
-void Transform::setRot(float rot) { this->rot = rot; }
+void Transform::setRot(float rot) {
+    this->rot = rot;
+    onRotChange(rot);
+}
 void Transform::translate(const glm::vec2& v)
 {
 	setPos(pos + v);

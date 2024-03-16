@@ -34,9 +34,8 @@ add_executable(${PROJECT_NAME}
 	 "src/Object/Graphical.cpp"
 	 "src/Component/Component.cpp"
 	 "src/Component/Custom/CameraMover.cpp"
-	 
-	 "src/Component/Collider/BoxCollider.cpp"
-	  "src/Texture.cpp" "include/Scene.h" "src/Scene.cpp")
+
+		"src/Texture.cpp" "include/Scene.h" "src/Scene.cpp" src/Component/Collider/PolygonCollider.cpp src/Component/Collider/CircleCollider.cpp)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

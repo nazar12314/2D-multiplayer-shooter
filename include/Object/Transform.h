@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/vec2.hpp"
+#include "Action.h"
 
 class Transform
 {
@@ -13,6 +14,7 @@ public:
 	float rot;
 	glm::vec2 scale = {1, 1};
 
+    Action<float> onRotChange;
 
 	glm::vec2 getPos() const { return pos; }
 	float getRot() const { return rot; }

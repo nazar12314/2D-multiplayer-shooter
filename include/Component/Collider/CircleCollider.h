@@ -8,4 +8,6 @@ public:
 	float radius = 0;
 
 	explicit CircleCollider(Object* obj) : Collider(obj) {}
+
+    bool collidesWith(Collider *other) override;
 };

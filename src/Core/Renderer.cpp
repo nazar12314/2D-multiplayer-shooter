@@ -36,6 +36,7 @@ void Renderer::render()
 	SDL_RenderClear(SDLHandler::renderer);
 	for (auto obj : graphicals)
 	{
+
 		if (!obj->obj->enabled) continue;
 		obj->draw(targetCamera->obj->pos, targetCamera->size);
 	}
