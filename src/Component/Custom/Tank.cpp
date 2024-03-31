@@ -9,14 +9,14 @@
 #include "MyTime.h"
 #include "Object.h"
 #include "PolygonCollider.h"
-#include "Texture.h"
-#include "Sprite.h"
+#include "Assets.h"
+#include "SpriteRenderer.h"
 #include "TankController.h"
 #include "Rigidbody.h"
 
 Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gunRotSpeed(gunRotSpeed), _firerate(firerate)
 {
-	obj->addComponent<Sprite>(new Texture("sprites/square.png", Color::hotPink()), glm::vec2(1, 1.2f));
+	obj->addComponent<SpriteRenderer>(new Texture("sprites/square.png"), glm::vec2(1, 1.2f), 0, Color::hot_pink);
 	obj->addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
 	obj->addComponent<RigidBody>(10, 25);
 	obj->addComponent<TankController>();
@@ -25,8 +25,8 @@ Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gun
 }
 void Tank::createGun()
 {
-	auto gunTex = new Texture("sprites/square.png", Color::cyan());
-	gun = Object::create("gun")->addComponent<Sprite>(gunTex, glm::vec2(0.2f, 0.7f), 1);
+	auto gunTex = new Texture("sprites/square.png");
+	gun = Object::create("gun")->addComponent<SpriteRenderer>(gunTex, glm::vec2(0.2f, 0.7f), 1, Color::cyan);
 
 	updateGunPosition();
 }

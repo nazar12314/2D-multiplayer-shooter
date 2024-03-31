@@ -2,13 +2,13 @@
 
 #include "Component.h"
 
-class Sprite;
+class SpriteRenderer;
 
 class Tank : public Component
 {
 	float _gunRotSpeed;
 	float _firerate;
-	Sprite* gun;
+	SpriteRenderer* gun;
 
 	float shootCooldown;
 

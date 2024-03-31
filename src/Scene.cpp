@@ -5,9 +5,9 @@
 #include "CameraFollow.h"
 #include "CameraResizer.h"
 #include "Rigidbody.h"
-#include "Sprite.h"
+#include "SpriteRenderer.h"
 #include "Tank.h"
-#include "Texture.h"
+#include "Assets.h"
 #include "Wall.h"
 
 void colliderTestScene()
@@ -19,8 +19,8 @@ void colliderTestScene()
 
 	auto obj1 = Object::create("Square", {10, 10});
 	auto obj2 = Object::create("Square", {65, 10});
-	obj1->addComponent<Sprite>(tex1, glm::ivec2(50, 70));
-	obj2->addComponent<Sprite>(tex2, glm::ivec2(50, 50));
+	obj1->addComponent<SpriteRenderer>(tex1, glm::ivec2(50, 70));
+	obj2->addComponent<SpriteRenderer>(tex2, glm::ivec2(50, 50));
 
 	auto box1 = obj1->addComponent<PolygonCollider>(glm::vec2(50, 70));
 	auto box2 = obj2->addComponent<PolygonCollider>(glm::vec2(50, 50));

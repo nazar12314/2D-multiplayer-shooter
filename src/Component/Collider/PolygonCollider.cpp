@@ -6,8 +6,14 @@
 #include <glm/glm.hpp>
 
 #include "Math.h"
+#include "SpriteRenderer.h"
+#include "Assets.h"
 
-PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size) {}
+PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
+{
+	for (int i = 0; i < 4; i++)
+		edgePointsTEMP.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(new Texture("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
+}
 
 bool PolygonCollider::intersectsWith(Collider* other)
 {
@@ -99,5 +105,13 @@ void PolygonCollider::recalculate()
 	};
 
 	for (auto& edge : _edges)
-		edge = rotate(edge - sPos, sRot) + sPos;
+		edge = rotate(edge - sPos, -sRot) + sPos;
+
+	for (int i = 0; i < 4; i++)
+		edgePointsTEMP[i]->obj->setPos(_edges[i]);
+}
+void PolygonCollider::onDestroy()
+{
+	for (auto& point : edgePointsTEMP)
+		Object::destroy(point->obj);
 }

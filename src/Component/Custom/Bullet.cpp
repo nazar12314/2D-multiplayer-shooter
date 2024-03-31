@@ -7,12 +7,12 @@
 #include "Object.h"
 #include "PolygonCollider.h"
 #include "Rigidbody.h"
-#include "Sprite.h"
-#include "Texture.h"
+#include "SpriteRenderer.h"
+#include "Assets.h"
 
 Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
 {
-	obj->addComponent<Sprite>(new Texture("sprites/square.png", Color::red()), glm::vec2(0.2f, 0.2f));
+	obj->addComponent<SpriteRenderer>(new Texture("sprites/square.png"), glm::vec2(0.2f, 0.2f), 0, Color::red);
 	obj->addComponent<PolygonCollider>(glm::vec2(0.2f, 0.2f), true);
 	rb = obj->addComponent<RigidBody>();
 }

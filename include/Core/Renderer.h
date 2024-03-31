@@ -4,12 +4,12 @@
 #include "glm/glm.hpp"
 
 class Camera;
-class Sprite;
+class SpriteRenderer;
 class Texture;
 
 class Renderer
 {
-	inline static std::vector<Sprite*> sprites{};
+	inline static std::vector<SpriteRenderer*> sprites{};
 
 public:
 	static void init();

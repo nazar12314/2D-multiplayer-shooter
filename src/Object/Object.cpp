@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Component.h"
-#include "Texture.h"
+#include "Assets.h"
 #include "glm/gtx/transform.hpp"
 
 // -- Global --
@@ -17,9 +17,6 @@ Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 void Object::destroy(Object* obj)
 {
 	obj->onDestroy();
-
-	for (Component* component : obj->components)
-		obj->removeComponent(component);
 	obj->components.apply_changes();
 
 	objects.erase_delayed(obj);
@@ -117,7 +114,7 @@ void Object::fixedUpdate() const
 void Object::onDestroy()
 {
 	for (Component* component : components)
-		component->onDestroy();
+		removeComponent(component);
 }
 
 void Object::onCollisionEnter(Collider* other) const

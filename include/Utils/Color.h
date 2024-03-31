@@ -1,4 +1,5 @@
 #pragma once
+
 #include <ostream>
 #include <glm/common.hpp>
 #include <glm/vec4.hpp>
@@ -8,23 +9,23 @@ class Color : public glm::vec4
 public:
 	Color(float r, float g, float b, float a = 1) : glm::vec4(r, g, b, a) {}
 	Color(int r, int g, int b, int a = 255) : glm::vec4((float)r / 255.f, (float)g / 255.f, (float)b / 255.f, (float)a / 255.f) {}
-	Color() : Color{0, 0, 0, 0} {}
+	Color() : Color {0, 0, 0, 0} {}
 
-	static Color white() { return {1.f, 1.f, 1.f}; }
-	static Color black() { return {0.f, 0.f, 0.f}; }
-	static Color red() { return {1.f, 0.f, 0.f}; }
-	static Color green() { return {0.f, 1.f, 0.f}; }
-	static Color blue() { return {0.f, 0.f, 1.f}; }
-	static Color yellow() { return {1.f, 1.f, 0.f}; }
-	static Color cyan() { return {0.f, 1.f, 1.f}; }
-	static Color magenta() { return {1.f, 0.f, 1.f}; }
-	static Color gray() { return {0.2f, 0.2f, 0.2f}; }
+	static Color white;
+	static Color black;
+	static Color red;
+	static Color green;
+	static Color blue;
+	static Color yellow;
+	static Color cyan;
+	static Color magenta;
+	static Color gray;
 
-	static Color darkGreen() { return {0.f, 0.5f, 0.f}; }
-	static Color skyblue() { return {.529f, .808f, .922f}; }
-	static Color gold() { return {1.f, .843f, 0.f}; }
-	static Color pink() { return {255, 192, 203}; }
-	static Color hotPink() { return {255, 105, 180}; }
+	static Color dark_green;
+	static Color sky_blue;
+	static Color gold;
+	static Color pink;
+	static Color hot_pink;
 
 	float r() const { return x; }
 	float g() const { return y; }

@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Multiplayer/Server.h"
 #include "Multiplayer/Client.h"
+#include "Assets.h"
 
 void runServer(Uint16 port)
 {
@@ -86,7 +87,7 @@ bool main_net()
 
 void main_game()
 {
-	Application::start({1000, 1000});
+	Application::start({800, 800});
 
 	Application::loop();
 

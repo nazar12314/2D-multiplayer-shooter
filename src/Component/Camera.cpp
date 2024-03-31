@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "SDLHandler.h"
-#include "Sprite.h"
+#include "SpriteRenderer.h"
 
 Camera::Camera(Object* obj, float size): Component(obj), _size(size)
 {

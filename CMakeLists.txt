@@ -15,7 +15,6 @@ include_directories(include/Component/Custom)
 include_directories(include/Component/Collider)
 include_directories(include/Core)
 include_directories(include/Object)
-include_directories(include/Other)
 include_directories(include/Utils)
 
 include_directories(libs)
@@ -27,13 +26,11 @@ add_executable(${PROJECT_NAME}
 	 "src/Application.cpp"
 	 "src/Object/Transform.cpp"
 	 "src/Core/Renderer.cpp"
-	 "include/Other/Texture.h"
 	 "src/Component/Camera.cpp"
 	 "src/Core/SDLHandler.cpp"
-	 "src/Component/Sprite.cpp"
+	 "src/Component/SpriteRenderer.cpp"
 	 "src/Component/Component.cpp"
 	 "src/Component/Custom/CameraFollow.cpp"
-	 "src/Other/Texture.cpp"
 	 "src/Scene.cpp"
 	 "src/Component/Custom/TankController.cpp"
 	 "src/Component/Collider/PolygonCollider.cpp" 
@@ -48,16 +45,15 @@ add_executable(${PROJECT_NAME}
 	 "include/Core/FPSCounter.h" 
 	 "src/Component/Collider/Collider.cpp" 
 	 "src/Component/Custom/Wall.cpp"
-		"src/Multiplayer/Client.cpp"
-		"src/Multiplayer/Server.cpp"
-		"src/Multiplayer/MessageQueue.cpp"
-		"include/Multiplayer/Client.h"
-		"include/Multiplayer/Server.h"
-		"include/Multiplayer/MessageQueue.h")
+	 "src/Multiplayer/Client.cpp"
+	 "src/Multiplayer/Server.cpp"
+	 "src/Multiplayer/MessageQueue.cpp"
+	 "include/Multiplayer/Client.h"
+	 "include/Multiplayer/Server.h"
+	 "include/Multiplayer/MessageQueue.h" "include/Core/Assets.h" "src/Core/Assets.cpp" "include/Utils/Concepts.h" "src/Utils/Color.cpp")
 
 find_package(SDL2 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

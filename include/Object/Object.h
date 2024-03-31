@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "VectorDelayed.h"
 #include "glm/vec2.hpp"
+#include "Concepts.h"
 
 class Collider;
 class Component;
@@ -53,13 +54,13 @@ public:
 	void setTag(const std::string& tag);
 	void setEnabled(bool enabled);
 
-	template <typename T, typename... Ts> T* addComponent(Ts... args);
-	template <typename T> void removeComponent();
+	template <derived<Component> T, typename... Ts> T* addComponent(Ts... args);
+	template <derived<Component> T> void removeComponent();
 	void removeComponent(Component* component);
 
-	template <typename T> bool hasComponent() const;
-	template <typename T> T* getComponent();
-	template <typename T> bool tryGetComponent(T*& component) const;
+	template <derived<Component> T> bool hasComponent() const;
+	template <derived<Component> T> T* getComponent();
+	template <derived<Component> T> bool tryGetComponent(T*& component) const;
 
 protected:
 	// -- System --
@@ -84,9 +85,8 @@ protected:
 	friend class Collider;
 };
 
-template <typename T, typename... Ts> T* Object::addComponent(Ts... args)
+template <derived<Component> T, typename... Ts> T* Object::addComponent(Ts... args)
 {
-	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
 	T* component = new T(this, args...);
 	components.push_back(component);
 
@@ -94,9 +94,8 @@ template <typename T, typename... Ts> T* Object::addComponent(Ts... args)
 	component->start();
 	return component;
 }
-template <typename T> bool Object::hasComponent() const
+template <derived<Component> T> bool Object::hasComponent() const
 {
-	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
 	for (Component* component : components)
 	{
 		T* casted = dynamic_cast<T*>(component);
@@ -105,9 +104,8 @@ template <typename T> bool Object::hasComponent() const
 	}
 	return false;
 }
-template <typename T> T* Object::getComponent()
+template <derived<Component> T> T* Object::getComponent()
 {
-	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
 	for (Component* component : components)
 	{
 		T* casted = dynamic_cast<T*>(component);
@@ -116,9 +114,8 @@ template <typename T> T* Object::getComponent()
 	}
 	return nullptr;
 }
-template <typename T> bool Object::tryGetComponent(T*& component) const
+template <derived<Component> T> bool Object::tryGetComponent(T*& component) const
 {
-	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
 	for (Component* c : components)
 	{
 		T* casted = dynamic_cast<T*>(c);
@@ -128,10 +125,8 @@ template <typename T> bool Object::tryGetComponent(T*& component) const
 	}
 	return false;
 }
-template <typename T> void Object::removeComponent()
+template <derived<Component> T> void Object::removeComponent()
 {
-	static_assert(std::is_base_of_v<Component, T>, "T must inherit from Component");
-
 	for (auto it = components.begin(); it != components.end(); ++it)
 	{
 		T* component = dynamic_cast<T*>(*it);
