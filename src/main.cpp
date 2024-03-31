@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "SDL.h"
-
-#include "Bullet.h"
+#include "VectorDelayed.h"
 
 int main(int argv, char* args[])
 {

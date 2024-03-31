@@ -5,24 +5,31 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include "Math.h"
+
+PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size): Collider(obj), _size(size)
+{
+	updateEdges();
+}
+
 void PolygonCollider::lateUpdate()
 {
 	if (!obj->transformChanged) return;
 	updateEdges();
 }
+
+
 bool PolygonCollider::collidesWith(Collider* other)
 {
-	float sRot = glm::radians(45.5f);
-
 	glm::vec2 sPos = obj->pos();
 	glm::vec2 oPos = other->obj->pos();
 
 	if (const auto* box = dynamic_cast<const PolygonCollider*>(other))
 	{
-		for (int i = 0; i < edges.size(); i++)
+		for (int i = 0; i < _edges.size(); i++)
 		{
-			glm::vec2 edge = edges[i];
-			glm::vec2 nextEdge = edges[(i + 1) % edges.size()];
+			glm::vec2 edge = _edges[i];
+			glm::vec2 nextEdge = _edges[(i + 1) % _edges.size()];
 
 			glm::vec2 axis = {edge.y - nextEdge.y, nextEdge.x - edge.x};
 
@@ -31,14 +38,14 @@ bool PolygonCollider::collidesWith(Collider* other)
 			float minO = std::numeric_limits<float>::max();
 			float maxO = std::numeric_limits<float>::min();
 
-			for (auto& edg : edges)
+			for (auto& edg : _edges)
 			{
 				float proj = (edg.x * axis.x + edg.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
 				minS = std::min(minS, proj);
 				maxS = std::max(maxS, proj);
 			}
 
-			for (auto edg : box->edges)
+			for (auto edg : box->_edges)
 			{
 				float proj = (edg.x * axis.x + edg.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
 				minO = std::min(minO, proj);
@@ -51,6 +58,7 @@ bool PolygonCollider::collidesWith(Collider* other)
 		return true;
 	}
 
+	float sRot = glm::radians(obj->rot());
 	if (const auto* circle = dynamic_cast<const CircleCollider*>(other))
 	{
 		double unrotatedX = std::cos(sRot)
@@ -63,36 +71,43 @@ bool PolygonCollider::collidesWith(Collider* other)
 
 		double closestX, closestY;
 
-		float rectX = sPos.x - (size.x / 2);
-		float rectY = sPos.y - (size.y / 2);
+		float rectX = sPos.x - (_size.x / 2);
+		float rectY = sPos.y - (_size.y / 2);
 
 		// Rectangle size as width x height
 		if (unrotatedX < rectX)
 			closestX = rectX;
-		else if (unrotatedX > rectX + size.x)
-			closestX = rectX + size.x;
+		else if (unrotatedX > rectX + _size.x)
+			closestX = rectX + _size.x;
 		else
 			closestX = unrotatedX;
 
 		if (unrotatedY < rectY)
 			closestY = rectY;
-		else if (unrotatedY > rectY + size.y)
-			closestY = rectY + size.y;
+		else if (unrotatedY > rectY + _size.y)
+			closestY = rectY + _size.y;
 		else
 			closestY = unrotatedY;
-
-		double distance = findDistance(unrotatedX, unrotatedY, closestX, closestY);
-
+		
+		double distance = Math::distance(unrotatedX, unrotatedY, closestX, closestY);
 		if (distance < circle->radius) return true;
 	}
-
 	return false;
 }
 
-double PolygonCollider::findDistance(double startX, double startY, double endX, double endY)
-{
-	double a = std::abs(startX - endX);
-	double b = std::abs(startY - endY);
 
-	return std::sqrt(a * a + b * b);
+void PolygonCollider::updateEdges()
+{
+	glm::vec2 sPos = obj->pos();
+	float sRot = glm::radians(obj->rot());
+
+	_edges = {
+		{sPos.x - _size.x / 2, sPos.y - _size.y / 2}, // bottom left
+		{sPos.x - _size.x / 2, sPos.y + _size.y / 2}, // top left
+		{sPos.x + _size.x / 2, sPos.y + _size.y / 2}, // top right
+		{sPos.x + _size.x / 2, sPos.y - _size.y / 2}, // bottom right
+	};
+
+	for (auto& edge : _edges)
+		edge = rotate(edge - sPos, sRot) + sPos;
 }

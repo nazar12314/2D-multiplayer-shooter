@@ -13,6 +13,7 @@ class Tank : public Component
 	float shootCooldown;
 
 	Tank(Object* obj, float gunRotSpeed = 180, float firerate = 1);
+	void createGun();
 
 	void update() override;
 	void updateGunPosition() const;

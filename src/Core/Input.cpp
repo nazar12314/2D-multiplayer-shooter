@@ -9,6 +9,7 @@ void Input::clear()
 	mouseButtonsPressed.clear();
 	mouseButtonsReleased.clear();
 	mouseMoved = false;
+	mouseWheelValue = 0;
 }
 
 void Input::handleInputEvent(const SDL_Event& event)
@@ -48,6 +49,10 @@ void Input::handleInputEvent(const SDL_Event& event)
 		mousePos.y = event.motion.y;
 
 		mouseMoved = true;
+	}
+	else if (event.type == SDL_MOUSEWHEEL)
+	{
+		mouseWheelValue = event.wheel.y;
 	}
 }
 

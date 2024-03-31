@@ -41,7 +41,13 @@ add_executable(${PROJECT_NAME}
 	 "src/Component/Rigidbody.cpp"
 	 "src/Core/Physics.cpp"
 	 "src/Core/MyTime.cpp"
-	 "src/Component/Custom/Tank.cpp" "include/Utils/Math.h" "src/Utils/Math.cpp" "include/Component/Custom/Bullet.h" "src/Component/Custom/Bullet.cpp")
+	 "src/Component/Custom/Tank.cpp"
+	 "src/Utils/Math.cpp" 
+	 "src/Component/Custom/Bullet.cpp"
+	 "src/Component/Custom/CameraResizer.cpp"
+	 "include/Core/FPSCounter.h" 
+	 "src/Component/Collider/Collider.cpp" 
+	 "src/Component/Custom/Wall.cpp")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)

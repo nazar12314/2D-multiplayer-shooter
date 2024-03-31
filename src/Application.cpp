@@ -5,6 +5,7 @@
 #include "Physics.h"
 #include "Renderer.h"
 #include "SDLHandler.h"
+#include "FPSCounter.h"
 
 #include "Scene.h"
 
@@ -15,7 +16,7 @@ void Application::start(const glm::ivec2& windowSize)
 	Time::init();
 	Physics::init();
 
-	Scene::init();
+	Scene::create();
 	Object::startAll();
 }
 
@@ -27,6 +28,7 @@ void Application::loop()
 		Object::prepareAll();
 		Physics::physicsLoop();
 		Time::tick();
+		FPSCounter::tick();
 
 		Object::updateAll();
 		Object::lateUpdateAll();

@@ -6,23 +6,23 @@
 
 #include "Action.h"
 #include "Transform.h"
+#include "VectorDelayed.h"
 #include "glm/vec2.hpp"
 
+class Collider;
 class Component;
 class Texture;
 
 class Object : public Transform
 {
-	inline static std::vector<Object*> objectsToAddTemp{};
-
 public:
 	// -- Global --
-	inline static std::vector<Object*> objects {};
+	inline static VectorDelayed<Object*> objects {};
 
-	inline static Action<Component*> onComponentAdded;
-	inline static Action<Component*> onComponentRemoved;
+	inline static Action<Component*> onComponentAddedGlobal;
+	inline static Action<Component*> onComponentRemovedGlobal;
 
-	static Object* create(const std::string& name, glm::vec2 pos = {0, 0}, float rot = 0);
+	static Object* create(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
 	static void destroy(Object* obj);
 
 	static void startAll();
@@ -30,32 +30,54 @@ public:
 	static void lateUpdateAll();
 	static void fixedUpdateAll();
 	static void destroyAll();
-	// -- Global --
 
 	static void prepareAll();
+	// -- Global --
 
 private:
-	std::vector<Component*> components {};
+	std::string _name;
+	std::string _tag;
+	bool _enabled = true;
+
+	VectorDelayed<Component*> components {};
 
 	Object(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
 	virtual ~Object();
 
 public:
-	std::string name;
-	bool enabled = true;
+	std::string name() const;
+	std::string tag() const;
+	bool enabled() const;
+
+	void setName(const std::string& name);
+	void setTag(const std::string& tag);
+	void setEnabled(bool enabled);
 
 	template <typename T, typename... Ts> T* addComponent(Ts... args);
 	template <typename T> void removeComponent();
+	void removeComponent(Component* component);
 
 	template <typename T> bool hasComponent() const;
 	template <typename T> T* getComponent();
 	template <typename T> bool tryGetComponent(T*& component) const;
 
+protected:
+	// -- System --
+	void prepare();
+
+	// -- Default --
 	virtual void start() const;
 	virtual void update() const;
 	virtual void lateUpdate() const;
 	virtual void fixedUpdate() const;
-	virtual void destroy() const;
+	virtual void onDestroy();
+
+	// -- Collision --
+	virtual void onCollisionEnter(Collider* other) const;
+	virtual void onCollisionStay(Collider* other) const;
+	virtual void onCollisionExit(Collider* other) const;
+
+	friend class Collider;
 };
 
 template <typename T, typename... Ts> T* Object::addComponent(Ts... args)
@@ -64,7 +86,7 @@ template <typename T, typename... Ts> T* Object::addComponent(Ts... args)
 	T* component = new T(this, args...);
 	components.push_back(component);
 
-	onComponentAdded(component);
+	onComponentAddedGlobal(component);
 	component->start();
 	return component;
 }
@@ -110,12 +132,6 @@ template <typename T> void Object::removeComponent()
 	{
 		T* component = dynamic_cast<T*>(*it);
 		if (component == nullptr) continue;
-		component->destroy();
-
-		onComponentRemoved(component);
-		components.erase(it);
-		delete component;
+		removeComponent(component);
 	}
-
-	std::erase_if(components, [](Component* c) { return dynamic_cast<T*>(c) != nullptr; });
 }

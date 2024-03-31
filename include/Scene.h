@@ -3,5 +3,5 @@
 class Scene {
 
 public:
-	static void init();
+	static void create();
 };

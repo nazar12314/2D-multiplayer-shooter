@@ -1,3 +1,4 @@
+#include "Collider.h"
 #include "RigidBody.h"
 
 RigidBody::RigidBody(Object* obj, float linearDrag, float angularDrag, float mass): Component(obj), linearDrag(linearDrag), angularDrag(angularDrag), mass(mass) {}
@@ -28,4 +29,10 @@ void RigidBody::rotateTo(float angle) const
 {
 	// TODO: calculate new angle with physics
 	obj->setRot(angle);
+}
+Collider* RigidBody::getAttachedCollider()
+{
+	if (attachedCollider == nullptr)
+		attachedCollider = obj->getComponent<Collider>();
+	return attachedCollider;
 }

@@ -11,12 +11,15 @@
 
 void Renderer::init()
 {
-	Object::onComponentAdded += [](Component* comp)
+	Object::onComponentAddedGlobal += [](Component* comp)
 	{
 		if (auto sprite = dynamic_cast<Sprite*>(comp))
+		{
 			sprites.push_back(sprite);
+			sortSprites();
+		}
 	};
-	Object::onComponentRemoved += [](Component* comp)
+	Object::onComponentRemovedGlobal += [](Component* comp)
 	{
 		if (auto sprite = dynamic_cast<Sprite*>(comp))
 			std::erase(sprites, sprite);
@@ -31,10 +34,9 @@ void Renderer::render()
 	SDL_RenderClear(SDLHandler::renderer);
 	for (auto sprite : sprites)
 	{
-		if (!sprite->obj->enabled) continue;
-
+		if (!sprite->obj->enabled()) continue;
 		auto screenPos = mainCamera->worldToScreenPos(sprite->obj->pos());
-		auto screenSize = (glm::vec2)sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
+		auto screenSize = sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
 		renderTex(sprite->texture(), screenPos, screenSize, sprite->obj->rot());
 	}
 	SDL_RenderPresent(SDLHandler::renderer);
@@ -49,4 +51,8 @@ void Renderer::renderTex(const Texture* tex, const glm::ivec2& pos, const glm::i
 	rect.h = size.y;
 
 	SDL_RenderCopyEx(SDLHandler::renderer, tex->texture, NULL, &rect, rot, NULL, SDL_FLIP_NONE);
+}
+void Renderer::sortSprites()
+{
+	std::sort(sprites.begin(), sprites.end(), [](const Sprite* a, const Sprite* b) { return a->_order < b->_order; });
 }

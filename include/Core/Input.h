@@ -19,6 +19,8 @@ public:
 	inline static glm::ivec2 mousePos {};
 	inline static bool mouseMoved = false;
 
+	inline static float mouseWheelValue = 0;
+
 	static void clear();
 	static void handleInputEvent(const SDL_Event& event);
 

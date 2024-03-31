@@ -10,15 +10,16 @@ class Camera : public Component
 {
 	inline static std::vector<Camera*> cameras{};
 
-	int _size;
+	float _size;
 
-	Camera(Object* obj, int size = 10);
+	Camera(Object* obj, float size = 10);
 	~Camera() override;
 
 public:
 	int priority = 0;
 
-	int size() const;
+	float size() const;
+	void setSize(float size);
 
 	glm::vec2 screenToWorldPos(const glm::ivec2& screenPos) const;
 	glm::ivec2 worldToScreenPos(const glm::vec2& worldPos) const;

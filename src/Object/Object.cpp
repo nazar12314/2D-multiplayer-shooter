@@ -10,15 +10,21 @@
 Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 {
 	auto obj = new Object(name, pos, rot);
-	objectsToAddTemp.emplace_back(obj);
+	objects.push_back_delayed(obj);
 
 	return obj;
 }
 void Object::destroy(Object* obj)
 {
-	objects.erase(std::ranges::find(objects, obj));
-	delete obj;
+	obj->onDestroy();
+
+	for (Component* component : obj->components)
+		obj->removeComponent(component);
+	obj->components.apply_changes();
+
+	objects.erase_delayed(obj);
 }
+
 void Object::startAll()
 {
 	for (Object* obj : objects)
@@ -28,7 +34,7 @@ void Object::updateAll()
 {
 	for (Object* obj : objects)
 	{
-		if (!obj->enabled) continue;
+		if (!obj->_enabled) continue;
 		obj->update();
 	}
 }
@@ -36,7 +42,7 @@ void Object::lateUpdateAll()
 {
 	for (Object* obj : objects)
 	{
-		if (!obj->enabled) continue;
+		if (!obj->_enabled) continue;
 		obj->lateUpdate();
 	}
 }
@@ -44,20 +50,19 @@ void Object::fixedUpdateAll()
 {
 	for (Object* obj : objects)
 	{
-		if (!obj->enabled) continue;
+		if (!obj->_enabled) continue;
 		obj->fixedUpdate();
 	}
 }
 void Object::destroyAll()
 {
 	for (Object* obj : objects)
-		obj->destroy();
+		obj->onDestroy();
 }
 
 void Object::prepareAll()
 {
-	objects.insert(objects.end(), objectsToAddTemp.begin(), objectsToAddTemp.end());
-	objectsToAddTemp.clear();
+	objects.apply_changes();
 
 	for (Object* obj : objects)
 		obj->transformChanged = false;
@@ -65,8 +70,29 @@ void Object::prepareAll()
 // -- Global --
 
 
-Object::Object(const std::string& name, glm::vec2 pos, float rot) : Transform(pos, rot), name(name) {}
+Object::Object(const std::string& name, glm::vec2 pos, float rot) : Transform(pos, rot), _name(name) {}
 Object::~Object() {}
+
+std::string Object::name() const { return _name; }
+std::string Object::tag() const { return _tag; }
+bool Object::enabled() const { return _enabled; }
+
+void Object::setName(const std::string& name) { _name = name; }
+void Object::setTag(const std::string& tag) { _tag = tag; }
+void Object::setEnabled(bool enabled) { _enabled = enabled; }
+
+void Object::removeComponent(Component* component)
+{
+	component->onDestroy();
+
+	components.erase_delayed(component);
+	onComponentRemovedGlobal(component);
+}
+
+void Object::prepare()
+{
+	components.apply_changes();
+}
 
 void Object::start() const
 {
@@ -88,8 +114,24 @@ void Object::fixedUpdate() const
 	for (Component* component : components)
 		component->fixedUpdate();
 }
-void Object::destroy() const
+void Object::onDestroy()
 {
 	for (Component* component : components)
-		component->destroy();
+		component->onDestroy();
+}
+
+void Object::onCollisionEnter(Collider* other) const
+{
+	for (Component* component : components)
+		component->onCollisionEnter(other);
+}
+void Object::onCollisionStay(Collider* other) const
+{
+	for (Component* component : components)
+		component->onCollisionStay(other);
+}
+void Object::onCollisionExit(Collider* other) const
+{
+	for (Component* component : components)
+		component->onCollisionExit(other);
 }

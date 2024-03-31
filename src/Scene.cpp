@@ -3,11 +3,12 @@
 #include "PolygonCollider.h"
 #include "Camera.h"
 #include "CameraFollow.h"
-#include "TankController.h"
+#include "CameraResizer.h"
 #include "Rigidbody.h"
 #include "Sprite.h"
 #include "Tank.h"
 #include "Texture.h"
+#include "Wall.h"
 
 void colliderTestScene()
 {
@@ -31,21 +32,15 @@ void gameScene()
 
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
 	auto follow = cam->obj->addComponent<CameraFollow>(5);
+	auto resizer = cam->obj->addComponent<CameraResizer>(8, 2, 8);
 
-	auto player = Object::create("Player");
-	player->addComponent<Sprite>(new Texture("sprites/square.png", Color::hotPink()), glm::vec2(1, 1.2f));
-	player->addComponent<PolygonCollider>(glm::vec2(1, 1));
-	player->addComponent<RigidBody>(10, 25);
-	player->addComponent<Tank>();
-	player->addComponent<TankController>();
+	auto tank = Object::create("Player")->addComponent<Tank>();
+	follow->setTarget(tank->obj);
 
-	follow->setTarget(player);
-
-	auto wall1 = Object::create("Wall", {5, 1})->addComponent<Sprite>(squareTex, glm::ivec2(5, 1));
-	wall1->obj->addComponent<PolygonCollider>(glm::vec2(5, 1));
+	auto wall1 = Object::create("Wall", {5, 1})->addComponent<Wall>(glm::vec2(5, 1));
 }
 
-void Scene::init()
+void Scene::create()
 {
 	gameScene();
 }

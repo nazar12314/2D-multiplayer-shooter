@@ -15,6 +15,7 @@ public:
 	static void init();
 
 	static void render();
-
 	static void renderTex(const Texture* tex, const glm::ivec2& pos, const glm::ivec2& size, float rot = 0);
+
+	static void sortSprites();
 };
