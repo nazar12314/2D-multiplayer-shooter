@@ -1,5 +1,5 @@
 #include "Collider.h"
-#include "RigidBody.h"
+#include "Rigidbody.h"
 
 RigidBody::RigidBody(Object* obj, float linearDrag, float angularDrag, float mass): Component(obj), linearDrag(linearDrag), angularDrag(angularDrag), mass(mass) {}
 

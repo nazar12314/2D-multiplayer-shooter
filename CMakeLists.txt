@@ -47,13 +47,47 @@ add_executable(${PROJECT_NAME}
 	 "src/Component/Custom/CameraResizer.cpp"
 	 "include/Core/FPSCounter.h" 
 	 "src/Component/Collider/Collider.cpp" 
-	 "src/Component/Custom/Wall.cpp")
+	 "src/Component/Custom/Wall.cpp"
+		"src/Multiplayer/Client.cpp"
+		"src/Multiplayer/Server.cpp"
+		"src/Multiplayer/MessageQueue.cpp"
+		"include/Multiplayer/Client.h"
+		"include/Multiplayer/Server.h"
+		"include/Multiplayer/MessageQueue.h")
 
 find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+
+
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	find_package(PkgConfig REQUIRED)
+
+	pkg_search_module(SDL2IMAGE REQUIRED SDL2_image)
+	pkg_search_module(SDL2NET REQUIRED SDL2_net)
+
+
+	include_directories(${SDL2IMAGE_INCLUDE_DIRS})
+	include_directories(${SDL2NET_INCLUDE_DIRS})
+
+
+	target_link_libraries(${PROJECT_NAME} ${SDL2IMAGE_LIBRARIES})
+	target_link_libraries(${PROJECT_NAME} ${SDL2NET_LIBRARIES})
+
+
+	# Optionally, add the linker flags to your target
+	target_link_options(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_LDFLAGS})
+	target_link_options(${PROJECT_NAME} PRIVATE ${SDL2NET_LDFLAGS})
+
+else ()
+	find_package(SDL2_image REQUIRED)
+	target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+	find_package(SDL2_net REQUIRED)
+	target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_net::SDL2_net)
+endif ()
+
+
+
 
 message("${SDL2_INCLUDE_DIRS}")
 

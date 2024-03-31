@@ -1,7 +1,7 @@
 #include "Object.h"
 
 #include <iostream>
-
+#include <algorithm>
 #include "Component.h"
 #include "Texture.h"
 #include "glm/gtx/transform.hpp"

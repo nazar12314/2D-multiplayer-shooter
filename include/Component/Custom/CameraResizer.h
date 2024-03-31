@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "MyTime.h"
 #include "Renderer.h"
+#include "Math.h"
 
 class CameraResizer : public Component
 {

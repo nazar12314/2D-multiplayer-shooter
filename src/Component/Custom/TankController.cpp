@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "PolygonCollider.h"
 #include "glm/vec2.hpp"
-#include "RigidBody.h"
+#include "Rigidbody.h"
 
 TankController::TankController(Object* obj, float moveSpeed, float rotationSpeed): Component(obj), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed)
 {

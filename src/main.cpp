@@ -1,13 +1,68 @@
-#include "Application.h"
-#include "SDL.h"
-#include "VectorDelayed.h"
+#include <SDL_net.h>
+#include <iostream>
+#include <string>
+#include <thread>
+#include "Multiplayer/Server.h"
+#include "Multiplayer/Client.h"
 
-int main(int argv, char* args[])
-{
-	Application::start({800, 800});
+void runServer(Uint16 port) {
+    Server server(port);
+    if (!server.init()) {
+        std::cerr << "Server failed to initialize." << std::endl;
+        return;
+    }
+    std::cout << "Server running..." << std::endl;
+    while (true) {
+        server.acceptConnections();
+        server.receiveMessages();
+    }
+}
 
-	Application::loop();
+void runClient(const std::string& host, Uint16 port) {
+    Client client(host, port);
+    if (!client.connect()) {
+        std::cerr << "Failed to connect to server." << std::endl;
+        return;
+    }
+    std::cout << "Connected to server." << std::endl;
 
-	Application::quit();
-	return 0;
+    std::string message;
+    while (true) {
+        std::cout << "Enter message: ";
+        std::getline(std::cin, message);
+        if (client.send(message)) {
+            std::cout << "Message sent." << std::endl;
+        }
+
+        std::string received = client.receive();
+        if (!received.empty()) {
+            std::cout << "Received: " << received << std::endl;
+        }
+    }
+
+    client.disconnect();
+}
+
+int main(int argc, char* argv[]) {
+    if (SDLNet_Init() != 0) {
+        std::cerr << "SDLNet_Init Error: " << SDLNet_GetError() << std::endl;
+        return 1;
+    }
+
+    int choice;
+    std::cout << "Run as server(1) or client(2): ";
+    std::cin >> choice;
+    std::cin.ignore();
+
+    if (choice == 1) {
+        std::thread serverThread(runServer, 1234);
+        serverThread.join();
+    } else if (choice == 2) {
+        runClient("127.0.0.1", 1234);
+    } else {
+        std::cout << "Invalid choice." << std::endl;
+    }
+
+    SDLNet_Quit();
+    return 0;
 }

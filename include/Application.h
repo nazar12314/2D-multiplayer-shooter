@@ -1,5 +1,5 @@
 #pragma once
-
+#include <algorithm>
 #include "glm/vec2.hpp"
 
 class Application
