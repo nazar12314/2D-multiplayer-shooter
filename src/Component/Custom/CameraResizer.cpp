@@ -1,5 +1,11 @@
 #include "CameraResizer.h"
 
+#include "Camera.h"
+#include "Input.h"
+#include "Math.h"
+#include "MyTime.h"
+#include "glm/common.hpp"
+
 CameraResizer::CameraResizer(Object* owner, float startSize, float sensitivity, float smoothness) : Component(owner),
                                                                                                     targetSize(startSize), sensitivity(sensitivity), smoothness(smoothness) {}
 

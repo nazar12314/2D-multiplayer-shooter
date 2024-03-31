@@ -77,6 +77,10 @@ protected:
 	virtual void onCollisionStay(Collider* other) const;
 	virtual void onCollisionExit(Collider* other) const;
 
+	virtual void onTriggerEnter(Collider* other) const;
+	virtual void onTriggerStay(Collider* other) const;
+	virtual void onTriggerExit(Collider* other) const;
+
 	friend class Collider;
 };
 

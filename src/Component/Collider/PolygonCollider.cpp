@@ -7,19 +7,9 @@
 
 #include "Math.h"
 
-PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size): Collider(obj), _size(size)
-{
-	updateEdges();
-}
+PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size) {}
 
-void PolygonCollider::lateUpdate()
-{
-	if (!obj->transformChanged) return;
-	updateEdges();
-}
-
-
-bool PolygonCollider::collidesWith(Collider* other)
+bool PolygonCollider::intersectsWith(Collider* other)
 {
 	glm::vec2 sPos = obj->pos();
 	glm::vec2 oPos = other->obj->pos();
@@ -88,7 +78,7 @@ bool PolygonCollider::collidesWith(Collider* other)
 			closestY = rectY + _size.y;
 		else
 			closestY = unrotatedY;
-		
+
 		double distance = Math::distance(unrotatedX, unrotatedY, closestX, closestY);
 		if (distance < circle->radius) return true;
 	}
@@ -96,7 +86,7 @@ bool PolygonCollider::collidesWith(Collider* other)
 }
 
 
-void PolygonCollider::updateEdges()
+void PolygonCollider::recalculate()
 {
 	glm::vec2 sPos = obj->pos();
 	float sRot = glm::radians(obj->rot());

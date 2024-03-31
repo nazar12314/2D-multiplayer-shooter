@@ -12,7 +12,7 @@ class Tank : public Component
 
 	float shootCooldown;
 
-	Tank(Object* obj, float gunRotSpeed = 180, float firerate = 1);
+	Tank(Object* obj, float gunRotSpeed = 180, float firerate = 10);
 	void createGun();
 
 	void update() override;

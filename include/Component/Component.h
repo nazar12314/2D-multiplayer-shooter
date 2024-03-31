@@ -22,4 +22,8 @@ public:
 	virtual void onCollisionEnter(Collider* other) {}
 	virtual void onCollisionStay(Collider* other) {}
 	virtual void onCollisionExit(Collider* other) {}
+
+	virtual void onTriggerEnter(Collider* other) {}
+	virtual void onTriggerStay(Collider* other) {}
+	virtual void onTriggerExit(Collider* other) {}
 };

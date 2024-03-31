@@ -135,3 +135,18 @@ void Object::onCollisionExit(Collider* other) const
 	for (Component* component : components)
 		component->onCollisionExit(other);
 }
+void Object::onTriggerEnter(Collider* other) const
+{
+	for (Component* component : components)
+		component->onTriggerEnter(other);
+}
+void Object::onTriggerStay(Collider* other) const
+{
+	for (Component* component : components)
+		component->onTriggerStay(other);
+}
+void Object::onTriggerExit(Collider* other) const
+{
+	for (Component* component : components)
+		component->onTriggerExit(other);
+}

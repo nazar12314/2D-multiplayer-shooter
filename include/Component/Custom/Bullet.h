@@ -12,7 +12,7 @@ class Bullet : public Component
 	Bullet(Object* obj, float speed = 12);
 
 	void fixedUpdate() override;
-	void onCollisionEnter(Collider* other) override;
+	void onTriggerEnter(Collider* other) override;
 
 public:
 	friend class Object;

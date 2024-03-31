@@ -12,12 +12,12 @@ void Physics::init()
 	Object::onComponentAddedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<RigidBody*>(comp))
-			rigidbodiesToAdd.push_back(rb);
+			rigidbodies.push_back_delayed(rb);
 	};
 	Object::onComponentRemovedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<RigidBody*>(comp))
-			rigidbodiesToRemove.push_back(rb);
+			rigidbodies.erase_delayed(rb);
 	};
 }
 void Physics::physicsLoop()
@@ -25,24 +25,27 @@ void Physics::physicsLoop()
 	float realTime = Time::getRealTime();
 	while (realTime - lastFixedUpdateTime >= Time::fixedDeltaTime)
 	{
-		addOrRemoveRequestedRigidbodies();
 		Time::fixedTick();
-		updateCollisions();
-		performFixedUpdate();
+		updatePhysics();
+		updateTriggers();
+		Object::fixedUpdateAll();
 
 		lastFixedUpdateTime += Time::fixedDeltaTime;
 	}
 }
 
-void Physics::performFixedUpdate()
+void Physics::updatePhysics()
 {
-	Object::fixedUpdateAll();
+	rigidbodies.apply_changes();
+	for (auto& rb : rigidbodies)
+		rb->recalculateAttachedCollider();
 
 	for (auto& rb : rigidbodies)
 	{
 		if (length(rb->velocity()) > EPSILON)
 		{
-			rb->moveTo(rb->obj->pos() + rb->_velocity);
+			auto finalVelocity = rb->_velocity / (1 + rb->linearDrag * Time::fixedDeltaTime);
+			rb->moveTo(rb->obj->pos() + (rb->_velocity + finalVelocity) / 2.0f);
 			rb->_velocity /= 1 + rb->linearDrag * Time::fixedDeltaTime;
 		}
 		else
@@ -50,7 +53,8 @@ void Physics::performFixedUpdate()
 
 		if (glm::abs(rb->angularVelocity()) > EPSILON)
 		{
-			rb->rotateTo(rb->obj->rot() + rb->_angularVelocity);
+			auto finalAngularVelocity = rb->_angularVelocity / (1 + rb->angularDrag * Time::fixedDeltaTime);
+			rb->rotateTo(rb->obj->rot() + (rb->_angularVelocity + finalAngularVelocity) / 2.0f);
 			rb->_angularVelocity /= 1 + rb->angularDrag * Time::fixedDeltaTime;
 		}
 		else
@@ -58,50 +62,60 @@ void Physics::performFixedUpdate()
 	}
 }
 
-void Physics::updateCollisions()
+void Physics::updateTriggers()
 {
 	for (int i = 0; i < rigidbodies.size(); i++)
 	{
 		auto rb1 = rigidbodies[i];
-		auto col1 = rb1->getAttachedCollider();
+		auto col1 = rb1->attachedCollider;
 		if (col1 == nullptr) continue;
 
 		for (int j = i + 1; j < rigidbodies.size(); j++)
 		{
 			auto rb2 = rigidbodies[j];
-			auto col2 = rb2->getAttachedCollider();
-			if (col2 == nullptr) continue;
+			auto col2 = rb2->attachedCollider;
+			if (col2 == nullptr || (!col1->_isTrigger && !col2->_isTrigger)) continue;
 
-			bool wasColliding = std::ranges::find(col1->collidingWith, col2) != col1->collidingWith.end();
-			if (col1->collidesWith(col2))
-			{
-				std::cout << col1->obj->name() << " colliding with " << col2->obj->name() << std::endl;
-				if (!wasColliding)
-				{
-					col1->collisionEntered(col2);
-					col2->collisionEntered(col1);
-				}
-				col1->collisionStayed(col2);
-				col2->collisionStayed(col1);
-			}
-			else
-			{
-				if (wasColliding)
-				{
-					col1->collisionExited(col2);
-					col2->collisionExited(col1);
-				}
-			}
+			updateTriggering(col1, col2, col1->intersectsWith(col2));
 		}
 	}
 }
-void Physics::addOrRemoveRequestedRigidbodies()
+void Physics::updateTriggering(Collider* col1, Collider* col2, bool intersecting)
 {
-	for (auto& rb : rigidbodiesToAdd)
-		rigidbodies.push_back(rb);
-	rigidbodiesToAdd.clear();
+	bool isTriggering = std::ranges::find(col1->triggeringWith, col2) != col1->triggeringWith.end();
+	if (intersecting)
+	{
+		std::cout << col1->obj->name() << " triggered with " << col2->obj->name() << std::endl;
+		if (!isTriggering)
+		{
+			col1->triggerEntered(col2);
+			col2->triggerEntered(col1);
+		}
+		col1->triggerStayed(col2);
+		col2->triggerStayed(col1);
+	}
+	else
+	{
+		if (isTriggering)
+		{
+			col1->triggerExited(col2);
+			col2->triggerExited(col1);
+		}
+	}
+}
 
-	for (auto& rb : rigidbodiesToRemove)
-		std::erase(rigidbodies, rb);
-	rigidbodiesToRemove.clear();
+std::vector<RigidBody*> Physics::getCollisions(const RigidBody* rb)
+{
+	if (rb->attachedCollider == nullptr || rb->attachedCollider->_isTrigger) return {};
+
+	std::vector<RigidBody*> collisions {};
+	for (auto& other : rigidbodies)
+	{
+		if (other == rb) continue;
+		if (other->attachedCollider == nullptr || other->attachedCollider->_isTrigger) continue;
+
+		if (rb->attachedCollider->intersectsWith(other->attachedCollider))
+			collisions.push_back(other);
+	}
+	return collisions;
 }

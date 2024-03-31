@@ -13,7 +13,7 @@
 Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
 {
 	obj->addComponent<Sprite>(new Texture("sprites/square.png", Color::red()), glm::vec2(0.2f, 0.2f));
-	obj->addComponent<PolygonCollider>(glm::vec2(0.2f, 0.2f));
+	obj->addComponent<PolygonCollider>(glm::vec2(0.2f, 0.2f), true);
 	rb = obj->addComponent<RigidBody>();
 }
 
@@ -22,7 +22,7 @@ void Bullet::fixedUpdate()
 	rb->moveTo(obj->pos() + obj->up() * _speed * Time::fixedDeltaTime);
 }
 
-void Bullet::onCollisionEnter(Collider* other)
+void Bullet::onTriggerEnter(Collider* other)
 {
 	if (other->obj->tag() == "Wall")
 	{

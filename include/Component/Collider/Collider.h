@@ -1,21 +1,39 @@
 #pragma once
 
-#include "Component.h"
 #include <vector>
+
+#include "Component.h"
 
 class Collider : public Component
 {
-	std::vector<Collider*> collidingWith {};
+	std::vector<Collider*> triggeringWith {};
+	bool _isTrigger = false;
+
+protected:
+	bool recalculateOnTransformChange = true;
 
 public:
-	explicit Collider(Object* obj);
+	explicit Collider(Object* obj, bool isTrigger = false);
 	~Collider() override = default;
 
-	virtual bool collidesWith(Collider* other) { return false; }
+	void start() override;
 
-	void collisionEntered(Collider* other);
+	bool isTrigger() const;
+	void setIsTrigger(bool trigger);
+
+	void lateUpdate() override;
+
+	virtual void recalculate() {}
+	virtual bool intersectsWith(Collider* other);
+
+	void collisionEntered(Collider* other) const;
 	void collisionStayed(Collider* other) const;
-	void collisionExited(Collider* other);
+	void collisionExited(Collider* other) const;
+
+	void triggerEntered(Collider* other);
+	void triggerStayed(Collider* other) const;
+	void triggerExited(Collider* other);
 
 	friend class Physics;
+	friend class RigidBody;
 };

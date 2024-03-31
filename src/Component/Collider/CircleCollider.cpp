@@ -3,10 +3,12 @@
 #include "glm/geometric.hpp"
 #include "Object.h"
 
-bool CircleCollider::collidesWith(Collider* other)
+CircleCollider::CircleCollider(Object* obj, bool isTrigger): Collider(obj, isTrigger) {}
+
+bool CircleCollider::intersectsWith(Collider* other)
 {
 	if (auto* box = dynamic_cast<PolygonCollider*>(other))
-		return box->collidesWith(this);
+		return box->intersectsWith(this);
 
 	if (auto* circle = dynamic_cast<CircleCollider*>(other))
 	{

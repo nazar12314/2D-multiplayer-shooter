@@ -14,6 +14,8 @@ class RigidBody : public Component
 
 	RigidBody(Object* obj, float linearDrag = 0, float angularDrag = 0, float mass = 1);
 
+	void collideWith(const std::vector<RigidBody*>& others) const;
+
 public:
 	float linearDrag, angularDrag;
 	float mass;
@@ -27,10 +29,10 @@ public:
 	void setAngularVelocity(float angularVelocity);
 	void addAngularVelocity(float angularVelocity);
 
-	void moveTo(glm::vec2 pos) const;
-	void rotateTo(float angle) const;
+	void moveTo(glm::vec2 pos);
+	void rotateTo(float rot);
 
-	Collider* getAttachedCollider();
+	Collider* recalculateAttachedCollider();
 
 	friend class Object;
 	friend class Physics;

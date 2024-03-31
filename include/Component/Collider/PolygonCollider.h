@@ -11,14 +11,12 @@ class PolygonCollider : public Collider
 	glm::vec2 _size {0, 0};
 	std::vector<glm::vec2> _edges;
 
-	PolygonCollider(Object* obj, glm::vec2 size);
-
-	void lateUpdate() override;
+	PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger = false);
 
 public:
-	bool collidesWith(Collider* other) override;
+	bool intersectsWith(Collider* other) override;
 
-	void updateEdges();
+	void recalculate() override;
 
 	friend class Object;
 };

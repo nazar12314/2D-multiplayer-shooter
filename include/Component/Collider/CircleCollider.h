@@ -7,7 +7,7 @@ class CircleCollider : public Collider
 public:
 	float radius = 0;
 
-	explicit CircleCollider(Object* obj) : Collider(obj) {}
+	explicit CircleCollider(Object* obj, bool isTrigger = false);
 
-    bool collidesWith(Collider *other) override;
+	bool intersectsWith(Collider* other) override;
 };

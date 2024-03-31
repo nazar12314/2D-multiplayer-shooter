@@ -1,9 +1,6 @@
 #include "Renderer.h"
 
-#include <iostream>
-
 #include "Object.h"
-#include "Application.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "SDLHandler.h"
