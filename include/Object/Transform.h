@@ -19,7 +19,7 @@ public:
 	float rot() const { return _rot; }
 	glm::vec2 scale() const { return _scale; }
 
-    Action<float> onRotChange;
+	Action<float> onRotChange;
 	void setPos(glm::vec2 pos);
 	void setRot(float rot);
 	void setScale(glm::vec2 scale);

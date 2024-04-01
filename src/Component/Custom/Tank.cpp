@@ -1,7 +1,5 @@
 #include "Tank.h"
 
-#include <iostream>
-
 #include "Bullet.h"
 #include "Camera.h"
 #include "Input.h"
@@ -13,10 +11,13 @@
 #include "SpriteRenderer.h"
 #include "TankController.h"
 #include "Rigidbody.h"
+#include "glm/geometric.hpp"
+#include "glm/detail/func_trigonometric.inl"
 
 Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gunRotSpeed(gunRotSpeed), _firerate(firerate)
 {
-	obj->addComponent<SpriteRenderer>(new Texture("sprites/square.png"), glm::vec2(1, 1.2f), 0, Color::hot_pink);
+	auto tex = Assets::load<Texture>("sprites/square.png");
+	obj->addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::hot_pink);
 	obj->addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
 	obj->addComponent<RigidBody>(10, 25);
 	obj->addComponent<TankController>();
@@ -25,8 +26,8 @@ Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gun
 }
 void Tank::createGun()
 {
-	auto gunTex = new Texture("sprites/square.png");
-	gun = Object::create("gun")->addComponent<SpriteRenderer>(gunTex, glm::vec2(0.2f, 0.7f), 1, Color::cyan);
+	auto tex = Assets::load<Texture>("sprites/square.png");
+	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.7f), 1, Color::cyan);
 
 	updateGunPosition();
 }

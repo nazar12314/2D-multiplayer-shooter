@@ -14,8 +14,8 @@ void colliderTestScene()
 {
 	auto cam = Object::create("Camera")->addComponent<Camera>(500);
 
-	auto tex1 = new Texture("sprites/square.png");
-	auto tex2 = new Texture("sprites/square.png");
+	auto tex1 = Assets::load<Texture>("sprites/square.png");
+	auto tex2 = Assets::load<Texture>("sprites/square.png");
 
 	auto obj1 = Object::create("Square", {10, 10});
 	auto obj2 = Object::create("Square", {65, 10});
@@ -28,8 +28,6 @@ void colliderTestScene()
 
 void gameScene()
 {
-	auto squareTex = new Texture("sprites/square.png");
-
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
 	auto follow = cam->obj->addComponent<CameraFollow>(5);
 	auto resizer = cam->obj->addComponent<CameraResizer>(8, 2, 8);

@@ -5,6 +5,7 @@
 #include "SpriteRenderer.h"
 #include "SDLHandler.h"
 #include "Assets.h"
+#include "Material.h"
 
 void Renderer::init()
 {
@@ -34,12 +35,12 @@ void Renderer::render()
 		if (!sprite->obj->enabled()) continue;
 		auto screenPos = mainCamera->worldToScreenPos(sprite->obj->pos());
 		auto screenSize = sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
-		renderTex(sprite->sprite(), screenPos, screenSize, sprite->obj->rot());
+		renderTex(sprite->material()->texture(), screenPos, screenSize, sprite->obj->rot());
 	}
 	SDL_RenderPresent(SDLHandler::renderer);
 }
 
-void Renderer::renderTex(const Texture* tex, const glm::ivec2& pos, const glm::ivec2& size, float rot)
+void Renderer::renderTex(SDL_Texture* tex, const glm::ivec2& pos, const glm::ivec2& size, float rot)
 {
 	SDL_Rect rect;
 	rect.x = pos.x - size.x / 2;
@@ -47,7 +48,7 @@ void Renderer::renderTex(const Texture* tex, const glm::ivec2& pos, const glm::i
 	rect.w = size.x;
 	rect.h = size.y;
 
-	SDL_RenderCopyEx(SDLHandler::renderer, tex->texture(), NULL, &rect, rot, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(SDLHandler::renderer, tex, NULL, &rect, rot, NULL, SDL_FLIP_NONE);
 }
 void Renderer::sortSprites()
 {

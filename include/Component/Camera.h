@@ -8,7 +8,7 @@
 
 class Camera : public Component
 {
-	inline static std::vector<Camera*> cameras{};
+	inline static std::vector<Camera*> cameras {};
 
 	float _size;
 

@@ -12,7 +12,7 @@
 
 Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
 {
-	obj->addComponent<SpriteRenderer>(new Texture("sprites/square.png"), glm::vec2(0.2f, 0.2f), 0, Color::red);
+	obj->addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/square.png"), glm::vec2(0.2f, 0.2f), 0, Color::red);
 	obj->addComponent<PolygonCollider>(glm::vec2(0.2f, 0.2f), true);
 	rb = obj->addComponent<RigidBody>();
 }

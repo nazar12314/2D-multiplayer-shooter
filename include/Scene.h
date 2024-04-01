@@ -1,7 +1,7 @@
 #pragma once
 
-class Scene {
-
+class Scene
+{
 public:
 	static void create();
 };

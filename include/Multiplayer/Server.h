@@ -6,20 +6,21 @@
 #include <string>
 #include <vector>
 
-class Server {
+class Server
+{
 public:
-    Server(Uint16 port);
-    ~Server();
-    bool init();
-    void acceptConnections();
-    void receiveMessages();
-    void sendToAll(const std::string& message);
+	Server(Uint16 port);
+	~Server();
+	bool init();
+	void acceptConnections();
+	void receiveMessages();
+	void sendToAll(const std::string& message);
 
 private:
-    IPaddress ip;
-    TCPsocket serverSocket;
-    std::vector<TCPsocket> clientSockets;
-    SDLNet_SocketSet socketSet;
+	IPaddress ip;
+	TCPsocket serverSocket;
+	std::vector<TCPsocket> clientSockets;
+	SDLNet_SocketSet socketSet;
 };
 
 #endif // SERVER_H

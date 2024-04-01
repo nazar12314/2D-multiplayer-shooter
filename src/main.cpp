@@ -6,7 +6,7 @@
 #include "Application.h"
 #include "Multiplayer/Server.h"
 #include "Multiplayer/Client.h"
-#include "Assets.h"
+#include "Material.h"
 
 void runServer(Uint16 port)
 {

@@ -44,32 +44,20 @@ template <derived<Asset> T, typename... Ts> T* Assets::load(const std::string& p
 	return asset;
 }
 
-class TextureBase : public Asset
+class Texture : public Asset
 {
 	SDL_Surface* _surface;
+	SDL_Texture* _texture;
 
-	TextureBase(const std::string& path);
-	~TextureBase() override;
+	Texture(const std::string& path);
+	~Texture() override;
 
 public:
 	SDL_Surface* surface() const { return _surface; }
+	SDL_Texture* texture() const { return _texture; }
+
+	Texture* clone() const { return new Texture(path()); }
 
 	friend class Assets;
 };
 
-class Texture
-{
-	TextureBase* _base;
-	SDL_Texture* _texture;
-
-	void setColor(const Color& color) const;
-
-public:
-	Texture(TextureBase* base);
-	Texture(const std::string& path);
-	Texture(const Texture& other);
-
-	SDL_Texture* texture() const { return _texture; }
-
-	friend class SpriteRenderer;
-};

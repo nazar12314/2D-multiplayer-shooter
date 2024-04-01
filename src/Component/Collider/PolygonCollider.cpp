@@ -1,18 +1,19 @@
 #include "PolygonCollider.h"
 
-#include "CircleCollider.h"
 #include <cmath>
 #include <vector>
-#include <glm/glm.hpp>
 
 #include "Math.h"
 #include "SpriteRenderer.h"
 #include "Assets.h"
+#include "CircleCollider.h"
+#include "Object.h"
+#include "glm/gtx/rotate_vector.hpp"
 
 PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
 {
 	for (int i = 0; i < 4; i++)
-		edgePointsTEMP.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(new Texture("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
+		edgePointsTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
 }
 
 bool PolygonCollider::intersectsWith(Collider* other)
@@ -108,10 +109,10 @@ void PolygonCollider::recalculate()
 		edge = rotate(edge - sPos, -sRot) + sPos;
 
 	for (int i = 0; i < 4; i++)
-		edgePointsTEMP[i]->obj->setPos(_edges[i]);
+		edgePointsTEST[i]->obj->setPos(_edges[i]);
 }
 void PolygonCollider::onDestroy()
 {
-	for (auto& point : edgePointsTEMP)
+	for (auto& point : edgePointsTEST)
 		Object::destroy(point->obj);
 }

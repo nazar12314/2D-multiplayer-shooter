@@ -2,12 +2,10 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include "Action.h"
 #include "Transform.h"
 #include "VectorDelayed.h"
-#include "glm/vec2.hpp"
 #include "Concepts.h"
 
 class Collider;

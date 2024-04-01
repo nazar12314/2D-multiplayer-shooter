@@ -1,10 +1,7 @@
 #pragma once
 
-#include "Object.h"
 #include "Collider.h"
 #include "glm/vec2.hpp"
-#include <vector>
-#include "glm/gtx/rotate_vector.hpp"
 
 class SpriteRenderer;
 
@@ -15,7 +12,7 @@ class PolygonCollider : public Collider
 
 	PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger = false);
 
-	std::vector<SpriteRenderer*> edgePointsTEMP {};
+	std::vector<SpriteRenderer*> edgePointsTEST {};
 
 public:
 	bool intersectsWith(Collider* other) override;
