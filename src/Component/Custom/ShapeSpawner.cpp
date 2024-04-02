@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "PolygonCollider.h"
 #include "CircleCollider.h"
+#include "MyMath.h"
 #include "MyTime.h"
 #include "SpriteRenderer.h"
 #include "Rigidbody.h"

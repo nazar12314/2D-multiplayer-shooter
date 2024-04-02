@@ -8,6 +8,7 @@
 #include "Gizmos.h"
 #include "Material.h"
 #include "SDLUtils.h"
+#include <algorithm>
 
 Material* Renderer::defaultCircleMaterial = new Material(Assets::load<Texture>("sprites/circle.png"));
 

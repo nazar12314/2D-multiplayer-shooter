@@ -25,8 +25,6 @@ public:
 	void setOrder(int order);
 	void setColor(const Color& color) const;
 
-	void onDestroy() override;
-
 	friend class Object;
 	friend class Renderer;
 };

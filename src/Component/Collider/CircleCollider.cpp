@@ -1,6 +1,6 @@
 #include "CircleCollider.h"
 
-#include "Math.h"
+#include "MyMath.h"
 #include "PolygonCollider.h"
 #include "Object.h"
 
@@ -21,8 +21,9 @@ Collision CircleCollider::getCollisionWith(PolygonCollider* other)
 Collision CircleCollider::getCollisionWith(CircleCollider* other)
 {
 	auto [sep, norm] = Math::findMinSeparation(obj->pos(), _radius, other->obj->pos(), other->_radius);
-	auto points = Math::findContactPoints(obj->pos(), _radius, other->obj->pos(), other->_radius);
-
 	auto collided = sep < 0;
-	return Collision(collided, norm, -sep, points, this, other);
+	if (!collided) return Collision(false);
+
+	auto contactPoints = Math::findContactPoints(obj->pos(), _radius, other->obj->pos(), other->_radius);
+	return Collision(collided, norm, -sep, contactPoints, this, other);
 }

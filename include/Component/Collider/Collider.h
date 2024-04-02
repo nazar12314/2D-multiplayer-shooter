@@ -16,6 +16,9 @@ class Collider : public Component
 	bool _isTrigger = false;
 	Rigidbody* _rb = nullptr;
 
+	explicit Collider(Object* obj, bool isTrigger = false);
+	~Collider() override;
+
 	virtual Collision getCollisionWith(Collider* other) = 0;
 	virtual Collision getCollisionWith(PolygonCollider* other) = 0;
 	virtual Collision getCollisionWith(CircleCollider* other) = 0;
@@ -31,12 +34,10 @@ class Collider : public Component
 	virtual float calculateInertia(float mass) const = 0;
 
 public:
-	explicit Collider(Object* obj, bool isTrigger = false);
-	~Collider() override;
-
 	bool isTrigger() const;
 	void setIsTrigger(bool trigger);
 
+	friend class Object;
 	friend class Physics;
 	friend class Rigidbody;
 	friend class PolygonCollider;
