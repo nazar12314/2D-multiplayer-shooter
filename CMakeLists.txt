@@ -60,7 +60,7 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/Physics/Solver.cpp"
 	 "include/Core/Physics/Collision.h"
 	 "src/Other/Gizmos.cpp"
-	 "include/Utils/SDLUtils.h")
+	 "include/Utils/SDLUtils.h" "include/Component/Custom/ShapeSpawner.h" "src/Component/Custom/ShapeSpawner.cpp")
 
 find_package(SDL2 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
@@ -72,14 +72,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	pkg_search_module(SDL2IMAGE REQUIRED SDL2_image)
 	pkg_search_module(SDL2NET REQUIRED SDL2_net)
 
-
 	include_directories(${SDL2IMAGE_INCLUDE_DIRS})
 	include_directories(${SDL2NET_INCLUDE_DIRS})
 
-
 	target_link_libraries(${PROJECT_NAME} ${SDL2IMAGE_LIBRARIES})
 	target_link_libraries(${PROJECT_NAME} ${SDL2NET_LIBRARIES})
-
 
 	# Optionally, add the linker flags to your target
 	target_link_options(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_LDFLAGS})
@@ -91,11 +88,6 @@ else ()
 	find_package(SDL2_net REQUIRED)
 	target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_net::SDL2_net)
 endif ()
-
-
-
-
-message("${SDL2_INCLUDE_DIRS}")
 
 find_package(Boost 1.71.0 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})

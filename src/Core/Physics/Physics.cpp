@@ -59,9 +59,9 @@ void Physics::solveCollisions()
 {
 	auto [collisions, triggers] = findCollisions();
 
-	for (auto& col : collisions)
-		for (auto& point : col.contactPoints)
-			Gizmos::drawPoint(point, 0.05f, Color::red);
+	//for (auto& col : collisions)
+	//	for (auto& point : col.contactPoints)
+	//		Gizmos::drawPoint(point, 0.05f, Color::red);
 
 	// Resolve collisions
 	for (auto& solver : solvers)
