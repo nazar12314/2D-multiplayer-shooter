@@ -4,6 +4,10 @@
 #include "SDLHandler.h"
 
 Material::Material(Texture* texture) : _texture(texture) {}
+Material::Material(Texture* texture, const Color& color) : _texture(texture)
+{
+	setColor(color);
+}
 Material::~Material()
 {
 	if (_coloredSDLTexture != nullptr)

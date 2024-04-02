@@ -7,7 +7,7 @@ class Time
 public:
 	inline static float time = 0;
 	inline static float deltaTime = 0;
-	inline static float fixedDeltaTime = 1 / 60.0f;
+	inline static float fixedDeltaTime = 1 / 120.0f;
 	inline static int fixedUpdateCount = 0;
 
 	static void init();

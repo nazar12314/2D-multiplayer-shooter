@@ -4,8 +4,6 @@
 
 #include "SDLHandler.h"
 
-void Assets::init() {}
-
 Texture::Texture(const std::string& path): Asset(path)
 {
 	_surface = IMG_Load(path.data());

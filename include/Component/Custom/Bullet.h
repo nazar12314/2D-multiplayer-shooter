@@ -3,12 +3,12 @@
 #include "Component.h"
 
 class Collider;
-class RigidBody;
+class Rigidbody;
 
 class Bullet : public Component
 {
 	float _speed;
-	RigidBody* rb;
+	Rigidbody* rb;
 
 	Bullet(Object* obj, float speed = 12);
 

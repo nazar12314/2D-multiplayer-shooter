@@ -12,6 +12,7 @@ class Material
 
 public:
 	Material(Texture* texture);
+	Material(Texture* texture, const Color& color);
 	~Material();
 
 	SDL_Texture* texture() const;

@@ -6,7 +6,7 @@
 #include "Application.h"
 #include "Multiplayer/Server.h"
 #include "Multiplayer/Client.h"
-#include "Material.h"
+#include "Gizmos.h"
 
 void runServer(Uint16 port)
 {

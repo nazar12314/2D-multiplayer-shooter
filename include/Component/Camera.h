@@ -23,6 +23,10 @@ public:
 
 	glm::vec2 screenToWorldPos(const glm::ivec2& screenPos) const;
 	glm::ivec2 worldToScreenPos(const glm::vec2& worldPos) const;
+	float screenToWorldSize(float screenSize) const;
+	float worldToScreenSize(float worldSize) const;
+	glm::vec2 screenToWorldSize(const glm::ivec2& screenSize) const;
+	glm::ivec2 worldToScreenSize(const glm::vec2& worldSize) const;
 
 	static Camera* getMain();
 

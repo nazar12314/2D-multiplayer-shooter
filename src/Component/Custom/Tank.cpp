@@ -17,9 +17,9 @@
 Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gunRotSpeed(gunRotSpeed), _firerate(firerate)
 {
 	auto tex = Assets::load<Texture>("sprites/square.png");
-	obj->addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::hot_pink);
+	obj->addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::randomLight());
 	obj->addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
-	obj->addComponent<RigidBody>(10, 25);
+	obj->addComponent<Rigidbody>(1.2f, 10, 25);
 	obj->addComponent<TankController>();
 
 	createGun();
@@ -27,7 +27,7 @@ Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gun
 void Tank::createGun()
 {
 	auto tex = Assets::load<Texture>("sprites/square.png");
-	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.7f), 1, Color::cyan);
+	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.7f), 1, Color::randomLight());
 
 	updateGunPosition();
 }

@@ -25,12 +25,8 @@ class Assets
 {
 	inline static std::vector<Asset*> assets {};
 
-	static void init();
-
 public:
 	template <derived<Asset> T, typename... Ts> static T* load(const std::string& path, Ts... args);
-
-	friend class Application;
 };
 
 template <derived<Asset> T, typename... Ts> T* Assets::load(const std::string& path, Ts... args)

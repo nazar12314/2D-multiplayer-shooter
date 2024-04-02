@@ -38,11 +38,11 @@ glm::vec2 Transform::down() const { return glm::rotate(glm::vec2(0, -1), glm::ra
 glm::vec2 Transform::left() const { return glm::rotate(glm::vec2(-1, 0), glm::radians(-_rot)); }
 glm::vec2 Transform::right() const { return glm::rotate(glm::vec2(1, 0), glm::radians(-_rot)); }
 
-glm::vec2 Transform::localToGlobalPos(const glm::vec2& localPos) const
+glm::vec2 Transform::localToGlobalPos(const glm::vec2& pos) const
 {
-	return glm::rotate(localPos, _rot) + _pos;
+	return glm::rotate(pos, -glm::radians(_rot)) + _pos;
 }
-glm::vec2 Transform::globalToLocalPos(const glm::vec2& globalPos) const
+glm::vec2 Transform::globalToLocalPos(const glm::vec2& pos) const
 {
-	return glm::rotate(globalPos, -_rot) - _pos;
+	return glm::rotate(pos, glm::radians(_rot)) - _pos;
 }

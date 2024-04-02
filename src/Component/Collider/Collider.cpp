@@ -1,35 +1,34 @@
 #include "Collider.h"
 
 #include "Object.h"
+#include "Rigidbody.h"
 
-Collider::Collider(Object* obj, bool isTrigger): Component(obj), _isTrigger(isTrigger) {}
-
-void Collider::start()
+Collider::Collider(Object* obj, bool isTrigger): Component(obj), _isTrigger(isTrigger)
 {
-	recalculate();
+	if (obj->tryGetComponent<Rigidbody>(_rb))
+		_rb->attachCollider(this);
+}
+Collider::~Collider()
+{
+	if (_rb != nullptr)
+		_rb->resetCollider();
 }
 
 bool Collider::isTrigger() const { return _isTrigger; }
 void Collider::setIsTrigger(bool trigger) { _isTrigger = trigger; }
 
-void Collider::lateUpdate()
+void Collider::collisionEntered(Collider* other)
 {
-	if (!obj->transformChanged || !recalculateOnTransformChange) return;
-	recalculate();
-}
-
-bool Collider::intersectsWith(Collider* other) { return false; }
-
-void Collider::collisionEntered(Collider* other) const
-{
+	collidingWith.push_back(other);
 	obj->onCollisionEnter(other);
 }
 void Collider::collisionStayed(Collider* other) const
 {
 	obj->onCollisionStay(other);
 }
-void Collider::collisionExited(Collider* other) const
+void Collider::collisionExited(Collider* other)
 {
+	std::erase(collidingWith, other);
 	obj->onCollisionExit(other);
 }
 

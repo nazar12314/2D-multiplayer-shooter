@@ -34,6 +34,6 @@ public:
 	glm::vec2 left() const;
 	glm::vec2 right() const;
 
-	glm::vec2 localToGlobalPos(const glm::vec2& localPos) const;
-	glm::vec2 globalToLocalPos(const glm::vec2& globalPos) const;
+	glm::vec2 localToGlobalPos(const glm::vec2& pos) const;
+	glm::vec2 globalToLocalPos(const glm::vec2& pos) const;
 };

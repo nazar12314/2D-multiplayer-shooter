@@ -1,100 +1,69 @@
-#include <iostream>
-
 #include "Collider.h"
-#include "Physics.h"
+#include "Math.h"
 #include "RigidBody.h"
+#include "glm/gtx/string_cast.hpp"
 
-RigidBody::RigidBody(Object* obj, float linearDrag, float angularDrag, float mass): Component(obj), linearDrag(linearDrag), angularDrag(angularDrag), mass(mass)
+Rigidbody::Rigidbody(Object* obj, float mass, float linearDrag, float angularDrag): Component(obj),
+                                                                                    _mass(mass), _invMass(1 / mass), _linearDrag(linearDrag), _angularDrag(angularDrag)
 {
-	recalculateAttachedCollider();
+	Collider* col;
+	if (obj->tryGetComponent<Collider>(col))
+		attachCollider(col);
 }
-
-void RigidBody::setVelocity(glm::vec2 velocity)
+Rigidbody::~Rigidbody()
 {
-	_velocity = velocity;
-}
-void RigidBody::addVelocity(glm::vec2 velocity)
-{
-	_velocity += velocity;
-}
-void RigidBody::setAngularVelocity(float angularVelocity)
-{
-	_angularVelocity = angularVelocity;
-}
-void RigidBody::addAngularVelocity(float angularVelocity)
-{
-	_angularVelocity += angularVelocity;
+	resetCollider();
 }
 
-void RigidBody::collideWith(const std::vector<RigidBody*>& others) const
+void Rigidbody::attachCollider(Collider* col)
 {
-	for (auto& other : others)
+	_attachedCollider = col;
+	col->_rb = this;
+
+	_inertia = _attachedCollider->calculateInertia(_mass);
+	_invInertia = 1 / _inertia;
+}
+void Rigidbody::resetCollider()
+{
+	if (_attachedCollider != nullptr)
 	{
-		if (attachedCollider->isTrigger() || other->attachedCollider->isTrigger()) continue;
-
-		// Revert position because of collision
-		attachedCollider->collisionEntered(other->attachedCollider);
-		other->attachedCollider->collisionEntered(attachedCollider);
-
-		attachedCollider->collisionStayed(other->attachedCollider);
-		other->attachedCollider->collisionStayed(attachedCollider);
-
-		attachedCollider->collisionExited(other->attachedCollider);
-		other->attachedCollider->collisionExited(attachedCollider);
-
-		std::cout << attachedCollider->obj->name() << " collided with " << other->attachedCollider->obj->name() << std::endl;
+		_attachedCollider->_rb = nullptr;
+		_attachedCollider = nullptr;
 	}
 }
-void RigidBody::moveTo(glm::vec2 pos)
+
+void Rigidbody::step(float dt)
 {
-	if (attachedCollider == nullptr || attachedCollider->_isTrigger)
+	_velocity += _force * _invMass * dt;
+	if (!Math::nearlyEqual(_velocity.x, 0) || !Math::nearlyEqual(_velocity.y, 0))
 	{
-		obj->setPos(pos);
-		attachedCollider->recalculate();
-		return;
+		obj->setPos(obj->pos() + _velocity * dt);
+		_velocity *= 1 - _linearDrag * dt;
 	}
+	_force = {0, 0};
 
-	auto oldPos = obj->pos();
-	obj->setPos(pos);
-	attachedCollider->recalculate();
-
-	auto collisions = Physics::getCollisions(this);
-	if (collisions.empty()) return;
-
-	obj->setPos(oldPos);
-	attachedCollider->recalculate();
-	_velocity = glm::vec2(0);
-
-	collideWith(collisions);
+	_angularVelocity += _angularForce * _invMass * dt;
+	if (!Math::nearlyEqual(_angularVelocity, 0))
+	{
+		obj->setRot(obj->rot() - glm::degrees(_angularVelocity) * dt);
+		_angularVelocity *= 1 - _angularDrag * dt;
+	}
+	_angularForce = 0;
 }
-void RigidBody::rotateTo(float rot)
+
+void Rigidbody::setIsStatic(bool isStatic) { _isStatic = isStatic; }
+void Rigidbody::setMass(float mass) { _mass = mass; }
+void Rigidbody::setRestitution(float restitution) { _restitution = restitution; }
+void Rigidbody::setLinearDrag(float linearDrag) { _linearDrag = linearDrag; }
+void Rigidbody::setAngularDrag(float angularDrag) { _angularDrag = angularDrag; }
+void Rigidbody::setVelocity(glm::vec2 velocity) { _velocity = velocity; }
+void Rigidbody::setAngularVelocity(float angularVelocity) { _angularVelocity = angularVelocity; }
+
+void Rigidbody::addForce(glm::vec2 force)
 {
-	if (attachedCollider == nullptr || attachedCollider->_isTrigger)
-	{
-		obj->setRot(rot);
-		attachedCollider->recalculate();
-		return;
-	}
-
-	auto oldRot = obj->rot();
-	obj->setRot(rot);
-	attachedCollider->recalculate();
-
-	auto collisions = Physics::getCollisions(this);
-	if (collisions.empty()) return;
-
-	obj->setRot(oldRot);
-	attachedCollider->recalculate();
-	_angularVelocity = 0;
-
-	collideWith(collisions);
+	_force += force;
 }
-Collider* RigidBody::recalculateAttachedCollider()
+void Rigidbody::addAngularForce(float force)
 {
-	if (attachedCollider == nullptr)
-	{
-		attachedCollider = obj->getComponent<Collider>();
-		attachedCollider->recalculateOnTransformChange = false;
-	}
-	return attachedCollider;
+	_angularForce += force;
 }

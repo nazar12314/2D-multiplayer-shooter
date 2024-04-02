@@ -2,14 +2,14 @@
 
 #include "Component.h"
 
-class RigidBody;
+class Rigidbody;
 class PolygonCollider;
 
 class TankController : public Component
 {
-	RigidBody* rb;
+	Rigidbody* rb;
 
-	TankController(Object* obj, float moveSpeed = 1, float rotationSpeed = 45);
+	TankController(Object* obj, float moveSpeed = 70, float rotationSpeed = 60);
 
 	void fixedUpdate() override;
 

@@ -4,12 +4,16 @@
 #include <glm/common.hpp>
 #include <glm/vec4.hpp>
 
+#include "glm/geometric.hpp"
+#include "glm/vec3.hpp"
+
 class Color : public glm::vec4
 {
 public:
 	Color(float r, float g, float b, float a = 1) : glm::vec4(r, g, b, a) {}
 	Color(int r, int g, int b, int a = 255) : glm::vec4(static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f,
 	                                                    static_cast<float>(a) / 255.f) {}
+	Color(const glm::vec3& v, float a = 1) : glm::vec4(v, a) {}
 	Color() : Color {0, 0, 0, 0} {}
 
 	static Color white;
@@ -27,6 +31,26 @@ public:
 	static Color gold;
 	static Color pink;
 	static Color hot_pink;
+
+	static Color random()
+	{
+		return {static_cast<float>(rand() % 256) / 255, static_cast<float>(rand() % 256) / 255, static_cast<float>(rand() % 256) / 255};
+	}
+	static Color randomLight()
+	{
+		auto r = static_cast<float>(rand() % 256) / 255;
+		auto g = static_cast<float>(rand() % 256) / 255;
+		auto b = static_cast<float>(rand() % 256) / 255;
+		auto max = glm::max(r, glm::max(g, b));
+		return {r / max, g / max, b / max};
+	}
+	static Color randomSaturated()
+	{
+		auto r = static_cast<float>(rand() % 256) / 255;
+		auto g = static_cast<float>(rand() % 256) / 255;
+		auto b = static_cast<float>(rand() % 256) / 255;
+		return normalize(glm::vec3(r, g, b));
+	}
 
 	float r() const { return x; }
 	float g() const { return y; }

@@ -14,6 +14,7 @@ include_directories(include/Component)
 include_directories(include/Component/Custom)
 include_directories(include/Component/Collider)
 include_directories(include/Core)
+include_directories(include/Core/Physics)
 include_directories(include/Object)
 include_directories(include/Other)
 include_directories(include/Utils)
@@ -37,7 +38,7 @@ add_executable(${PROJECT_NAME}
 	 "src/Component/Collider/PolygonCollider.cpp"
 	 "src/Component/Collider/CircleCollider.cpp"
 	 "src/Component/Rigidbody.cpp"
-	 "src/Core/Physics.cpp"
+	 "src/Core/Physics/Physics.cpp"
 	 "src/Core/MyTime.cpp"
 	 "src/Component/Custom/Tank.cpp"
 	 "src/Utils/Math.cpp" 
@@ -55,7 +56,11 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/Assets.cpp"
 	 "include/Utils/Concepts.h"
 	 "src/Utils/Color.cpp"
-	 "src/Other/Material.cpp")
+	 "src/Other/Material.cpp"
+	 "src/Core/Physics/Solver.cpp"
+	 "include/Core/Physics/Collision.h"
+	 "src/Other/Gizmos.cpp"
+	 "include/Utils/SDLUtils.h")
 
 find_package(SDL2 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})

@@ -1,6 +1,5 @@
 #include "PolygonCollider.h"
 
-#include <cmath>
 #include <vector>
 
 #include "Math.h"
@@ -8,111 +7,87 @@
 #include "Assets.h"
 #include "CircleCollider.h"
 #include "Object.h"
-#include "glm/gtx/rotate_vector.hpp"
+#include "glm/detail/func_trigonometric.inl"
 
 PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
 {
-	for (int i = 0; i < 4; i++)
-		edgePointsTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
-}
+	updateVertices();
 
-bool PolygonCollider::intersectsWith(Collider* other)
+	if constexpr (DISPLAY_VERTICES_DEBUG)
+		for (int i = 0; i < _vertices.size(); i++)
+			vertexSpritesTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
+}
+void PolygonCollider::updateVertices()
 {
-	glm::vec2 sPos = obj->pos();
-	glm::vec2 oPos = other->obj->pos();
-
-	if (const auto* box = dynamic_cast<const PolygonCollider*>(other))
-	{
-		for (int i = 0; i < _edges.size(); i++)
-		{
-			glm::vec2 edge = _edges[i];
-			glm::vec2 nextEdge = _edges[(i + 1) % _edges.size()];
-
-			glm::vec2 axis = {edge.y - nextEdge.y, nextEdge.x - edge.x};
-
-			float minS = std::numeric_limits<float>::max();
-			float maxS = std::numeric_limits<float>::min();
-			float minO = std::numeric_limits<float>::max();
-			float maxO = std::numeric_limits<float>::min();
-
-			for (auto& edg : _edges)
-			{
-				float proj = (edg.x * axis.x + edg.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
-				minS = std::min(minS, proj);
-				maxS = std::max(maxS, proj);
-			}
-
-			for (auto edg : box->_edges)
-			{
-				float proj = (edg.x * axis.x + edg.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
-				minO = std::min(minO, proj);
-				maxO = std::max(maxO, proj);
-			}
-
-			if (maxS < minO || maxO < minS) return false;
-		}
-
-		return true;
-	}
-
-	float sRot = glm::radians(obj->rot());
-	if (const auto* circle = dynamic_cast<const CircleCollider*>(other))
-	{
-		double unrotatedX = std::cos(sRot)
-			* (oPos.x - sPos.x) - std::sin(sRot)
-			* (oPos.y - sPos.y) + sPos.x;
-
-		double unrotatedY = std::sin(sRot)
-			* (oPos.x - sPos.x) + std::cos(sRot)
-			* (oPos.y - sPos.y) + sPos.y;
-
-		double closestX, closestY;
-
-		float rectX = sPos.x - (_size.x / 2);
-		float rectY = sPos.y - (_size.y / 2);
-
-		// Rectangle size as width x height
-		if (unrotatedX < rectX)
-			closestX = rectX;
-		else if (unrotatedX > rectX + _size.x)
-			closestX = rectX + _size.x;
-		else
-			closestX = unrotatedX;
-
-		if (unrotatedY < rectY)
-			closestY = rectY;
-		else if (unrotatedY > rectY + _size.y)
-			closestY = rectY + _size.y;
-		else
-			closestY = unrotatedY;
-
-		double distance = Math::distance(unrotatedX, unrotatedY, closestX, closestY);
-		if (distance < circle->radius) return true;
-	}
-	return false;
+	// TODO: generalize for any number of vertices
+	_vertices.resize(4);
+	_vertices[0] = {-_size.x / 2, -_size.y / 2}; // bottom left
+	_vertices[1] = {-_size.x / 2, +_size.y / 2}; // top left
+	_vertices[2] = {+_size.x / 2, +_size.y / 2}; // top right
+	_vertices[3] = {+_size.x / 2, -_size.y / 2}; // bottom right;
 }
 
-
-void PolygonCollider::recalculate()
+Collision PolygonCollider::getCollisionWith(Collider* other)
 {
-	glm::vec2 sPos = obj->pos();
-	float sRot = glm::radians(obj->rot());
-
-	_edges = {
-		{sPos.x - _size.x / 2, sPos.y - _size.y / 2}, // bottom left
-		{sPos.x - _size.x / 2, sPos.y + _size.y / 2}, // top left
-		{sPos.x + _size.x / 2, sPos.y + _size.y / 2}, // top right
-		{sPos.x + _size.x / 2, sPos.y - _size.y / 2}, // bottom right
-	};
-
-	for (auto& edge : _edges)
-		edge = rotate(edge - sPos, -sRot) + sPos;
-
-	for (int i = 0; i < 4; i++)
-		edgePointsTEST[i]->obj->setPos(_edges[i]);
+	return other->getCollisionWith(this);
 }
+Collision PolygonCollider::getCollisionWith(PolygonCollider* other)
+{
+	auto vertices = calculateGlobalVertices();
+	auto otherVertices = other->calculateGlobalVertices();
+	auto [sep1, norm1] = Math::findMinSeparation(vertices, otherVertices);
+	auto [sep2, norm2] = Math::findMinSeparation(otherVertices, vertices);
+	auto contactPoints = Math::findContactPoints(vertices, otherVertices);
+
+	auto collided = sep1 < 0 && sep2 < 0;
+	if (sep1 > sep2)
+		return Collision(collided, norm1, -sep1, contactPoints, this, other);
+	return Collision(collided, norm2, -sep2, contactPoints, other, this);
+}
+Collision PolygonCollider::getCollisionWith(CircleCollider* other)
+{
+	auto vertices = calculateGlobalVertices();
+	auto [sep, norm] = Math::findMinSeparation(other->obj->pos(), other->radius(), vertices);
+	auto contactPoints = Math::findContactPoints(other->obj->pos(), other->radius(), vertices);
+
+	auto collided = sep < 0;
+	return Collision(collided, norm, -sep, contactPoints, other, this);
+}
+
+std::vector<glm::vec2> PolygonCollider::calculateGlobalVertices() const
+{
+	std::vector<glm::vec2> vertices(_vertices.size());
+	for (int i = 0; i < _vertices.size(); i++)
+		vertices[i] = obj->localToGlobalPos(_vertices[i]);
+
+	if constexpr (DISPLAY_VERTICES_DEBUG)
+		for (int i = 0; i < _vertices.size(); i++)
+			vertexSpritesTEST[i]->obj->setPos(vertices[i]);
+	return vertices;
+}
+
 void PolygonCollider::onDestroy()
 {
-	for (auto& point : edgePointsTEST)
-		Object::destroy(point->obj);
+	if constexpr (DISPLAY_VERTICES_DEBUG)
+		for (auto& point : vertexSpritesTEST)
+			Object::destroy(point->obj);
+}
+float PolygonCollider::calculateInertia(float mass) const
+{
+	float sum1 = 0;
+	float sum2 = 0;
+	for (int n = 0; n < _vertices.size(); ++n)
+	{
+		sum1 += Math::cross(_vertices[n + 1], _vertices[n]) * 
+			(dot(_vertices[n + 1], _vertices[n + 1]) + dot(_vertices[n + 1], _vertices[n]) + dot(_vertices[n], _vertices[n]));
+		sum2 += Math::cross(_vertices[n + 1], _vertices[n]);
+	}
+	return (mass / 6 * sum1 / sum2);
+}
+
+void PolygonCollider::size(glm::vec2 size) { _size = size; }
+void PolygonCollider::setSize(glm::vec2 size)
+{
+	_size = size;
+	updateVertices();
 }

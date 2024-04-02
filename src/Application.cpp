@@ -6,7 +6,6 @@
 #include "Renderer.h"
 #include "SDLHandler.h"
 #include "FPSCounter.h"
-
 #include "Scene.h"
 
 void Application::start(const glm::ivec2& windowSize)

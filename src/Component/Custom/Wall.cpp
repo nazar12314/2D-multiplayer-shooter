@@ -11,5 +11,5 @@ Wall::Wall(Object* obj, glm::vec2 size): Component(obj)
 	auto tex = Assets::load<Texture>("sprites/square.png");
 	obj->addComponent<SpriteRenderer>(tex, size);
 	obj->addComponent<PolygonCollider>(size);
-	obj->addComponent<RigidBody>();
+	obj->addComponent<Rigidbody>();
 }

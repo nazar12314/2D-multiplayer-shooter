@@ -31,6 +31,27 @@ glm::ivec2 Camera::worldToScreenPos(const glm::vec2& worldPos) const
 	auto ratio = wSize.x / wSize.y;
 	return glm::vec2(relPos.x + ratio / 2, 0.5f - relPos.y) * wSize.y;
 }
+float Camera::screenToWorldSize(float screenSize) const
+{
+	auto wSize = (glm::vec2)SDLHandler::windowSize;
+	return screenSize / wSize.y * _size;
+}
+float Camera::worldToScreenSize(float worldSize) const
+{
+	auto wSize = (glm::vec2)SDLHandler::windowSize;
+	return worldSize / _size * wSize.y;
+}
+glm::vec2 Camera::screenToWorldSize(const glm::ivec2& screenSize) const
+{
+	auto wSize = (glm::vec2)SDLHandler::windowSize;
+	return (glm::vec2(screenSize.x, screenSize.y) / wSize.y) * _size;
+}
+glm::ivec2 Camera::worldToScreenSize(const glm::vec2& worldSize) const
+{
+	auto wSize = (glm::vec2)SDLHandler::windowSize;
+	return (worldSize / _size) * wSize.y;
+}
+
 Camera* Camera::getMain()
 {
 	if (cameras.empty()) return nullptr;
