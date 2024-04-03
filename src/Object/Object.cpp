@@ -16,7 +16,6 @@ Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 void Object::destroy(Object* obj)
 {
 	obj->onDestroy();
-	obj->components.apply_changes();
 
 	objects.erase_delayed(obj);
 }
@@ -59,9 +58,8 @@ void Object::destroyAll()
 void Object::prepareAll()
 {
 	objects.apply_changes();
-
 	for (Object* obj : objects)
-		obj->transformChanged = false;
+		obj->prepare();
 }
 // -- Global --
 
@@ -87,6 +85,7 @@ void Object::removeComponent(Component* component)
 
 void Object::prepare()
 {
+	transformChanged = false;
 	components.apply_changes();
 }
 

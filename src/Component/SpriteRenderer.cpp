@@ -37,8 +37,3 @@ void SpriteRenderer::setColor(const Color& color) const
 {
 	_material->setColor(color);
 }
-
-void SpriteRenderer::onDestroy()
-{
-	delete _material;
-}

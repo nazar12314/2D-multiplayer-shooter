@@ -13,7 +13,7 @@ protected:
 	Transform(glm::vec2 pos = {0, 0}, float rot = 0);
 
 public:
-	bool transformChanged = false;
+	bool transformChanged = false; // not working
 
 	glm::vec2 pos() const { return _pos; }
 	float rot() const { return _rot; }

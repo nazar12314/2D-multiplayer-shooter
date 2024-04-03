@@ -1,7 +1,7 @@
 #include "Solver.h"
 
 #include "Collider.h"
-#include "Math.h"
+#include "MyMath.h"
 #include "Rigidbody.h"
 #include "glm/geometric.hpp"
 

@@ -56,4 +56,3 @@ public:
 
 	friend class Assets;
 };
-

@@ -1,6 +1,7 @@
 #include "Physics.h"
 
 #include <algorithm>
+#include <iostream>
 
 #include "Collider.h"
 #include "Gizmos.h"
@@ -59,9 +60,9 @@ void Physics::solveCollisions()
 {
 	auto [collisions, triggers] = findCollisions();
 
-	for (auto& col : collisions)
-		for (auto& point : col.contactPoints)
-			Gizmos::drawPoint(point, 0.05f, Color::red);
+	//for (auto& col : collisions)
+	//	for (auto& point : col.contactPoints)
+	//		Gizmos::drawPoint(point, 0.05f, Color::red);
 
 	// Resolve collisions
 	for (auto& solver : solvers)
@@ -72,10 +73,12 @@ void Physics::solveCollisions()
 }
 
 
+std::vector<Collision> collisions;
+std::vector<Collision> triggers;
 std::pair<std::vector<Collision>, std::vector<Collision>> Physics::findCollisions()
 {
-	std::vector<Collision> collisions;
-	std::vector<Collision> triggers;
+	collisions.clear();
+	triggers.clear();
 
 	for (int i = 0; i < rigidbodies.size(); i++)
 	{

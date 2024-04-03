@@ -1,6 +1,4 @@
-#include "Math.h"
-
-#include <iostream>
+#include "MyMath.h"
 
 #include "Gizmos.h"
 #include "glm/gtx/rotate_vector.hpp"
@@ -133,9 +131,9 @@ bool Math::intersects(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float
 	return glm::distance(centerA, centerB) - radiusA - radiusB <= 0;
 }
 
-std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
+std::vector<glm::vec2>& Math::findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
 {
-	std::vector<glm::vec2> contactPoints;
+	_contactPointsStorage.clear();
 	auto minDis = std::numeric_limits<float>::max();
 	for (int i = 0; i < verticesA.size(); i++)
 	{
@@ -150,11 +148,11 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 			if (dis < minDis)
 			{
 				minDis = dis;
-				contactPoints.clear();
-				contactPoints.push_back(closestPoint);
+				_contactPointsStorage.clear();
+				_contactPointsStorage.push_back(closestPoint);
 			}
 			else if (nearlyEqual(dis, minDis))
-				contactPoints.push_back(closestPoint);
+				_contactPointsStorage.push_back(closestPoint);
 		}
 	}
 
@@ -171,18 +169,19 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 			if (dis < minDis)
 			{
 				minDis = dis;
-				contactPoints.clear();
-				contactPoints.push_back(closestPoint);
+				_contactPointsStorage.clear();
+				_contactPointsStorage.push_back(closestPoint);
 			}
 			else if (nearlyEqual(dis, minDis))
-				contactPoints.push_back(closestPoint);
+				_contactPointsStorage.push_back(closestPoint);
 		}
 	}
-	return contactPoints;
+	return _contactPointsStorage;
 }
-std::vector<glm::vec2> Math::findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB)
+std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB)
 {
-	glm::vec2 contactPoint {};
+	_contactPointsStorage.clear();
+	_contactPointsStorage.push_back({});
 	auto minDis = std::numeric_limits<float>::max();
 	for (int i = 0; i < verticesB.size(); i++)
 	{
@@ -194,14 +193,16 @@ std::vector<glm::vec2> Math::findContactPoints(glm::vec2 centerA, float radiusA,
 		if (dis < minDis)
 		{
 			minDis = dis;
-			contactPoint = closestPoint;
+			_contactPointsStorage[0] = closestPoint;
 		}
 	}
-	return {contactPoint};
+	return _contactPointsStorage;
 }
-std::vector<glm::vec2> Math::findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
+std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
 {
-	return {centerA + normalize(centerB - centerA) * radiusA};
+	_contactPointsStorage.clear();
+	_contactPointsStorage.push_back(centerA + normalize(centerB - centerA) * radiusA);
+	return _contactPointsStorage;
 }
 
 int Math::closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& vertices)

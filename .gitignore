@@ -15,3 +15,8 @@ libs/glslang/
 textures/
 
 models/
+
+CMakeSettings.json
+
+libs/SDL2/
+libs/SDL2_image/

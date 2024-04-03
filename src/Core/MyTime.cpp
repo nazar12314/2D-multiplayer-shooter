@@ -2,6 +2,8 @@
 
 #include <SDL_timer.h>
 
+#include "glm/common.hpp"
+
 void Time::init()
 {
 	time = getRealTime();
@@ -10,7 +12,7 @@ void Time::init()
 void Time::tick()
 {
 	auto realTime = getRealTime();
-	deltaTime = realTime - lastTickTime;
+	deltaTime = glm::clamp(realTime - lastTickTime, 0.0f, 0.1f);
 	time = lastTickTime = realTime;
 }
 

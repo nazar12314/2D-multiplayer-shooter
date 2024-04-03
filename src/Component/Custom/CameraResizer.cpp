@@ -2,7 +2,7 @@
 
 #include "Camera.h"
 #include "Input.h"
-#include "Math.h"
+#include "MyMath.h"
 #include "MyTime.h"
 #include "glm/common.hpp"
 

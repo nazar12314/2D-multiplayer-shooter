@@ -7,6 +7,8 @@ class Math
 {
 	static float shortestAngle(float currentAngle, float targetAngle);
 
+	inline static std::vector<glm::vec2> _contactPointsStorage {2};
+
 public:
 	static float rotateTowards(float currentAngle, float targetAngle, float maxStep);
 	static float lerp(float a, float b, float t);
@@ -22,9 +24,9 @@ public:
 	static bool intersects(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB);
 	static bool intersects(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB);
 
-	static std::vector<glm::vec2> findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB);
-	static std::vector<glm::vec2> findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB);
-	static std::vector<glm::vec2> findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB);
+	static std::vector<glm::vec2>& findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB);
+	static std::vector<glm::vec2>& findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB);
+	static std::vector<glm::vec2>& findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB);
 
 	static int closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& vertices);
 

@@ -12,6 +12,7 @@ class PolygonCollider : public Collider
 
 	glm::vec2 _size {0, 0};
 	std::vector<glm::vec2> _vertices {};
+	std::vector<glm::vec2> _globalVerticesStorage {};
 
 	std::vector<SpriteRenderer*> vertexSpritesTEST {};
 
@@ -22,7 +23,7 @@ class PolygonCollider : public Collider
 	Collision getCollisionWith(PolygonCollider* other) override;
 	Collision getCollisionWith(CircleCollider* other) override;
 
-	std::vector<glm::vec2> calculateGlobalVertices() const;
+	std::vector<glm::vec2>& calculateGlobalVertices();
 
 	void onDestroy() override;
 
