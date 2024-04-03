@@ -1,5 +1,7 @@
 #include "MyMath.h"
 
+#include <iostream>
+
 #include "Gizmos.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include "glm/gtx/closest_point.hpp"
@@ -111,7 +113,7 @@ std::tuple<float, glm::vec2> Math::findMinSeparation(glm::vec2 centerA, float ra
 std::tuple<float, glm::vec2> Math::findMinSeparation(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
 {
 	auto sep = glm::distance(centerA, centerB) - radiusA - radiusB;
-	auto sepNorm = normalize(centerB - centerA);
+	auto sepNorm = centerA != centerB ? normalize(centerB - centerA) : glm::vec2(1, 0);
 	return {sep, sepNorm};
 }
 
@@ -201,6 +203,11 @@ std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA
 std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
 {
 	_contactPointsStorage.clear();
+	if (centerA == centerB)
+	{
+		_contactPointsStorage.push_back(centerA + glm::vec2(radiusA, 0));
+		return _contactPointsStorage;
+	}
 	_contactPointsStorage.push_back(centerA + normalize(centerB - centerA) * radiusA);
 	return _contactPointsStorage;
 }
