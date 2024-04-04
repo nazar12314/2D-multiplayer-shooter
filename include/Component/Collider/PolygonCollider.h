@@ -12,21 +12,21 @@ class PolygonCollider : public Collider
 
 	glm::vec2 _size {0, 0};
 	std::vector<glm::vec2> _vertices {};
-	std::vector<glm::vec2> _globalVerticesStorage {};
+	std::vector<glm::vec2> _globalVertices {};
 
 	std::vector<SpriteRenderer*> vertexSpritesTEST {};
 
 	PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger = false);
 	void updateVertices();
+	void recalculate() override;
 
-	Collision getCollisionWith(Collider* other) override;
-	Collision getCollisionWith(PolygonCollider* other) override;
-	Collision getCollisionWith(CircleCollider* other) override;
-
-	std::vector<glm::vec2>& calculateGlobalVertices();
+	std::optional<Collision> getCollisionWith(Collider* other) override;
+	std::optional<Collision> getCollisionWith(PolygonCollider* other) override;
+	std::optional<Collision> getCollisionWith(CircleCollider* other) override;
 
 	void onDestroy() override;
 
+	float calculateMass() const override;
 	float calculateInertia(float mass) const override;
 
 public:

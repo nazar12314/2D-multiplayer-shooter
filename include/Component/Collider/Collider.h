@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <vector>
 
 #include "Collision.h"
@@ -19,9 +20,12 @@ class Collider : public Component
 	explicit Collider(Object* obj, bool isTrigger = false);
 	~Collider() override;
 
-	virtual Collision getCollisionWith(Collider* other) = 0;
-	virtual Collision getCollisionWith(PolygonCollider* other) = 0;
-	virtual Collision getCollisionWith(CircleCollider* other) = 0;
+	void start() override;
+	virtual void recalculate() {}
+
+	virtual std::optional<Collision> getCollisionWith(Collider* other) = 0;
+	virtual std::optional<Collision> getCollisionWith(PolygonCollider* other) = 0;
+	virtual std::optional<Collision> getCollisionWith(CircleCollider* other) = 0;
 
 	void collisionEntered(Collider* other);
 	void collisionStayed(Collider* other) const;
@@ -31,8 +35,8 @@ class Collider : public Component
 	void triggerStayed(Collider* other) const;
 	void triggerExited(Collider* other);
 
+	virtual float calculateMass() const = 0;
 	virtual float calculateInertia(float mass) const = 0;
-
 public:
 	bool isTrigger() const;
 	void setIsTrigger(bool trigger);

@@ -1,3 +1,8 @@
+#define _CRTDBG_MAP_ALLOC
+
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #include "Application.h"
 
 void main_game()
@@ -11,9 +16,8 @@ void main_game()
 
 int main(int argc, char* argv[])
 {
-	//main_net();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	main_game();
-
 	return 0;
 }

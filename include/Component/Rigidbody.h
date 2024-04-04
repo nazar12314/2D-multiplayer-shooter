@@ -7,27 +7,34 @@ class Collider;
 
 class Rigidbody : public Component
 {
-	bool _isStatic = false;
+	bool _isStatic;
 
-	float _mass;
-	float _invMass;
+	float _mass = 1;
+	float _invMass = 1;
 	float _inertia = 0;
 	float _invInertia = 0;
 	float _restitution = 0;
 
+	float _staticFriction = 0.6f;
+	float _dynamicFriction = 0.4f;
+
+	float _gravity = 0;
+
 	// Linear
-	float _linearDrag;
+	float _linearDrag = 0;
 	glm::vec2 _velocity = {0, 0};
 	glm::vec2 _force = {0, 0};
 
 	// Angular
-	float _angularDrag;
+	float _angularDrag = 0;
 	float _angularVelocity = 0;
 	float _angularForce = 0;
 
 	Collider* _attachedCollider = nullptr;
 
-	Rigidbody(Object* obj, float mass = 1, float linearDrag = 0, float angularDrag = 0);
+	Rigidbody(Object* obj, float linearDrag, float angularDrag = 0);
+	Rigidbody(Object* obj);
+	void initCollider();
 	~Rigidbody() override;
 
 	void step(float dt);
@@ -40,6 +47,9 @@ public:
 	float mass() const { return _mass; }
 	float invMass() const { return _invMass; }
 	float restitution() const { return _restitution; }
+	float staticFriction() const { return _staticFriction; }
+	float dynamicFriction() const { return _dynamicFriction; }
+	float gravity() const { return _gravity; }
 	float linearDrag() const { return _linearDrag; }
 	float angularDrag() const { return _angularDrag; }
 	glm::vec2 velocity() const { return _velocity; }
@@ -48,6 +58,9 @@ public:
 	void setIsStatic(bool isStatic);
 	void setMass(float mass);
 	void setRestitution(float restitution);
+	void setStaticFriction(float staticFriction);
+	void setDynamicFriction(float dynamicFriction);
+	void setGravity(float gravity);
 	void setLinearDrag(float linearDrag);
 	void setAngularDrag(float angularDrag);
 	void setVelocity(glm::vec2 velocity);
@@ -55,6 +68,9 @@ public:
 
 	void addForce(glm::vec2 force);
 	void addAngularForce(float force);
+
+	void moveTo(glm::vec2 pos) const;
+	void rotateTo(float rot) const;
 
 	friend class Object;
 	friend class Physics;

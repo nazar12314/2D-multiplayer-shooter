@@ -14,6 +14,11 @@ Collider::~Collider()
 		_rb->resetCollider();
 }
 
+void Collider::start()
+{
+	recalculate();
+}
+
 bool Collider::isTrigger() const { return _isTrigger; }
 void Collider::setIsTrigger(bool trigger) { _isTrigger = trigger; }
 

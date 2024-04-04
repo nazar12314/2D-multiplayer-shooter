@@ -1,6 +1,6 @@
 #include "Physics.h"
 
-#include <algorithm>
+#include <execution>
 #include <iostream>
 
 #include "Collider.h"
@@ -8,6 +8,7 @@
 #include "MyTime.h"
 #include "Rigidbody.h"
 #include "Solver.h"
+#include "Utils.h"
 
 void Physics::init()
 {
@@ -32,75 +33,149 @@ void Physics::subscribeToEvents()
 
 void Physics::physicsLoop()
 {
-	float realTime = Time::getRealTime();
-	while (realTime - lastFixedUpdateTime >= Time::fixedDeltaTime)
+	fixedUpdateTimer -= Time::deltaTime;
+	while (fixedUpdateTimer <= 0)
 	{
 		Time::fixedTick();
-		lastFixedUpdateTime += Time::fixedDeltaTime;
+		fixedUpdateTimer += Time::fixedDeltaTime;
+		Object::fixedUpdateAll();
 
 		// !!! PHYSICS STEP !!!
 		step(Time::fixedDeltaTime);
 		// !!! PHYSICS STEP !!!
-
-		Object::fixedUpdateAll();
 	}
 }
 
 void Physics::step(float dt)
 {
-	// Simulate rigidbodies
 	rigidbodies.apply_changes();
-	for (auto& rb : rigidbodies)
-		rb->step(dt);
+	for (int i = 0; i < SUBSTEPS; i++)
+	{
+		for (auto& rb : rigidbodies)
+			rb->step(dt / SUBSTEPS);
 
-	solveCollisions();
+		solveCollisions();
+
+		displayContactPoints_debug();
+	}
+}
+
+void Physics::displayContactPoints_debug()
+{
+	if constexpr (!DISPLAY_CONTACT_POINTS) return;
+	for (auto& col : collisionStorage)
+		for (auto& point : col.contactPoints)
+			Gizmos::drawPoint(point, 0.05f, Color::red);
+	for (auto& trig : triggerStorage)
+		for (auto& point : trig.contactPoints)
+			Gizmos::drawPoint(point, 0.05f, Color::green);
 }
 
 void Physics::solveCollisions()
 {
-	auto [collisions, triggers] = findCollisions();
+	//static int n = 0;
+	//static int seqSum = 0;
+	//static int parSum = 0;
 
-	//for (auto& col : collisions)
-	//	for (auto& point : col.contactPoints)
-	//		Gizmos::drawPoint(point, 0.05f, Color::red);
+	//seqSum += Utils::measureTime(updateCollisionsSequential);
+	//parSum += Utils::measureTime(updateCollisionsParallel);
+
+	//n++;
+	//std::cout << seqSum / n << " " << parSum / n << " " << seqSum / (float)parSum << std::endl;
+
+	updateCollisionsParallel();
 
 	// Resolve collisions
 	for (auto& solver : solvers)
-		solver->solveCollisions(collisions);
+		solver->solveCollisions(collisionStorage);
 
-	sendCollisionCallbacks(collisions);
-	sendTriggerCallbacks(triggers);
+	sendCollisionCallbacks(collisionStorage);
+	sendTriggerCallbacks(triggerStorage);
 }
 
 
-std::vector<Collision> collisions;
-std::vector<Collision> triggers;
-std::pair<std::vector<Collision>, std::vector<Collision>> Physics::findCollisions()
+void Physics::updateCollisionsSequential()
 {
-	collisions.clear();
-	triggers.clear();
+	collisionStorage.clear();
+	triggerStorage.clear();
 
 	for (int i = 0; i < rigidbodies.size(); i++)
 	{
 		auto rb1 = rigidbodies[i];
 		auto col1 = rb1->_attachedCollider;
+		if (col1 == nullptr) continue;
 
 		for (int j = i + 1; j < rigidbodies.size(); j++)
 		{
 			auto rb2 = rigidbodies[j];
 			auto col2 = rb2->_attachedCollider;
-			bool isTrigger = col1->_isTrigger || col2->_isTrigger;
+			if (col2 == nullptr) continue;
 
 			auto collision = col1->getCollisionWith(col2);
-			if (!collision.collided) continue;
+			if (!collision.has_value()) continue;
 
-			if (isTrigger)
-				triggers.push_back(collision);
+			if (col1->_isTrigger || col2->_isTrigger)
+				triggerStorage.push_back(collision.value());
 			else
-				collisions.push_back(collision);
+				collisionStorage.push_back(collision.value());
 		}
 	}
-	return {collisions, triggers};
+}
+
+void Physics::updateCollisionsParallel()
+{
+	collisionStorage.clear();
+	triggerStorage.clear();
+	collisionStorage.reserve(rigidbodies.size() * rigidbodies.size() / 2);
+	triggerStorage.reserve(rigidbodies.size() * rigidbodies.size() / 2);
+
+	std::mutex mutexCol;
+	std::mutex mutexTrig;
+	auto interactionCount = rigidbodies.size() * rigidbodies.size() / 2 - rigidbodies.size() / 2;
+	for (int ind = 0; ind < TASK_COUNT; ind++)
+	{
+		int start = ind * interactionCount / TASK_COUNT;
+		int end = (ind + 1) * interactionCount / TASK_COUNT;
+
+		pool.push_task([start, end, &mutexCol, &mutexTrig]
+		{
+			for (int i = start; i < end; i++)
+			{
+				auto size = rigidbodies.size();
+				auto y = 0;
+				int j = i;
+				while (j >= size - y - 1 && j > 0)
+				{
+					j -= size - y - 1;
+					y++;
+				}
+				auto x = y + j + 1;
+
+				auto col1 = rigidbodies[y]->_attachedCollider;
+				if (col1 == nullptr) continue;
+
+				auto col2 = rigidbodies[x]->_attachedCollider;
+				if (col2 == nullptr) continue;
+
+				auto collision = col1->getCollisionWith(col2);
+				if (!collision.has_value()) continue;
+
+				if (col1->_isTrigger || col2->_isTrigger)
+				{
+					mutexTrig.lock();
+					triggerStorage.push_back(collision.value());
+					mutexTrig.unlock();
+				}
+				else
+				{
+					mutexCol.lock();
+					collisionStorage.push_back(collision.value());
+					mutexCol.unlock();
+				}
+			}
+		});
+	}
+	pool.wait_for_tasks();
 }
 
 void Physics::sendCollisionCallbacks(const std::vector<Collision>& collisions)
@@ -111,24 +186,13 @@ void Physics::sendCollisionCallbacks(const std::vector<Collision>& collisions)
 		auto col2 = collision.col2;
 
 		bool currentlyColliding = std::ranges::find(col1->collidingWith, col2) != col1->collidingWith.end();
-		if (collision.collided)
+		if (!currentlyColliding)
 		{
-			if (!currentlyColliding)
-			{
-				col1->collisionEntered(col2);
-				col2->collisionEntered(col1);
-			}
-			col1->collisionStayed(col2);
-			col2->collisionStayed(col1);
+			col1->collisionEntered(col2);
+			col2->collisionEntered(col1);
 		}
-		else
-		{
-			if (currentlyColliding)
-			{
-				col1->collisionExited(col2);
-				col2->collisionExited(col1);
-			}
-		}
+		col1->collisionStayed(col2);
+		col2->collisionStayed(col1);
 	}
 }
 void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
@@ -139,23 +203,12 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 		auto col2 = trigger.col2;
 
 		bool currentlyTriggering = std::ranges::find(col1->triggeringWith, col2) != col1->triggeringWith.end();
-		if (trigger.collided)
+		if (!currentlyTriggering)
 		{
-			if (!currentlyTriggering)
-			{
-				col1->triggerEntered(col2);
-				col2->triggerEntered(col1);
-			}
-			col1->triggerStayed(col2);
-			col2->triggerStayed(col1);
+			col1->triggerEntered(col2);
+			col2->triggerEntered(col1);
 		}
-		else
-		{
-			if (currentlyTriggering)
-			{
-				col1->triggerExited(col2);
-				col2->triggerExited(col1);
-			}
-		}
+		col1->triggerStayed(col2);
+		col2->triggerStayed(col1);
 	}
 }

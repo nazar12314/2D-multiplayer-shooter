@@ -7,7 +7,6 @@
 #include "Assets.h"
 #include "Gizmos.h"
 #include "Material.h"
-#include "SDLUtils.h"
 #include <algorithm>
 
 Material* Renderer::defaultCircleMaterial = new Material(Assets::load<Texture>("sprites/circle.png"));
@@ -49,7 +48,7 @@ void Renderer::renderSprites(const Camera* mainCamera)
 	for (auto sprite : sprites)
 	{
 		if (!sprite->obj->enabled()) continue;
-		auto screenPos = mainCamera->worldToScreenPos(sprite->obj->pos());
+		auto screenPos = mainCamera->worldToScreenPoint(sprite->obj->pos());
 		auto screenSize = sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
 		renderTex(sprite->material()->texture(), screenPos, screenSize, sprite->obj->rot());
 	}
@@ -67,15 +66,15 @@ void Renderer::renderTex(SDL_Texture* tex, const glm::ivec2& pos, const glm::ive
 }
 void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot)
 {
-	auto screenPos = Camera::getMain()->worldToScreenPos(pos);
+	auto screenPos = Camera::getMain()->worldToScreenPoint(pos);
 	auto screenSize = Camera::getMain()->worldToScreenSize(size);
 	renderTex(tex, screenPos, screenSize, rot);
 }
 
 void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color)
 {
-	auto screenP1 = Camera::getMain()->worldToScreenPos(p1);
-	auto screenP2 = Camera::getMain()->worldToScreenPos(p2);
+	auto screenP1 = Camera::getMain()->worldToScreenPoint(p1);
+	auto screenP2 = Camera::getMain()->worldToScreenPoint(p2);
 
 	SDL_SetRenderDrawColor(SDLHandler::renderer, color.r() * 255, color.g() * 255, color.b() * 255, color.a() * 255);
 	SDL_RenderDrawLine(SDLHandler::renderer, screenP1.x, screenP1.y, screenP2.x, screenP2.y);

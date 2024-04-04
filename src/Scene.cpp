@@ -1,7 +1,6 @@
 #include "Scene.h"
 
 #include "PolygonCollider.h"
-#include "CircleCollider.h"
 #include "Camera.h"
 #include "CameraFollow.h"
 #include "CameraResizer.h"
@@ -9,26 +8,11 @@
 #include "SpriteRenderer.h"
 #include "Tank.h"
 #include "Assets.h"
+#include "MyMath.h"
 #include "ShapeSpawner.h"
-#include "glm/ext/scalar_constants.hpp"
+#include "WallCreator.h"
 
-void colliderTestScene()
-{
-	auto cam = Object::create("Camera")->addComponent<Camera>(500);
-
-	auto tex1 = Assets::load<Texture>("sprites/square.png");
-	auto tex2 = Assets::load<Texture>("sprites/square.png");
-
-	auto obj1 = Object::create("Square", {10, 10});
-	auto obj2 = Object::create("Square", {65, 10});
-	obj1->addComponent<SpriteRenderer>(tex1, glm::ivec2(50, 70));
-	obj2->addComponent<SpriteRenderer>(tex2, glm::ivec2(50, 50));
-
-	auto box1 = obj1->addComponent<PolygonCollider>(glm::vec2(50, 70));
-	auto box2 = obj2->addComponent<PolygonCollider>(glm::vec2(50, 50));
-}
-
-void gameScene()
+void shapeSpawnerNoGravityWithTankScene()
 {
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
 	auto follow = cam->obj->addComponent<CameraFollow>(5);
@@ -40,7 +24,36 @@ void gameScene()
 	Object::create("ShapeSpawner")->addComponent<ShapeSpawner>();
 }
 
+void lotsOfShapesWithGravityScene()
+{
+	auto cam = Object::create("Camera")->addComponent<Camera>(8);
+	auto resizer = cam->obj->addComponent<CameraResizer>(20, 2, 8);
+
+	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
+
+	WallCreator::createWall(glm::vec2((-5 + 0.25f) / 1.414f, -4), 45, glm::vec2(10, 0.5f));
+	WallCreator::createWall(glm::vec2((5 - 0.25f) / 1.414f, -4), -45, glm::vec2(10, 0.5f));
+
+	for (int i = 0; i < 15; i++)
+	{
+		shapeSpawner->spawnSquare(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
+		shapeSpawner->spawnCircle(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
+	}
+}
+
+void shapeSpawnerWithGravity()
+{
+	auto cam = Object::create("Camera")->addComponent<Camera>(8);
+	auto resizer = cam->obj->addComponent<CameraResizer>(20, 2, 15, true);
+
+	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
+
+	WallCreator::createWall(glm::vec2(0, -5), 0, glm::vec2(15, 0.5f));
+	WallCreator::createWall(glm::vec2(-3, -1), 15, glm::vec2(5, 0.25f));
+	WallCreator::createWall(glm::vec2(3, 1), -15, glm::vec2(5, 0.25f));
+}
+
 void Scene::create()
 {
-	gameScene();
+	shapeSpawnerWithGravity();
 }

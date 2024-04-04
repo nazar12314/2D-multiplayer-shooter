@@ -5,12 +5,6 @@ class Object;
 
 class Component
 {
-public:
-	Object* obj;
-
-	Component(Object* obj);
-	virtual ~Component();
-
 	// -- Default --
 	virtual void start() {}
 	virtual void update() {}
@@ -26,4 +20,12 @@ public:
 	virtual void onTriggerEnter(Collider* other) {}
 	virtual void onTriggerStay(Collider* other) {}
 	virtual void onTriggerExit(Collider* other) {}
+
+public:
+	Object* obj;
+
+	Component(Object* obj);
+	virtual ~Component();
+
+	friend class Object;
 };

@@ -12,8 +12,8 @@ void Time::init()
 void Time::tick()
 {
 	auto realTime = getRealTime();
-	deltaTime = glm::clamp(realTime - lastTickTime, 0.0f, 0.1f);
-	time = lastTickTime = realTime;
+	deltaTime = glm::clamp(realTime - _lastTickTime, 0.0f, maxDeltaTime);
+	time = _lastTickTime = realTime;
 }
 
 void Time::fixedTick()

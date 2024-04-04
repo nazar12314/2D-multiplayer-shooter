@@ -1,6 +1,5 @@
 #include "Object.h"
 
-#include <iostream>
 #include "Component.h"
 #include "Assets.h"
 #include "glm/gtx/transform.hpp"

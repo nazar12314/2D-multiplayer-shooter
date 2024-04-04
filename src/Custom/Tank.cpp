@@ -19,7 +19,7 @@ Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gun
 	auto tex = Assets::load<Texture>("sprites/square.png");
 	obj->addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::randomLight());
 	obj->addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
-	obj->addComponent<Rigidbody>(1.2f, 10, 25);
+	obj->addComponent<Rigidbody>(10, 25);
 	obj->addComponent<TankController>();
 
 	createGun();
@@ -49,7 +49,7 @@ void Tank::update()
 void Tank::updateGunPosition() const
 {
 	auto mousePos = Input::mousePos;
-	auto mouseWorldPos = Camera::getMain()->screenToWorldPos(mousePos);
+	auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
 
 	auto targetDir = normalize(mouseWorldPos - obj->pos());
 	float targetRot = glm::degrees(atan2(targetDir.x, targetDir.y));

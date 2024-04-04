@@ -2,13 +2,14 @@
 
 class Time
 {
-	inline static float lastTickTime = 0;
+	inline static float _lastTickTime = 0;
 
 public:
+	inline static float maxDeltaTime = 1 / 10.0f;
+	inline static float fixedDeltaTime = 1 / 120.0f;
+
 	inline static float time = 0;
 	inline static float deltaTime = 0;
-	inline static float fixedDeltaTime = 1 / 120.0f;
-	inline static int fixedUpdateCount = 0;
 
 	static void init();
 

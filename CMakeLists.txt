@@ -11,9 +11,9 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 include_directories(include)
 include_directories(include/Component)
-include_directories(include/Component/Custom)
 include_directories(include/Component/Collider)
 include_directories(include/Core)
+include_directories(include/Custom)
 include_directories(include/Core/Physics)
 include_directories(include/Object)
 include_directories(include/Other)
@@ -37,21 +37,21 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/SDLHandler.cpp"
 	 "src/Component/SpriteRenderer.cpp"
 	 "src/Component/Component.cpp"
-	 "src/Component/Custom/CameraFollow.cpp"
+	 "src/Custom/CameraFollow.cpp"
 	 "src/Scene.cpp"
-	 "src/Component/Custom/TankController.cpp"
+	 "src/Custom/TankController.cpp"
 	 "src/Component/Collider/PolygonCollider.cpp"
 	 "src/Component/Collider/CircleCollider.cpp"
 	 "src/Component/Rigidbody.cpp"
 	 "src/Core/Physics/Physics.cpp"
 	 "src/Core/MyTime.cpp"
-	 "src/Component/Custom/Tank.cpp"
+	 "src/Custom/Tank.cpp"
 	 "src/Utils/MyMath.cpp" 
-	 "src/Component/Custom/Bullet.cpp"
-	 "src/Component/Custom/CameraResizer.cpp"
+	 "src/Custom/Bullet.cpp"
+	 "src/Custom/CameraResizer.cpp"
 	 "include/Core/FPSCounter.h"
 	 "src/Component/Collider/Collider.cpp"
-	 "src/Component/Custom/Wall.cpp"
+	 "src/Custom/Wall.cpp"
 	 "src/Multiplayer/Client.cpp"
 	 "src/Multiplayer/Server.cpp"
 	 "src/Multiplayer/MessageQueue.cpp"
@@ -65,12 +65,18 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/Physics/Solver.cpp"
 	 "include/Core/Physics/Collision.h"
 	 "src/Other/Gizmos.cpp"
-	 "include/Utils/SDLUtils.h" "include/Component/Custom/ShapeSpawner.h" "src/Component/Custom/ShapeSpawner.cpp")
+	 "include/Utils/SDLUtils.h"
+	 "src/Custom/ShapeSpawner.cpp"
+	 "include/Utils/Utils.h"
+	 "include/Custom/WallCreator.h" "src/Custom/WallCreator.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
 	target_link_libraries(${PROJECT_NAME} SDL2)
 	target_link_libraries(${PROJECT_NAME} SDL2_image)
+
+	configure_file(libs/SDL2_image/SDL2_image.dll ${CMAKE_BINARY_DIR}/SDL2_image.dll COPYONLY)
+	configure_file(libs/SDL2_image/SDL2_image.lib ${CMAKE_BINARY_DIR}/SDL2_image.lib COPYONLY)
 ELSE()
 	find_package(SDL2 REQUIRED)
 	target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})

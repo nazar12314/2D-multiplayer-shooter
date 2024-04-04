@@ -26,6 +26,10 @@ float Math::lerp(float a, float b, float t)
 {
 	return a + (b - a) * t;
 }
+glm::vec2 Math::lerp(glm::vec2 a, glm::vec2 b, float t)
+{
+	return a + (b - a) * t;
+}
 
 float Math::distance(float startX, float startY, float endX, float endY)
 {
@@ -63,6 +67,7 @@ std::tuple<float, glm::vec2> Math::findMinSeparation(const std::vector<glm::vec2
 			sep = minSep;
 			sepNorm = norm;
 		}
+
 		if (sep > 0) break;
 	}
 	return {sep, sepNorm};
@@ -133,9 +138,9 @@ bool Math::intersects(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float
 	return glm::distance(centerA, centerB) - radiusA - radiusB <= 0;
 }
 
-std::vector<glm::vec2>& Math::findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
+std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
 {
-	_contactPointsStorage.clear();
+	std::vector<glm::vec2> contactPoints;
 	auto minDis = std::numeric_limits<float>::max();
 	for (int i = 0; i < verticesA.size(); i++)
 	{
@@ -150,11 +155,14 @@ std::vector<glm::vec2>& Math::findContactPoints(const std::vector<glm::vec2>& ve
 			if (dis < minDis)
 			{
 				minDis = dis;
-				_contactPointsStorage.clear();
-				_contactPointsStorage.push_back(closestPoint);
+				contactPoints.clear();
+				contactPoints.push_back(closestPoint);
 			}
-			else if (nearlyEqual(dis, minDis))
-				_contactPointsStorage.push_back(closestPoint);
+			else if (nearlyEqual(dis, minDis, 0.00000001f))
+			{
+				if (std::ranges::find(contactPoints, closestPoint) == contactPoints.end())
+					contactPoints.push_back(closestPoint);
+			}
 		}
 	}
 
@@ -171,19 +179,21 @@ std::vector<glm::vec2>& Math::findContactPoints(const std::vector<glm::vec2>& ve
 			if (dis < minDis)
 			{
 				minDis = dis;
-				_contactPointsStorage.clear();
-				_contactPointsStorage.push_back(closestPoint);
+				contactPoints.clear();
+				contactPoints.push_back(closestPoint);
 			}
 			else if (nearlyEqual(dis, minDis))
-				_contactPointsStorage.push_back(closestPoint);
+			{
+				contactPoints.push_back(closestPoint);
+			}
 		}
 	}
-	return _contactPointsStorage;
+	int sz = contactPoints.size();
+	return contactPoints;
 }
-std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB)
+std::vector<glm::vec2> Math::findContactPoints(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB)
 {
-	_contactPointsStorage.clear();
-	_contactPointsStorage.push_back({});
+	std::vector<glm::vec2> contactPoints(1);
 	auto minDis = std::numeric_limits<float>::max();
 	for (int i = 0; i < verticesB.size(); i++)
 	{
@@ -195,21 +205,16 @@ std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA
 		if (dis < minDis)
 		{
 			minDis = dis;
-			_contactPointsStorage[0] = closestPoint;
+			contactPoints[0] = closestPoint;
 		}
 	}
-	return _contactPointsStorage;
+	return contactPoints;
 }
-std::vector<glm::vec2>& Math::findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
+std::vector<glm::vec2> Math::findContactPoints(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
 {
-	_contactPointsStorage.clear();
-	if (centerA == centerB)
-	{
-		_contactPointsStorage.push_back(centerA + glm::vec2(radiusA, 0));
-		return _contactPointsStorage;
-	}
-	_contactPointsStorage.push_back(centerA + normalize(centerB - centerA) * radiusA);
-	return _contactPointsStorage;
+	if (nearlyEqual(centerA, centerB))
+		return {centerA + glm::vec2(radiusA, 0)};
+	return {centerA + normalize(centerB - centerA) * radiusA};
 }
 
 int Math::closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& vertices)
@@ -249,4 +254,12 @@ bool Math::nearlyEqual(float a, float b, float epsilon)
 bool Math::nearlyEqual(glm::vec2 a, glm::vec2 b, float epsilon)
 {
 	return nearlyEqual(a.x, b.x, epsilon) && nearlyEqual(a.y, b.y, epsilon);
+}
+bool Math::nearlyZero(float a, float epsilon)
+{
+	return nearlyEqual(a, 0, epsilon);
+}
+bool Math::nearlyZero(glm::vec2 a, float epsilon)
+{
+	return nearlyEqual(a.x, 0) && nearlyEqual(a.y, 0);
 }

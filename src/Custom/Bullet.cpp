@@ -18,7 +18,7 @@ Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
 
 void Bullet::fixedUpdate()
 {
-	obj->setPos(obj->pos() + obj->up() * _speed * Time::fixedDeltaTime);
+	rb->moveTo(obj->pos() + obj->up() * _speed * Time::fixedDeltaTime);
 }
 
 void Bullet::onTriggerEnter(Collider* other)

@@ -27,46 +27,45 @@ void PolygonCollider::updateVertices()
 	_vertices[3] = {+_size.x / 2, -_size.y / 2}; // bottom right;
 }
 
-Collision PolygonCollider::getCollisionWith(Collider* other)
+std::optional<Collision> PolygonCollider::getCollisionWith(Collider* other)
 {
 	return other->getCollisionWith(this);
 }
-Collision PolygonCollider::getCollisionWith(PolygonCollider* other)
+std::optional<Collision> PolygonCollider::getCollisionWith(PolygonCollider* other)
 {
-	auto& vertices = calculateGlobalVertices();
-	auto& otherVertices = other->calculateGlobalVertices();
+	auto& vertices = _globalVertices;
+	auto& otherVertices = other->_globalVertices;
 	auto [sep1, norm1] = Math::findMinSeparation(vertices, otherVertices);
-	if (sep1 >= 0) return Collision(false);
-	auto [sep2, norm2] = Math::findMinSeparation(otherVertices, vertices);
-	auto collided = sep1 < 0 && sep2 < 0;
-	if (!collided) return Collision(false);
+	if (sep1 >= 0) return std::nullopt;
 
-	auto& contactPoints = Math::findContactPoints(vertices, otherVertices);
+	auto [sep2, norm2] = Math::findMinSeparation(otherVertices, vertices);
+	auto collided = sep1 <= 0 && sep2 <= 0;
+	if (!collided) return std::nullopt;
+
+	auto contactPoints = Math::findContactPoints(vertices, otherVertices);
 	if (sep1 > sep2)
 		return Collision(collided, norm1, -sep1, contactPoints, this, other);
 	return Collision(collided, norm2, -sep2, contactPoints, other, this);
 }
-Collision PolygonCollider::getCollisionWith(CircleCollider* other)
+std::optional<Collision> PolygonCollider::getCollisionWith(CircleCollider* other)
 {
-	auto& vertices = calculateGlobalVertices();
-	auto [sep, norm] = Math::findMinSeparation(other->obj->pos(), other->radius(), vertices);
-	auto collided = sep < 0;
-	if (!collided) return Collision(false);
+	auto [sep, norm] = Math::findMinSeparation(other->obj->pos(), other->radius(), _globalVertices);
+	auto collided = sep <= 0;
+	if (!collided) return std::nullopt;
 
-	auto contactPoints = Math::findContactPoints(other->obj->pos(), other->radius(), vertices);
+	auto contactPoints = Math::findContactPoints(other->obj->pos(), other->radius(), _globalVertices);
 	return Collision(collided, norm, -sep, contactPoints, other, this);
 }
 
-std::vector<glm::vec2>& PolygonCollider::calculateGlobalVertices()
+void PolygonCollider::recalculate()
 {
-	_globalVerticesStorage.resize(_vertices.size());
+	_globalVertices.resize(_vertices.size());
 	for (int i = 0; i < _vertices.size(); i++)
-		_globalVerticesStorage[i] = obj->localToGlobalPos(_vertices[i]);
+		_globalVertices[i] = obj->localToGlobalPos(_vertices[i]);
 
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)
-			vertexSpritesTEST[i]->obj->setPos(_globalVerticesStorage[i]);
-	return _globalVerticesStorage;
+			vertexSpritesTEST[i]->obj->setPos(_globalVertices[i]);
 }
 
 void PolygonCollider::onDestroy()
@@ -74,6 +73,18 @@ void PolygonCollider::onDestroy()
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (auto& point : vertexSpritesTEST)
 			Object::destroy(point->obj);
+}
+
+float PolygonCollider::calculateMass() const
+{
+	float area = 0;
+	for (int n = 0; n < _vertices.size(); ++n)
+	{
+		auto v1 = _vertices[n];
+		auto v2 = _vertices[(n + 1) % _vertices.size()];
+		area += std::abs(Math::cross(v2, v1));
+	}
+	return area / 2;
 }
 float PolygonCollider::calculateInertia(float mass) const
 {
@@ -83,11 +94,10 @@ float PolygonCollider::calculateInertia(float mass) const
 	{
 		auto v1 = _vertices[n];
 		auto v2 = _vertices[(n + 1) % _vertices.size()];
-		sum1 += Math::cross(v2, v1) *
-			(dot(v2, v2) + dot(v2, v1) + dot(v1, v1));
+		sum1 += Math::cross(v2, v1) * (dot(v1, v1) + dot(v1, v2) + dot(v2, v2));
 		sum2 += Math::cross(v2, v1);
 	}
-	return (mass / 6 * sum1 / sum2);
+	return mass / 6 * sum1 / sum2;
 }
 
 void PolygonCollider::size(glm::vec2 size) { _size = size; }

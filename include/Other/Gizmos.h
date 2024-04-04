@@ -31,6 +31,7 @@ protected:
 	float duration;
 
 	Gizmo(const Color& color, float duration);
+	virtual ~Gizmo() = default;
 
 	virtual void draw() const = 0;
 

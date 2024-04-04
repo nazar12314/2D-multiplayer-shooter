@@ -16,7 +16,7 @@ Camera::~Camera()
 float Camera::size() const { return _size; }
 void Camera::setSize(float size) { _size = size; }
 
-glm::vec2 Camera::screenToWorldPos(const glm::ivec2& screenPos) const
+glm::vec2 Camera::screenToWorldPoint(const glm::ivec2& screenPos) const
 {
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
 	auto ratio = wSize.x / wSize.y;
@@ -24,7 +24,7 @@ glm::vec2 Camera::screenToWorldPos(const glm::ivec2& screenPos) const
 	return relPos * _size + obj->pos();
 }
 
-glm::ivec2 Camera::worldToScreenPos(const glm::vec2& worldPos) const
+glm::ivec2 Camera::worldToScreenPoint(const glm::vec2& worldPos) const
 {
 	auto relPos = (worldPos - obj->pos()) / _size;
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
@@ -56,5 +56,5 @@ Camera* Camera::getMain()
 {
 	if (cameras.empty()) return nullptr;
 	auto lambda = [](const Camera* a, const Camera* b) { return a->priority < b->priority; };
-	return *std::max_element(cameras.begin(), cameras.end(), lambda);
+	return *std::ranges::max_element(cameras, lambda);
 }
