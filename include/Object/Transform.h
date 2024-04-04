@@ -9,20 +9,22 @@ class Transform
 	float _rot;
 	glm::vec2 _scale = {1, 1};
 
+	float _z = 0;
+
 protected:
 	Transform(glm::vec2 pos = {0, 0}, float rot = 0);
 
 public:
-	bool transformChanged = false; // not working
-
 	glm::vec2 pos() const { return _pos; }
 	float rot() const { return _rot; }
 	glm::vec2 scale() const { return _scale; }
+	float z() const { return _z; }
 
 	Action<float> onRotChange;
 	void setPos(glm::vec2 pos);
 	void setRot(float rot);
 	void setScale(glm::vec2 scale);
+	void setZ(float z);
 
 	void translate(const glm::vec2& v);
 	void rotate(float degrees);

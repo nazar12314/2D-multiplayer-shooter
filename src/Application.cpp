@@ -18,7 +18,7 @@ void Application::start(const glm::ivec2& windowSize)
 	Physics::init();
 
 	Scene::create();
-	Object::startAll();
+	Object::sendCallbackAll(&Component::start);
 }
 
 void Application::loop()
@@ -31,8 +31,8 @@ void Application::loop()
 		Time::tick();
 		FPSCounter::tick();
 
-		Object::updateAll();
-		Object::lateUpdateAll();
+		Object::sendCallbackAll(&Component::update);
+		Object::sendCallbackAll(&Component::lateUpdate);
 
 		if (doQuit) break;
 		Renderer::render();

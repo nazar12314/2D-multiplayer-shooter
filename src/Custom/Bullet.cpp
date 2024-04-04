@@ -11,9 +11,9 @@
 Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
 {
 	auto tex = Assets::load<Texture>("sprites/circle.png");
-	obj->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), 0, Color::red);
-	obj->addComponent<CircleCollider>(0.1f, true);
-	rb = obj->addComponent<Rigidbody>();
+	addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), 0, Color::red);
+	addComponent<CircleCollider>(0.1f, true);
+	rb = addComponent<Rigidbody>();
 }
 
 void Bullet::fixedUpdate()

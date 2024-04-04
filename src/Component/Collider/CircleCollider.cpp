@@ -3,6 +3,7 @@
 #include "MyMath.h"
 #include "PolygonCollider.h"
 #include "Object.h"
+#include "glm/detail/func_geometric.inl"
 #include "glm/ext/scalar_constants.hpp"
 
 CircleCollider::CircleCollider(Object* obj, float radius, bool isTrigger): Collider(obj, isTrigger), _radius(radius) {}
@@ -43,4 +44,9 @@ std::vector<glm::vec2> CircleCollider::findContactPoints(const PolygonCollider* 
 std::vector<glm::vec2> CircleCollider::findContactPoints(const CircleCollider* other) const
 {
 	return Math::findContactPoints(obj->pos(), _radius, other->obj->pos(), other->_radius);
+}
+
+bool CircleCollider::isPointInside(const glm::vec2& point) const
+{
+	return distance(obj->pos(), point) <= _radius;
 }

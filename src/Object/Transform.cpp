@@ -4,21 +4,11 @@
 
 Transform::Transform(const glm::vec2 pos, float rot) : _pos(pos), _rot(rot) {}
 
-void Transform::setPos(glm::vec2 pos)
-{
-	this->_pos = pos;
-	transformChanged = true;
-}
-void Transform::setRot(float rot)
-{
-	this->_rot = rot;
-	transformChanged = true;
-}
-void Transform::setScale(glm::vec2 scale)
-{
-	this->_scale = scale;
-	transformChanged = true;
-}
+void Transform::setPos(glm::vec2 pos) { this->_pos = pos; }
+void Transform::setRot(float rot) { this->_rot = rot; }
+void Transform::setScale(glm::vec2 scale) { this->_scale = scale; }
+void Transform::setZ(float z) { this->_z = z; }
+
 void Transform::translate(const glm::vec2& v)
 {
 	setPos(_pos + v);

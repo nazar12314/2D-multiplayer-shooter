@@ -9,7 +9,6 @@ class Math
 
 public:
 	static float rotateTowards(float currentAngle, float targetAngle, float maxStep);
-	static float distance(float startX, float startY, float endX, float endY);
 	static float distanceSquared(glm::vec2 a, glm::vec2 b);
 	static float cross(glm::vec2 a, glm::vec2 b);
 

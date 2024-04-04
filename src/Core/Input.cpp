@@ -1,6 +1,8 @@
 #include "Input.h"
 
 #include "Application.h"
+#include "Camera.h"
+#include "Physics.h"
 
 void Input::clear()
 {
@@ -8,7 +10,6 @@ void Input::clear()
 	keysReleased.clear();
 	mouseButtonsPressed.clear();
 	mouseButtonsReleased.clear();
-	mouseMoved = false;
 	mouseWheelValue = 0;
 }
 
@@ -31,24 +32,42 @@ void Input::handleInputEvent(const SDL_Event& event)
 	else if (event.type == SDL_KEYUP)
 	{
 		keysReleased.push_back(event.key.keysym.sym);
-		keysCurrentlyDown.erase(std::remove(keysCurrentlyDown.begin(), keysCurrentlyDown.end(), event.key.keysym.sym), keysCurrentlyDown.end());
+		std::erase(keysCurrentlyDown, event.key.keysym.sym);
 	}
 	else if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
 		mouseButtonsPressed.push_back(event.button.button);
 		mouseButtonsCurrentlyDown.push_back(event.button.button);
+
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		mouseDownCollider = Physics::raycastAt(mouseWorldPos);
 	}
 	else if (event.type == SDL_MOUSEBUTTONUP)
 	{
 		mouseButtonsReleased.push_back(event.button.button);
-		mouseButtonsCurrentlyDown.erase(std::remove(mouseButtonsCurrentlyDown.begin(), mouseButtonsCurrentlyDown.end(), event.button.button), mouseButtonsCurrentlyDown.end());
+		std::erase(mouseButtonsCurrentlyDown, event.button.button);
+
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		auto hitCollider = Physics::raycastAt(mouseWorldPos);
+		if (hitCollider == nullptr || hitCollider != mouseDownCollider) return;
+
+		hitCollider->obj->sendCallback(&Component::onMouseClick);
 	}
 	else if (event.type == SDL_MOUSEMOTION)
 	{
 		mousePos.x = event.motion.x;
 		mousePos.y = event.motion.y;
 
-		mouseMoved = true;
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		auto hitCollider = Physics::raycastAt(mouseWorldPos);
+		if (hitCollider == mouseOverCollider) return;
+
+		if (mouseOverCollider != nullptr)
+			mouseOverCollider->obj->sendCallback(&Component::onMouseExit);
+		mouseOverCollider = hitCollider;
+
+		if (hitCollider == nullptr) return;
+		hitCollider->obj->sendCallback(&Component::onMouseEnter);
 	}
 	else if (event.type == SDL_MOUSEWHEEL)
 	{

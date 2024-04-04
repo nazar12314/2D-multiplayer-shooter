@@ -31,13 +31,6 @@ glm::vec2 Math::lerp(glm::vec2 a, glm::vec2 b, float t)
 	return a + (b - a) * t;
 }
 
-float Math::distance(float startX, float startY, float endX, float endY)
-{
-	float a = std::abs(startX - endX);
-	float b = std::abs(startY - endY);
-
-	return std::sqrt(a * a + b * b);
-}
 float Math::distanceSquared(glm::vec2 a, glm::vec2 b)
 {
 	return (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);

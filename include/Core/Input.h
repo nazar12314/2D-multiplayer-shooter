@@ -5,9 +5,10 @@
 #include "Action.h"
 #include "glm/vec2.hpp"
 
+class Collider;
+
 class Input
 {
-public:
 	inline static std::vector<SDL_Keycode> keysPressed {};
 	inline static std::vector<SDL_Keycode> keysReleased {};
 	inline static std::vector<SDL_Keycode> keysCurrentlyDown {};
@@ -16,13 +17,15 @@ public:
 	inline static std::vector<Uint8> mouseButtonsReleased {};
 	inline static std::vector<Uint8> mouseButtonsCurrentlyDown {};
 
-	inline static glm::ivec2 mousePos {};
-	inline static bool mouseMoved = false;
-
-	inline static float mouseWheelValue = 0;
+	inline static Collider* mouseOverCollider = nullptr;
+	inline static Collider* mouseDownCollider = nullptr;
 
 	static void clear();
 	static void handleInputEvent(const SDL_Event& event);
+
+public:
+	inline static glm::ivec2 mousePos {};
+	inline static float mouseWheelValue = 0;
 
 	// SDLK_{X} - X key, e.g. SDLK_w - W key
 	static bool wasKeyPressed(SDL_Keycode key);
@@ -33,4 +36,6 @@ public:
 	static bool wasMouseButtonPressed(Uint8 button);
 	static bool wasMouseButtonReleased(Uint8 button);
 	static bool isMouseButtonDown(Uint8 button);
+
+	friend class SDLHandler;
 };

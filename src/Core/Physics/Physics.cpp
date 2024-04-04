@@ -21,11 +21,15 @@ void Physics::subscribeToEvents()
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
 			rigidbodies.push_back_delayed(rb);
+		if (auto col = dynamic_cast<Collider*>(comp))
+			colliders.push_back_delayed(col);
 	};
 	Object::onComponentRemovedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
 			rigidbodies.erase_delayed(rb);
+		if (auto col = dynamic_cast<Collider*>(comp))
+			colliders.erase_delayed(col);
 	};
 }
 
@@ -45,7 +49,7 @@ void Physics::physicsLoop()
 	{
 		Time::fixedTick();
 		fixedUpdateTimer += Time::fixedDeltaTime;
-		Object::fixedUpdateAll();
+		Object::sendCallbackAll(&Component::fixedUpdate);
 
 		// !!! PHYSICS STEP !!!
 		step(Time::fixedDeltaTime);
@@ -249,4 +253,21 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 		col1->triggerStayed(col2);
 		col2->triggerStayed(col1);
 	}
+}
+
+Collider* Physics::raycastAt(const glm::vec2& point)
+{
+	colliders.apply_changes();
+	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->obj->z() < b->obj->z(); });
+
+	Collider* collider = nullptr;
+	for (auto& col : colliders)
+	{
+		if (col->isPointInside(point))
+		{
+			collider = col;
+			break;
+		}
+	}
+	return collider;
 }

@@ -12,14 +12,15 @@ class Rigidbody;
 
 class Physics
 {
-	constexpr static int SUBSTEPS = 8;  // Increase for precision, decrease for performance
+	constexpr static int SUBSTEPS = 2;  // Increase for precision, decrease for performance
 	constexpr static int TASK_COUNT = 32;
 
 	constexpr static bool MANUAL_UPDATE = false;
 	constexpr static bool DISPLAY_GIZMOS_CONTACTS_DEBUG = true;
-	constexpr static bool DISPLAY_GIZMOS_NORMALS_DEBUG = true;
+	constexpr static bool DISPLAY_GIZMOS_NORMALS_DEBUG = false;
 
 	inline static VectorDelayed<Rigidbody*> rigidbodies;
+	inline static VectorDelayed<Collider*> colliders;
 
 	inline static float fixedUpdateTimer = 0;
 
@@ -51,6 +52,8 @@ class Physics
 	static void clearGizmos_debug();
 
 public:
+	static Collider* raycastAt(const glm::vec2& point);
+
 	friend class Rigidbody;
 	friend class Application;
 };

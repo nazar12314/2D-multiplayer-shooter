@@ -15,8 +15,8 @@
 void shapeSpawnerNoGravityWithTankScene()
 {
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
-	auto follow = cam->obj->addComponent<CameraFollow>(5);
-	auto resizer = cam->obj->addComponent<CameraResizer>(8, 2, 8);
+	auto follow = cam->addComponent<CameraFollow>(5);
+	auto resizer = cam->addComponent<CameraResizer>(8, 2, 8);
 
 	auto tank = Object::create("Player")->addComponent<Tank>();
 	follow->setTarget(tank->obj);
@@ -27,7 +27,7 @@ void shapeSpawnerNoGravityWithTankScene()
 void lotsOfShapesWithGravityScene()
 {
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
-	auto resizer = cam->obj->addComponent<CameraResizer>(20, 2, 8);
+	auto resizer = cam->addComponent<CameraResizer>(20, 2, 8);
 
 	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
 
@@ -44,7 +44,7 @@ void lotsOfShapesWithGravityScene()
 void shapeSpawnerWithGravity()
 {
 	auto cam = Object::create("Camera")->addComponent<Camera>(8);
-	auto resizer = cam->obj->addComponent<CameraResizer>(20, 2, 15, true);
+	auto resizer = cam->addComponent<CameraResizer>(20, 2, 15, true);
 
 	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
 

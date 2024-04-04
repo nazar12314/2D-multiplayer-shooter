@@ -25,29 +25,29 @@ void Collider::setIsTrigger(bool trigger) { _isTrigger = trigger; }
 void Collider::collisionEntered(Collider* other)
 {
 	collidingWith.push_back(other);
-	obj->onCollisionEnter(other);
+	obj->sendCallback(&Component::onCollisionEnter, other);
 }
 void Collider::collisionStayed(Collider* other) const
 {
-	obj->onCollisionStay(other);
+	obj->sendCallback(&Component::onCollisionStay, other);
 }
 void Collider::collisionExited(Collider* other)
 {
 	std::erase(collidingWith, other);
-	obj->onCollisionExit(other);
+	obj->sendCallback(&Component::onCollisionExit, other);
 }
 
 void Collider::triggerEntered(Collider* other)
 {
 	triggeringWith.push_back(other);
-	obj->onTriggerEnter(other);
+	obj->sendCallback(&Component::onTriggerEnter, other);
 }
 void Collider::triggerStayed(Collider* other) const
 {
-	obj->onTriggerStay(other);
+	obj->sendCallback(&Component::onTriggerStay, other);
 }
 void Collider::triggerExited(Collider* other)
 {
 	std::erase(triggeringWith, other);
-	obj->onTriggerExit(other);
+	obj->sendCallback(&Component::onTriggerExit, other);
 }

@@ -12,7 +12,7 @@ class Collider;
 class Component;
 class Texture;
 
-class Object : public Transform
+class Object final : public Transform
 {
 public:
 	// -- Global --
@@ -24,16 +24,16 @@ public:
 	static Object* create(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
 	static void destroy(Object* obj);
 
-	static void startAll();
-	static void updateAll();
-	static void lateUpdateAll();
-	static void fixedUpdateAll();
 	static void destroyAll();
 
 	static void prepareAll();
+	template <typename... Ts> static void sendCallbackAll(void (Component::*func)(Ts...), Ts... args);
 	// -- Global --
 
 private:
+	void prepare();
+	template <typename... Ts> void sendCallback(void(Component::* func)(Ts...), Ts... args);
+
 	std::string _name;
 	std::string _tag;
 	bool _enabled = true;
@@ -41,7 +41,6 @@ private:
 	VectorDelayed<Component*> components {};
 
 	Object(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
-	virtual ~Object();
 
 public:
 	std::string name() const;
@@ -60,28 +59,20 @@ public:
 	template <derived<Component> T> T* getComponent();
 	template <derived<Component> T> bool tryGetComponent(T*& component) const;
 
-protected:
-	// -- System --
-	void prepare();
-
-	// -- Default --
-	virtual void start() const;
-	virtual void update() const;
-	virtual void lateUpdate() const;
-	virtual void fixedUpdate() const;
-	virtual void onDestroy();
-
-	// -- Collision --
-	virtual void onCollisionEnter(Collider* other) const;
-	virtual void onCollisionStay(Collider* other) const;
-	virtual void onCollisionExit(Collider* other) const;
-
-	virtual void onTriggerEnter(Collider* other) const;
-	virtual void onTriggerStay(Collider* other) const;
-	virtual void onTriggerExit(Collider* other) const;
-
 	friend class Collider;
+	friend class Input;
 };
+
+template <typename ... Ts> void Object::sendCallbackAll(void(Component::* func)(Ts...), Ts... args)
+{
+	for (Object* obj : objects)
+		obj->sendCallback(func, args...);
+}
+template <typename ... Ts> void Object::sendCallback(void(Component::* func)(Ts...), Ts... args)
+{
+	for (Component* component : components)
+		(component->*func)(args...);
+}
 
 template <derived<Component> T, typename... Ts> T* Object::addComponent(Ts... args)
 {

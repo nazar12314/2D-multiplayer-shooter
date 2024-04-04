@@ -14,6 +14,8 @@ class CircleCollider : public Collider
 	std::vector<glm::vec2> findContactPoints(const PolygonCollider* other) const override;
 	std::vector<glm::vec2> findContactPoints(const CircleCollider* other) const override;
 
+	bool isPointInside(const glm::vec2& point) const override;
+
 	explicit CircleCollider(Object* obj, float radius = 1, bool isTrigger = false);
 
 	float calculateMass() const override;

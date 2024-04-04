@@ -68,6 +68,20 @@ std::vector<glm::vec2> PolygonCollider::findContactPoints(const CircleCollider* 
 	return Math::findContactPoints(other->obj->pos(), other->radius(), _globalVertices);
 }
 
+bool PolygonCollider::isPointInside(const glm::vec2& point) const
+{
+	auto vertices = _globalVertices;
+	bool c = false;
+	for (int i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++)
+	{
+		if (vertices[i].y >= point.y != (vertices[j].y >= point.y) &&
+			point.x <= (vertices[j].x - vertices[i].x) * (point.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x
+		)
+			c = !c;
+	}
+	return c;
+}
+
 void PolygonCollider::recalculate()
 {
 	_globalVertices.resize(_vertices.size());

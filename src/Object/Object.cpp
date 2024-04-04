@@ -14,44 +14,17 @@ Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 }
 void Object::destroy(Object* obj)
 {
-	obj->onDestroy();
+	sendCallbackAll(&Component::onDestroy);
 
 	objects.erase_delayed(obj);
-}
-
-void Object::startAll()
-{
-	for (Object* obj : objects)
-		obj->start();
-}
-void Object::updateAll()
-{
-	for (Object* obj : objects)
-	{
-		if (!obj->_enabled) continue;
-		obj->update();
-	}
-}
-void Object::lateUpdateAll()
-{
-	for (Object* obj : objects)
-	{
-		if (!obj->_enabled) continue;
-		obj->lateUpdate();
-	}
-}
-void Object::fixedUpdateAll()
-{
-	for (Object* obj : objects)
-	{
-		if (!obj->_enabled) continue;
-		obj->fixedUpdate();
-	}
+	delete obj;
 }
 void Object::destroyAll()
 {
+	objects.apply_changes();
 	for (Object* obj : objects)
-		obj->onDestroy();
+		destroy(obj);
+	objects.apply_changes();
 }
 
 void Object::prepareAll()
@@ -64,7 +37,6 @@ void Object::prepareAll()
 
 
 Object::Object(const std::string& name, glm::vec2 pos, float rot) : Transform(pos, rot), _name(name) {}
-Object::~Object() {}
 
 std::string Object::name() const { return _name; }
 std::string Object::tag() const { return _tag; }
@@ -84,63 +56,5 @@ void Object::removeComponent(Component* component)
 
 void Object::prepare()
 {
-	transformChanged = false;
 	components.apply_changes();
-}
-
-void Object::start() const
-{
-	for (Component* component : components)
-		component->start();
-}
-void Object::update() const
-{
-	for (Component* component : components)
-		component->update();
-}
-void Object::lateUpdate() const
-{
-	for (Component* component : components)
-		component->lateUpdate();
-}
-void Object::fixedUpdate() const
-{
-	for (Component* component : components)
-		component->fixedUpdate();
-}
-void Object::onDestroy()
-{
-	for (Component* component : components)
-		removeComponent(component);
-}
-
-void Object::onCollisionEnter(Collider* other) const
-{
-	for (Component* component : components)
-		component->onCollisionEnter(other);
-}
-void Object::onCollisionStay(Collider* other) const
-{
-	for (Component* component : components)
-		component->onCollisionStay(other);
-}
-void Object::onCollisionExit(Collider* other) const
-{
-	for (Component* component : components)
-		component->onCollisionExit(other);
-}
-void Object::onTriggerEnter(Collider* other) const
-{
-	for (Component* component : components)
-		component->onTriggerEnter(other);
-}
-void Object::onTriggerStay(Collider* other) const
-{
-	for (Component* component : components)
-		component->onTriggerStay(other);
-}
-void Object::onTriggerExit(Collider* other) const
-{
-	for (Component* component : components)
-		component->onTriggerExit(other);
 }
