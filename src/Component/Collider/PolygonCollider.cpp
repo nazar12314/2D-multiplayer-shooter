@@ -42,10 +42,9 @@ std::optional<Collision> PolygonCollider::getCollisionWith(PolygonCollider* othe
 	auto collided = sep1 <= 0 && sep2 <= 0;
 	if (!collided) return std::nullopt;
 
-	auto contactPoints = Math::findContactPoints(vertices, otherVertices);
 	if (sep1 > sep2)
-		return Collision(collided, norm1, -sep1, contactPoints, this, other);
-	return Collision(collided, norm2, -sep2, contactPoints, other, this);
+		return Collision(norm1, -sep1, this, other);
+	return Collision(norm2, -sep2, other, this);
 }
 std::optional<Collision> PolygonCollider::getCollisionWith(CircleCollider* other)
 {
@@ -53,8 +52,20 @@ std::optional<Collision> PolygonCollider::getCollisionWith(CircleCollider* other
 	auto collided = sep <= 0;
 	if (!collided) return std::nullopt;
 
-	auto contactPoints = Math::findContactPoints(other->obj->pos(), other->radius(), _globalVertices);
-	return Collision(collided, norm, -sep, contactPoints, other, this);
+	return Collision(norm, -sep, other, this);
+}
+
+std::vector<glm::vec2> PolygonCollider::findContactPoints(const Collider* other) const
+{
+	return other->findContactPoints(this);
+}
+std::vector<glm::vec2> PolygonCollider::findContactPoints(const PolygonCollider* other) const
+{
+	return Math::findContactPoints(_globalVertices, other->_globalVertices);
+}
+std::vector<glm::vec2> PolygonCollider::findContactPoints(const CircleCollider* other) const
+{
+	return Math::findContactPoints(other->obj->pos(), other->radius(), _globalVertices);
 }
 
 void PolygonCollider::recalculate()

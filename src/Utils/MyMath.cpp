@@ -163,7 +163,7 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 				contactPoints.clear();
 				contactPoints.push_back(closestPoint);
 			}
-			else if (nearlyEqual(dis, minDis, 0.00000001f))
+			else if (nearlyEqual(dis, minDis, 0.0000000001f))
 				contactPoints.push_back(closestPoint);
 		}
 	}
@@ -184,9 +184,9 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 				contactPoints.clear();
 				contactPoints.push_back(closestPoint);
 			}
-			else if (nearlyEqual(dis, minDis))
+			else if (nearlyEqual(dis, minDis, 0.0000000001f))
 			{
-				if (std::ranges::find(contactPoints, closestPoint) == contactPoints.end())
+				if (!nearlyEqual(contactPoints[0], closestPoint, 0.0000000001f))
 					contactPoints.push_back(closestPoint);
 			}
 		}

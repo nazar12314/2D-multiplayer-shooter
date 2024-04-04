@@ -27,6 +27,10 @@ class Collider : public Component
 	virtual std::optional<Collision> getCollisionWith(PolygonCollider* other) = 0;
 	virtual std::optional<Collision> getCollisionWith(CircleCollider* other) = 0;
 
+	virtual std::vector<glm::vec2> findContactPoints(const Collider* other) const = 0;
+	virtual std::vector<glm::vec2> findContactPoints(const PolygonCollider* other) const = 0;
+	virtual std::vector<glm::vec2> findContactPoints(const CircleCollider* other) const = 0;
+
 	void collisionEntered(Collider* other);
 	void collisionStayed(Collider* other) const;
 	void collisionExited(Collider* other);

@@ -16,7 +16,7 @@ Camera::~Camera()
 float Camera::size() const { return _size; }
 void Camera::setSize(float size) { _size = size; }
 
-glm::vec2 Camera::screenToWorldPoint(const glm::ivec2& screenPos) const
+glm::vec2 Camera::screenToWorldPoint(const glm::vec2& screenPos) const
 {
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
 	auto ratio = wSize.x / wSize.y;
@@ -24,7 +24,7 @@ glm::vec2 Camera::screenToWorldPoint(const glm::ivec2& screenPos) const
 	return relPos * _size + obj->pos();
 }
 
-glm::ivec2 Camera::worldToScreenPoint(const glm::vec2& worldPos) const
+glm::vec2 Camera::worldToScreenPoint(const glm::vec2& worldPos) const
 {
 	auto relPos = (worldPos - obj->pos()) / _size;
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
@@ -41,12 +41,12 @@ float Camera::worldToScreenSize(float worldSize) const
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
 	return worldSize / _size * wSize.y;
 }
-glm::vec2 Camera::screenToWorldSize(const glm::ivec2& screenSize) const
+glm::vec2 Camera::screenToWorldSize(const glm::vec2& screenSize) const
 {
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
-	return (glm::vec2(screenSize.x, screenSize.y) / wSize.y) * _size;
+	return screenSize / wSize.y * _size;
 }
-glm::ivec2 Camera::worldToScreenSize(const glm::vec2& worldSize) const
+glm::vec2 Camera::worldToScreenSize(const glm::vec2& worldSize) const
 {
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
 	return (worldSize / _size) * wSize.y;

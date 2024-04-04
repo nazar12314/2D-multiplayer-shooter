@@ -21,7 +21,7 @@ void ShapeSpawner::spawnSquare(glm::vec2 spawnPos) const
 	obj->addComponent<PolygonCollider>(glm::vec2(size, size));
 	auto rb = obj->addComponent<Rigidbody>(enableGravity ? 0 : 5.0f, 0);
 	rb->setRestitution(0.5f);
-	if (enableGravity) rb->setGravity(20);
+	if (enableGravity) rb->setGravity(10);
 }
 void ShapeSpawner::spawnCircle(glm::vec2 spawnPos) const
 {
@@ -32,7 +32,7 @@ void ShapeSpawner::spawnCircle(glm::vec2 spawnPos) const
 	obj->addComponent<CircleCollider>(radius);
 	auto rb = obj->addComponent<Rigidbody>(enableGravity ? 0 : 5.0f, 0);
 	rb->setRestitution(0.5f);
-	if (enableGravity) rb->setGravity(20);
+	if (enableGravity) rb->setGravity(10);
 }
 
 void ShapeSpawner::update()

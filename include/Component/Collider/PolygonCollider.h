@@ -24,6 +24,10 @@ class PolygonCollider : public Collider
 	std::optional<Collision> getCollisionWith(PolygonCollider* other) override;
 	std::optional<Collision> getCollisionWith(CircleCollider* other) override;
 
+	std::vector<glm::vec2> findContactPoints(const Collider* other) const override;
+	std::vector<glm::vec2> findContactPoints(const PolygonCollider* other) const override;
+	std::vector<glm::vec2> findContactPoints(const CircleCollider* other) const override;
+
 	void onDestroy() override;
 
 	float calculateMass() const override;

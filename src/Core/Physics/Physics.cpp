@@ -14,9 +14,6 @@
 void Physics::init()
 {
 	subscribeToEvents();
-
-	solvers.push_back(new PositionSolver());
-	solvers.push_back(new ImpulseSolver());
 }
 void Physics::subscribeToEvents()
 {
@@ -53,37 +50,51 @@ void Physics::physicsLoop()
 		// !!! PHYSICS STEP !!!
 		step(Time::fixedDeltaTime);
 		// !!! PHYSICS STEP !!!
+
+		if (Input::isKeyDown(SDLK_LCTRL))
+			for (int i = 0; i < 3; i++)
+				step(Time::fixedDeltaTime);
 	}
 }
 
 void Physics::step(float dt, int substeps)
 {
+	clearGizmos_debug();
+
 	rigidbodies.apply_changes();
 	for (int i = 0; i < substeps; i++)
 	{
 		for (auto& rb : rigidbodies)
-			rb->step(dt / SUBSTEPS);
+			rb->step(dt / substeps);
 
 		solveCollisions();
 
-		displayContactPoints_debug();
+		displayGizmos_debug();
 	}
 }
 
-void Physics::displayContactPoints_debug()
+void Physics::displayGizmos_debug()
 {
-	if constexpr (!DISPLAY_CONTACT_POINTS) return;
+	if constexpr (!DISPLAY_GIZMOS_CONTACTS_DEBUG && !DISPLAY_GIZMOS_NORMALS_DEBUG) return;
 
+	//updateCollisionsParallel();
+	//updateContactPoints();
+
+	if constexpr (DISPLAY_GIZMOS_CONTACTS_DEBUG)
+		for (auto& col : collisionStorage)
+			for (auto& point : col.contactPoints)
+				gizmos.push_back(Gizmos::drawPoint(point, 0.03f, Color::red, 999));
+
+	if constexpr (DISPLAY_GIZMOS_NORMALS_DEBUG)
+		for (auto& col : collisionStorage)
+			for (auto& point : col.contactPoints)
+				gizmos.push_back(Gizmos::drawVector(point, col.norm, glm::clamp(col.depth * 250, 0.0f, 5.0f), Color::green, 999));
+}
+void Physics::clearGizmos_debug()
+{
 	for (auto& gizmo : gizmos)
 		Gizmos::remove(gizmo);
 	gizmos.clear();
-
-	for (auto& col : collisionStorage)
-		for (auto& point : col.contactPoints)
-			gizmos.push_back(Gizmos::drawPoint(point, 0.05f, Color::red, 999));
-	for (auto& trig : triggerStorage)
-		for (auto& point : trig.contactPoints)
-			gizmos.push_back(Gizmos::drawPoint(point, 0.05f, Color::green, 999));
 }
 
 void Physics::solveCollisions()
@@ -101,8 +112,9 @@ void Physics::solveCollisions()
 	updateCollisionsParallel();
 
 	// Resolve collisions
-	for (auto& solver : solvers)
-		solver->solveCollisions(collisionStorage);
+	PositionSolver::solveCollisions(collisionStorage);
+	updateContactPoints();
+	ImpulseSolver::solveCollisions(collisionStorage);
 
 	sendCollisionCallbacks(collisionStorage);
 	sendTriggerCallbacks(triggerStorage);
@@ -191,6 +203,17 @@ void Physics::updateCollisionsParallel()
 		});
 	}
 	pool.wait_for_tasks();
+}
+
+void Physics::updateContactPoints()
+{
+	for (auto& collision : collisionStorage)
+	{
+		auto col1 = collision.col1;
+		auto col2 = collision.col2;
+
+		collision.contactPoints = col1->findContactPoints(col2);
+	}
 }
 
 void Physics::sendCollisionCallbacks(const std::vector<Collision>& collisions)

@@ -54,7 +54,7 @@ void Rigidbody::step(float dt)
 	if (!Math::nearlyZero(_velocity))
 	{
 		obj->setPos(obj->pos() + _velocity * dt);
-		_velocity *= 1 - _linearDrag * dt;
+		//_velocity *= 1 - _linearDrag * dt;
 		moved = true;
 	}
 	_force = {0, 0};
@@ -63,9 +63,10 @@ void Rigidbody::step(float dt)
 	if (!Math::nearlyZero(_angularVelocity))
 	{
 		obj->setRot(obj->rot() - glm::degrees(_angularVelocity) * dt);
-		_angularVelocity *= 1 - _angularDrag * dt;
+		//_angularVelocity *= 1 - _angularDrag * dt;
 		moved = true;
 	}
+	else _angularVelocity = 0;
 	_angularForce = 0;
 
 	if (moved && _attachedCollider != nullptr)

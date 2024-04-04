@@ -9,11 +9,12 @@
 #include "Material.h"
 #include <algorithm>
 
-Material* Renderer::defaultCircleMaterial = new Material(Assets::load<Texture>("sprites/circle.png"));
-
 void Renderer::init()
 {
 	subscribeToEvents();
+
+	circleMaterial = new Material(Assets::load<Texture>("sprites/circle.png"));
+	squareMaterial = new Material(Assets::load<Texture>("sprites/square.png"));
 }
 void Renderer::subscribeToEvents()
 {
@@ -54,15 +55,15 @@ void Renderer::renderSprites(const Camera* mainCamera)
 	}
 }
 
-void Renderer::renderTex(SDL_Texture* tex, const glm::ivec2& pos, const glm::ivec2& size, float rot)
+void Renderer::renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot)
 {
-	SDL_Rect rect;
+	SDL_FRect rect;
 	rect.x = pos.x - size.x / 2;
 	rect.y = pos.y - size.y / 2;
 	rect.w = size.x;
 	rect.h = size.y;
 
-	SDL_RenderCopyEx(SDLHandler::renderer, tex, NULL, &rect, rot, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(SDLHandler::renderer, tex, NULL, &rect, rot, NULL, SDL_FLIP_NONE);
 }
 void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot)
 {
@@ -71,18 +72,15 @@ void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm:
 	renderTex(tex, screenPos, screenSize, rot);
 }
 
-void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color)
+void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width)
 {
-	auto screenP1 = Camera::getMain()->worldToScreenPoint(p1);
-	auto screenP2 = Camera::getMain()->worldToScreenPoint(p2);
-
-	SDL_SetRenderDrawColor(SDLHandler::renderer, color.r() * 255, color.g() * 255, color.b() * 255, color.a() * 255);
-	SDL_RenderDrawLine(SDLHandler::renderer, screenP1.x, screenP1.y, screenP2.x, screenP2.y);
+	squareMaterial->setColor(color);
+	renderTexWorld(squareMaterial->texture(), (p1 + p2) / 2.f, {width, distance(p1, p2)}, 90 - glm::degrees(glm::atan(p2.y - p1.y, p2.x - p1.x)));
 }
 void Renderer::drawCircleWorld(const glm::vec2& pos, float radius, const Color& color)
 {
-	defaultCircleMaterial->setColor(color);
-	renderTexWorld(defaultCircleMaterial->texture(), pos, {radius * 2, radius * 2});
+	circleMaterial->setColor(color);
+	renderTexWorld(circleMaterial->texture(), pos, {radius * 2, radius * 2});
 }
 void Renderer::sortSprites()
 {

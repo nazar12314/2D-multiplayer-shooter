@@ -52,7 +52,5 @@ public:
 	SDL_Surface* surface() const { return _surface; }
 	SDL_Texture* texture() const { return _texture; }
 
-	Texture* clone() const { return new Texture(path()); }
-
 	friend class Assets;
 };

@@ -19,6 +19,7 @@ public:
 	static Gizmo* drawRect(glm::vec2 pos, glm::vec2 size, const Color& color = Color::green, float dur = 0.01f);
 	static Gizmo* drawCircle(glm::vec2 pos, float radius, const Color& color = Color::green, float dur = 0.01f);
 	static Gizmo* drawPoint(glm::vec2 pos, float radius, const Color& color = Color::green, float dur = 0.01f);
+	static Gizmo* drawVector(glm::vec2 pos, glm::vec2 dir, float length = 1, const Color& color = Color::green, float dur = 0.01f);
 
 	static void remove(Gizmo* gizmo);
 
@@ -58,7 +59,20 @@ class PointGizmo : public Gizmo
 
 	PointGizmo(glm::vec2 pos, float radius, const Color& color, float duration);
 
-	void draw()const override;
+	void draw() const override;
+
+	friend class Gizmos;
+};
+
+class VectorGizmo : public Gizmo
+{
+	glm::vec2 pos;
+	glm::vec2 dir;
+	float length;
+
+	VectorGizmo(glm::vec2 pos, glm::vec2 dir, float length, const Color& color, float duration);
+
+	void draw() const override;
 
 	friend class Gizmos;
 };

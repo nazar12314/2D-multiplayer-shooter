@@ -21,12 +21,12 @@ public:
 	float size() const;
 	void setSize(float size);
 
-	glm::vec2 screenToWorldPoint(const glm::ivec2& screenPos) const;
-	glm::ivec2 worldToScreenPoint(const glm::vec2& worldPos) const;
+	glm::vec2 screenToWorldPoint(const glm::vec2& screenPos) const;
+	glm::vec2 worldToScreenPoint(const glm::vec2& worldPos) const;
 	float screenToWorldSize(float screenSize) const;
 	float worldToScreenSize(float worldSize) const;
-	glm::vec2 screenToWorldSize(const glm::ivec2& screenSize) const;
-	glm::ivec2 worldToScreenSize(const glm::vec2& worldSize) const;
+	glm::vec2 screenToWorldSize(const glm::vec2& screenSize) const;
+	glm::vec2 worldToScreenSize(const glm::vec2& worldSize) const;
 
 	static Camera* getMain();
 

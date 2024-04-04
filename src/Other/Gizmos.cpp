@@ -60,6 +60,13 @@ Gizmo* Gizmos::drawPoint(glm::vec2 pos, float radius, const Color& color, float 
 
 	return gizmo;
 }
+Gizmo* Gizmos::drawVector(glm::vec2 pos, glm::vec2 dir, float length, const Color& color, float dur)
+{
+	auto gizmo = new VectorGizmo(pos, dir, length, color, dur);
+	gizmos.push_back(gizmo);
+
+	return gizmo;
+}
 void Gizmos::remove(Gizmo* gizmo)
 {
 	std::erase(gizmos, gizmo);
@@ -84,6 +91,13 @@ PointGizmo::PointGizmo(glm::vec2 pos, float radius, const Color& color, float du
 void PointGizmo::draw() const
 {
 	auto sizeMult = Camera::getMain()->size();
-	Renderer::drawCircleWorld(pos, sizeMult * (radius + 0.02f) / 7, Color::white);
+	Renderer::drawCircleWorld(pos, sizeMult * (radius + 0.015f) / 7.0f, Color::white);
 	Renderer::drawCircleWorld(pos, sizeMult * radius / 7, color);
+}
+
+VectorGizmo::VectorGizmo(glm::vec2 pos, glm::vec2 dir, float length, const Color& color, float duration) : Gizmo(color, duration), pos(pos), dir(dir), length(length) {}
+void VectorGizmo::draw() const
+{
+	auto sizeMult = Camera::getMain()->size();
+	Renderer::drawLine(pos, pos + sizeMult * dir * length / 15.0f, color, sizeMult / 300.0f);
 }

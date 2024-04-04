@@ -4,23 +4,14 @@
 
 #include "Collision.h"
 
-class Rigidbody;
-
-class Solver
+class PositionSolver
 {
 public:
-	virtual void solveCollisions(const std::vector<Collision>& collisions) = 0;
+	static void solveCollisions(const std::vector<Collision>& collisions);
 };
 
-
-class PositionSolver : public Solver
+class ImpulseSolver
 {
 public:
-	void solveCollisions(const std::vector<Collision>& collisions) override;
-};
-
-class ImpulseSolver : public Solver
-{
-public:
-	void solveCollisions(const std::vector<Collision>& collisions) override;
+	static void solveCollisions(const std::vector<Collision>& collisions);
 };

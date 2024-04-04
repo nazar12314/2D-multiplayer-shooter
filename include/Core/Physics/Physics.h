@@ -12,13 +12,14 @@ class Rigidbody;
 
 class Physics
 {
-	constexpr static int SUBSTEPS = 4;
-	constexpr static bool DISPLAY_CONTACT_POINTS = true;
+	constexpr static int SUBSTEPS = 8;  // Increase for precision, decrease for performance
 	constexpr static int TASK_COUNT = 32;
-	constexpr static bool MANUAL_UPDATE = true;
+
+	constexpr static bool MANUAL_UPDATE = false;
+	constexpr static bool DISPLAY_GIZMOS_CONTACTS_DEBUG = true;
+	constexpr static bool DISPLAY_GIZMOS_NORMALS_DEBUG = true;
 
 	inline static VectorDelayed<Rigidbody*> rigidbodies;
-	inline static std::vector<Solver*> solvers;
 
 	inline static float fixedUpdateTimer = 0;
 
@@ -39,12 +40,15 @@ class Physics
 	static void updateCollisionsSequential();
 	static void updateCollisionsParallel();
 
+	static void updateContactPoints();
+
 	// Callbacks
 	static void sendCollisionCallbacks(const std::vector<Collision>& collisions);
 	static void sendTriggerCallbacks(const std::vector<Collision>& triggers);
 
 	inline static std::vector<Gizmo*> gizmos;
-	static void displayContactPoints_debug();
+	static void displayGizmos_debug();
+	static void clearGizmos_debug();
 
 public:
 	friend class Rigidbody;
