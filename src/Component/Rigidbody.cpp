@@ -7,7 +7,7 @@ Rigidbody::Rigidbody(Object* obj, float linearDrag, float angularDrag): Componen
 {
 	initCollider();
 }
-Rigidbody::Rigidbody(Object* obj) : Component(obj), _isStatic(true), _mass(std::numeric_limits<float>::max()), _invMass(0)
+Rigidbody::Rigidbody(Object* obj, bool isStatic) : Component(obj), _isStatic(isStatic)
 {
 	initCollider();
 }
@@ -46,6 +46,16 @@ void Rigidbody::step(float dt)
 {
 	if (_isStatic) return;
 
+	if (!Math::nearlyZero(_velocity))
+		_velocity -= _velocity * _linearDrag * dt;
+
+	if (!Math::nearlyZero(_angularVelocity))
+		_angularVelocity -= _angularVelocity * _angularDrag * dt;
+}
+void Rigidbody::substep(float dt)
+{
+	if (_isStatic) return;
+
 	// Apply gravity
 	_force += glm::vec2(0, -_gravity * _mass);
 
@@ -54,7 +64,6 @@ void Rigidbody::step(float dt)
 	if (!Math::nearlyZero(_velocity))
 	{
 		obj->setPos(obj->pos() + _velocity * dt);
-		//_velocity *= 1 - _linearDrag * dt;
 		moved = true;
 	}
 	_force = {0, 0};
@@ -63,7 +72,6 @@ void Rigidbody::step(float dt)
 	if (!Math::nearlyZero(_angularVelocity))
 	{
 		obj->setRot(obj->rot() - glm::degrees(_angularVelocity) * dt);
-		//_angularVelocity *= 1 - _angularDrag * dt;
 		moved = true;
 	}
 	else _angularVelocity = 0;
@@ -104,4 +112,25 @@ void Rigidbody::rotateTo(float rot) const
 	obj->setRot(rot);
 	if (_attachedCollider != nullptr)
 		_attachedCollider->recalculate();
+}
+
+void Rigidbody::applyImpulse(glm::vec2 pos, glm::vec2 impulse)
+{
+	if (_isStatic) return;
+
+	_velocity += impulse * _invMass;
+	_angularVelocity += Math::cross(pos - obj->pos(), impulse) * _invInertia;
+}
+void Rigidbody::applyImpact(glm::vec2 point, float radius, float force)
+{
+	if (_isStatic) return;
+
+	auto collision = _attachedCollider->getImpactCollision(point, radius);
+	if (collision == std::nullopt || collision->depth <= 0) return;
+
+	auto contactPoint = collision->contactPoints[0];
+
+	auto distanceFactor = length(point - contactPoint) / radius;
+	auto impulse = normalize(obj->pos() - contactPoint) * (1 - std::pow(distanceFactor, 1.5f)) * force;
+	applyImpulse(contactPoint, impulse);
 }

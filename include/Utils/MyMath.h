@@ -15,6 +15,7 @@ public:
 	static float round(float value, int digits = 0);
 
 	static float lerp(float a, float b, float t);
+	static float lerpUnclamped(float a, float b, float t);
 	static glm::vec2 lerp(glm::vec2 a, glm::vec2 b, float t);
 
 	static std::tuple<float, glm::vec2> findMinSeparation(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB);
@@ -34,6 +35,9 @@ public:
 	static float randomFloat(float min, float max);
 	static float randomInt(int min, int max);
 	static float randomValue();
+	static glm::vec2 randomVec2(float min, float max);
+	static glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);
+	static glm::vec2 randomDir();
 
 	static bool nearlyEqual(float a, float b, float epsilon = 0.0001f);
 	static bool nearlyEqual(glm::vec2 a, glm::vec2 b, float epsilon = 0.0001f);

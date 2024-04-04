@@ -55,7 +55,7 @@ void Physics::physicsLoop()
 		step(Time::fixedDeltaTime);
 		// !!! PHYSICS STEP !!!
 
-		if (Input::isKeyDown(SDLK_LCTRL))
+		if (Input::isKeyDown(SDLK_LCTRL)) // Speed up for testing
 			for (int i = 0; i < 3; i++)
 				step(Time::fixedDeltaTime);
 	}
@@ -66,10 +66,14 @@ void Physics::step(float dt, int substeps)
 	clearGizmos_debug();
 
 	rigidbodies.apply_changes();
+	colliders.apply_changes();
+	for (auto& rb : rigidbodies)
+		rb->step(dt);
+
 	for (int i = 0; i < substeps; i++)
 	{
 		for (auto& rb : rigidbodies)
-			rb->step(dt / substeps);
+			rb->substep(dt / substeps);
 
 		solveCollisions();
 
@@ -257,7 +261,6 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 
 Collider* Physics::raycastAt(const glm::vec2& point)
 {
-	colliders.apply_changes();
 	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->obj->z() < b->obj->z(); });
 
 	Collider* collider = nullptr;
@@ -270,4 +273,10 @@ Collider* Physics::raycastAt(const glm::vec2& point)
 		}
 	}
 	return collider;
+}
+
+void Physics::createImpact(const glm::vec2& point, float radius, float force)
+{
+	for (auto& rb : rigidbodies)
+		rb->applyImpact(point, radius, force);
 }

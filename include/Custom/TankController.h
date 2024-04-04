@@ -9,7 +9,7 @@ class TankController : public Component
 {
 	Rigidbody* rb;
 
-	TankController(Object* obj, float moveSpeed = 70, float rotationSpeed = 60);
+	TankController(Object* obj, float moveSpeed = 130, float rotationSpeed = 80);
 
 	void fixedUpdate() override;
 

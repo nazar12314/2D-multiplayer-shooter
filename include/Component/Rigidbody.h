@@ -33,11 +33,12 @@ class Rigidbody : public Component
 	Collider* _attachedCollider = nullptr;
 
 	Rigidbody(Object* obj, float linearDrag, float angularDrag = 0);
-	Rigidbody(Object* obj);
+	Rigidbody(Object* obj, bool isStatic = true);
 	void initCollider();
 	~Rigidbody() override;
 
 	void step(float dt);
+	void substep(float dt);
 
 	void attachCollider(Collider* col);
 	void resetCollider();
@@ -72,9 +73,13 @@ public:
 	void moveTo(glm::vec2 pos) const;
 	void rotateTo(float rot) const;
 
+	void applyImpulse(glm::vec2 pos, glm::vec2 impulse);
+	void applyImpact(glm::vec2 point, float radius, float force);
+
 	friend class Object;
 	friend class Physics;
 	friend class Collider;
 	friend class PositionSolver;
 	friend class ImpulseSolver;
+	friend class ImpactSolver;
 };

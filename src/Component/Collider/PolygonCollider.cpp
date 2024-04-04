@@ -81,6 +81,15 @@ bool PolygonCollider::isPointInside(const glm::vec2& point) const
 	}
 	return c;
 }
+std::optional<Collision> PolygonCollider::getImpactCollision(glm::vec2 center, float radius) 
+{
+	auto [sep, norm] = Math::findMinSeparation(center, radius, _globalVertices);
+	auto collided = sep <= 0;
+	if (!collided) return std::nullopt;
+
+	auto contactPoints = Math::findContactPoints(center, radius, _globalVertices);
+	return Collision(norm, -sep, nullptr, this, contactPoints);
+}
 
 void PolygonCollider::recalculate()
 {

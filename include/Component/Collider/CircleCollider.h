@@ -21,6 +21,9 @@ class CircleCollider : public Collider
 	float calculateMass() const override;
 	float calculateInertia(float mass) const override;
 
+	std::optional<Collision> getImpactCollision(glm::vec2 center, float radius) override;
+
+
 public:
 	float radius() const { return _radius; }
 	void setRadius(float radius) { _radius = radius; }

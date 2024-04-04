@@ -54,6 +54,8 @@ class Physics
 public:
 	static Collider* raycastAt(const glm::vec2& point);
 
+	static void createImpact(const glm::vec2& point, float radius, float force);
+
 	friend class Rigidbody;
 	friend class Application;
 };

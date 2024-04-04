@@ -29,6 +29,7 @@ class PolygonCollider : public Collider
 	std::vector<glm::vec2> findContactPoints(const CircleCollider* other) const override;
 
 	bool isPointInside(const glm::vec2& point) const override;
+	std::optional<Collision> getImpactCollision(glm::vec2 center, float radius) override;
 
 	void onDestroy() override;
 

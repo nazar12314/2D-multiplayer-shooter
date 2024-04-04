@@ -6,13 +6,14 @@ class SpriteRenderer;
 
 class Tank : public Component
 {
-	float _gunRotSpeed;
-	float _firerate;
+	float _gunRotSpeed = 180;
+	float _firerate = 4;
 	SpriteRenderer* gun;
+	bool _explosiveBullets;
 
 	float shootCooldown;
 
-	Tank(Object* obj, float gunRotSpeed = 180, float firerate = 10);
+	Tank(Object* obj, bool explosiveBullets = false);
 	void createGun();
 
 	void update() override;

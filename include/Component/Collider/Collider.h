@@ -32,6 +32,7 @@ class Collider : public Component
 	virtual std::vector<glm::vec2> findContactPoints(const CircleCollider* other) const = 0;
 
 	virtual bool isPointInside(const glm::vec2& point) const = 0;
+	virtual std::optional<Collision> getImpactCollision(glm::vec2 center, float radius) = 0;
 
 	void collisionEntered(Collider* other);
 	void collisionStayed(Collider* other) const;
@@ -43,6 +44,7 @@ class Collider : public Component
 
 	virtual float calculateMass() const = 0;
 	virtual float calculateInertia(float mass) const = 0;
+
 public:
 	bool isTrigger() const;
 	void setIsTrigger(bool trigger);
@@ -52,6 +54,7 @@ public:
 	friend class Rigidbody;
 	friend class PolygonCollider;
 	friend class CircleCollider;
-	friend class ImpulseSolver;
 	friend class PositionSolver;
+	friend class ImpulseSolver;
+	friend class FrictionSolver;
 };

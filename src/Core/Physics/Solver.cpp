@@ -1,7 +1,5 @@
 #include "Solver.h"
 
-#include <iostream>
-
 #include "Collider.h"
 #include "MyMath.h"
 #include "Rigidbody.h"
@@ -25,25 +23,13 @@ void PositionSolver::solveCollisions(const std::vector<Collision>& collisions)
 
 void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 {
-	static std::vector<glm::vec2> r1Values(2);
-	static std::vector<glm::vec2> r2Values(2);
-	static std::vector<glm::vec2> impulses(2);
-	static std::vector<glm::vec2> frictionImpulses(2);
-	static std::vector<float> jValues(2);
-
 	for (auto& collision : collisions)
 	{
 		auto rb1 = collision.col1->_rb;
 		auto rb2 = collision.col2->_rb;
 		if (rb1->isStatic() && rb2->isStatic()) continue;
 
-		r1Values.clear();
-		r2Values.clear();
-		impulses.clear();
-		jValues.clear();
-
 		auto e = std::min(rb1->_restitution, rb2->_restitution);
-
 		auto contactPoint = collision.contactPoints.size() == 1 ? collision.contactPoints[0] : (collision.contactPoints[0] + collision.contactPoints[1]) / 2.0f;
 
 		auto r1 = contactPoint - rb1->obj->pos();
@@ -68,8 +54,6 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 
 		auto j = -(1.0f + e) * contactVelMag;
 		j /= denom;
-		jValues.push_back(j);
-
 		auto impulse = j * collision.norm;
 
 		rb1->_velocity -= impulse * rb1->_invMass;
@@ -82,8 +66,6 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 		// Friction
 		auto sf = (rb1->_staticFriction + rb2->_staticFriction) / 2;
 		auto df = (rb1->_dynamicFriction + rb2->_dynamicFriction) / 2;
-
-		frictionImpulses.clear();
 
 		angularVel1 = r1Perp * rb1->_angularVelocity;
 		angularVel2 = r2Perp * rb2->_angularVelocity;
@@ -104,13 +86,11 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 		auto jt = -dot(relVel, tangent);
 		jt /= denom;
 
-
 		glm::vec2 frictionImpulse;
 		if (std::abs(jt) <= j * sf)
 			frictionImpulse = jt * tangent;
 		else
 			frictionImpulse = -j * tangent * df;
-
 
 		rb1->_velocity -= frictionImpulse * rb1->_invMass;
 		rb1->_angularVelocity -= Math::cross(r1, frictionImpulse) * rb1->_invInertia;

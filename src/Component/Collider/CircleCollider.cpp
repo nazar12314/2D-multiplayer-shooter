@@ -15,6 +15,15 @@ float CircleCollider::calculateInertia(float mass) const
 {
 	return 0.5f * mass * _radius * _radius;
 }
+std::optional<Collision> CircleCollider::getImpactCollision(glm::vec2 center, float radius)
+{
+	auto [sep, norm] = Math::findMinSeparation(obj->pos(), _radius, center, radius);
+	auto collided = sep <= 0;
+	if (!collided) return std::nullopt;
+
+	auto contactPoints = Math::findContactPoints(obj->pos(), _radius, center, radius);
+	return Collision(norm, -sep, this, nullptr, contactPoints);
+}
 
 std::optional<Collision> CircleCollider::getCollisionWith(Collider* other)
 {

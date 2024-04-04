@@ -14,12 +14,12 @@
 #include "glm/geometric.hpp"
 #include "glm/detail/func_trigonometric.inl"
 
-Tank::Tank(Object* obj, float gunRotSpeed, float firerate): Component(obj), _gunRotSpeed(gunRotSpeed), _firerate(firerate)
+Tank::Tank(Object* obj, bool explosiveBullets): Component(obj), _explosiveBullets(explosiveBullets)
 {
 	auto tex = Assets::load<Texture>("sprites/square.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::randomLight());
 	addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
-	addComponent<Rigidbody>(10, 25);
+	addComponent<Rigidbody>(10, 15);
 	addComponent<TankController>();
 
 	createGun();
@@ -70,5 +70,5 @@ void Tank::shoot() const
 
 	auto spawnPos = obj->pos() + dir * gun->size().y * 0.85f;
 	auto bullet = Object::create("bullet", spawnPos, gun->obj->rot());
-	bullet->addComponent<Bullet>();
+	bullet->addComponent<Bullet>(16, _explosiveBullets);
 }

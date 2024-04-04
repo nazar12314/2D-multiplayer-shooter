@@ -16,6 +16,9 @@ void Object::destroy(Object* obj)
 {
 	sendCallbackAll(&Component::onDestroy);
 
+	for (Component* comp : obj->components)
+		onComponentRemovedGlobal(comp);
+
 	objects.erase_delayed(obj);
 	delete obj;
 }

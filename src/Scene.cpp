@@ -36,8 +36,8 @@ void lotsOfShapesWithGravityScene()
 
 	for (int i = 0; i < 15; i++)
 	{
-		shapeSpawner->spawnSquare(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
-		shapeSpawner->spawnCircle(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
+		ShapeSpawner::spawnSquare(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
+		ShapeSpawner::spawnCircle(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
 	}
 }
 
@@ -53,7 +53,23 @@ void shapeSpawnerWithGravity()
 	WallCreator::createWall(glm::vec2(3, 1), -15, glm::vec2(5, 0.25f));
 }
 
+void impactBulletsTankScene()
+{
+	auto cam = Object::create("Camera")->addComponent<Camera>(8);
+	auto follow = cam->addComponent<CameraFollow>(5);
+	auto resizer = cam->addComponent<CameraResizer>(8, 2, 8);
+
+	auto tank = Object::create("Player")->addComponent<Tank>(true);
+	follow->setTarget(tank->obj);
+
+	for (int i = 0; i < 50; i++)
+	{
+		ShapeSpawner::spawnSquare(Math::randomVec2(-10, 10));
+		ShapeSpawner::spawnCircle(Math::randomVec2(-10, 10));
+	}
+}
+
 void Scene::create()
 {
-	shapeSpawnerWithGravity();
+	impactBulletsTankScene();
 }

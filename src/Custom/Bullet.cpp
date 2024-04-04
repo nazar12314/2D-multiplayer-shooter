@@ -7,8 +7,9 @@
 #include "SpriteRenderer.h"
 #include "Assets.h"
 #include "CircleCollider.h"
+#include "Physics.h"
 
-Bullet::Bullet(Object* obj, float speed): Component(obj), _speed(speed)
+Bullet::Bullet(Object* obj, float speed, bool explode): Component(obj), _speed(speed), _explode(explode)
 {
 	auto tex = Assets::load<Texture>("sprites/circle.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), 0, Color::red);
@@ -23,6 +24,9 @@ void Bullet::fixedUpdate()
 
 void Bullet::onTriggerEnter(Collider* other)
 {
-	if (other->obj->tag() == "Wall")
-		Object::destroy(obj);
+	if (other->obj->tag() != "Wall") return;
+
+	if (_explode)
+		Physics::createImpact(obj->pos(), 5.0f, 10.0f);
+	Object::destroy(obj);
 }

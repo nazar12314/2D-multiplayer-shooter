@@ -12,7 +12,7 @@
 #include "Rigidbody.h"
 #include "glm/ext/scalar_constants.hpp"
 
-void ShapeSpawner::spawnSquare(glm::vec2 spawnPos) const
+void ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto size = Math::randomFloat(0.5f, 1);
 	auto obj = Object::create("Square", spawnPos);
@@ -23,7 +23,7 @@ void ShapeSpawner::spawnSquare(glm::vec2 spawnPos) const
 	rb->setRestitution(0.5f);
 	if (enableGravity) rb->setGravity(10);
 }
-void ShapeSpawner::spawnCircle(glm::vec2 spawnPos) const
+void ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto radius = Math::randomFloat(0.25f, 0.5f);
 	auto obj = Object::create("Circle", spawnPos);
@@ -46,7 +46,7 @@ void ShapeSpawner::update()
 
 	auto spawnPos = Camera::getMain()->screenToWorldPoint(Input::mousePos);
 	if (Input::isMouseButtonDown(SDL_BUTTON_LEFT))
-		spawnSquare(spawnPos);
+		spawnSquare(spawnPos, enableGravity);
 	if (Input::isMouseButtonDown(SDL_BUTTON_RIGHT))
-		spawnCircle(spawnPos);
+		spawnCircle(spawnPos, enableGravity);
 }
