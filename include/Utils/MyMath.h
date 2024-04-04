@@ -13,6 +13,8 @@ public:
 	static float distanceSquared(glm::vec2 a, glm::vec2 b);
 	static float cross(glm::vec2 a, glm::vec2 b);
 
+	static float round(float value, int digits = 0);
+
 	static float lerp(float a, float b, float t);
 	static glm::vec2 lerp(glm::vec2 a, glm::vec2 b, float t);
 

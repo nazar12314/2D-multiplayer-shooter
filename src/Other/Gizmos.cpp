@@ -1,5 +1,6 @@
 #include "Gizmos.h"
 
+#include "Camera.h"
 #include "MyTime.h"
 #include "Renderer.h"
 
@@ -19,20 +20,27 @@ void Gizmos::draw()
 	}
 }
 
-void Gizmos::drawLine(glm::vec2 p1, glm::vec2 p2, const Color& color, float dur)
+Gizmo* Gizmos::drawLine(glm::vec2 p1, glm::vec2 p2, const Color& color, float dur)
 {
-	gizmos.push_back(new PolygonGizmo({p1, p2}, color, dur));
+	auto gizmo = new PolygonGizmo({p1, p2}, color, dur);
+	gizmos.push_back(gizmo);
+
+	return gizmo;
 }
-void Gizmos::drawRect(glm::vec2 pos, glm::vec2 size, const Color& color, float dur)
+Gizmo* Gizmos::drawRect(glm::vec2 pos, glm::vec2 size, const Color& color, float dur)
 {
 	auto p1 = pos;
 	auto p2 = pos + glm::vec2(size.x, 0);
 	auto p3 = pos + size;
 	auto p4 = pos + glm::vec2(0, size.y);
-	gizmos.push_back(new PolygonGizmo({p1, p2, p3, p4, p1}, color, dur));
+
+	auto gizmo = new PolygonGizmo({p1, p2, p3, p4, p1}, color, dur);
+	gizmos.push_back(gizmo);
+
+	return gizmo;
 }
 
-void Gizmos::drawCircle(glm::vec2 pos, float radius, const Color& color, float dur)
+Gizmo* Gizmos::drawCircle(glm::vec2 pos, float radius, const Color& color, float dur)
 {
 	std::vector<glm::vec2> points;
 	for (int i = 0; i < 360; i += 10)
@@ -40,11 +48,22 @@ void Gizmos::drawCircle(glm::vec2 pos, float radius, const Color& color, float d
 		float angle = glm::radians((float)i);
 		points.push_back(pos + glm::vec2(cos(angle), sin(angle)) * radius);
 	}
-	gizmos.push_back(new PolygonGizmo(points, color, dur));
+	auto gizmo = new PolygonGizmo(points, color, dur);
+	gizmos.push_back(gizmo);
+
+	return gizmo;
 }
-void Gizmos::drawPoint(glm::vec2 pos, float radius, const Color& color, float dur)
+Gizmo* Gizmos::drawPoint(glm::vec2 pos, float radius, const Color& color, float dur)
 {
-	gizmos.push_back(new PointGizmo(pos, radius, color, dur));
+	auto gizmo = new PointGizmo(pos, radius, color, dur);
+	gizmos.push_back(gizmo);
+
+	return gizmo;
+}
+void Gizmos::remove(Gizmo* gizmo)
+{
+	std::erase(gizmos, gizmo);
+	delete gizmo;
 }
 
 
@@ -64,6 +83,7 @@ void PolygonGizmo::draw() const
 PointGizmo::PointGizmo(glm::vec2 pos, float radius, const Color& color, float duration) : Gizmo(color, duration), pos(pos), radius(radius) {}
 void PointGizmo::draw() const
 {
-	Renderer::drawCircle(pos, radius + 0.02f, Color::white);
-	Renderer::drawCircle(pos, radius, color);
+	auto sizeMult = Camera::getMain()->size();
+	Renderer::drawCircleWorld(pos, sizeMult * (radius + 0.02f) / 7, Color::white);
+	Renderer::drawCircleWorld(pos, sizeMult * radius / 7, color);
 }

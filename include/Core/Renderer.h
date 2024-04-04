@@ -17,7 +17,7 @@ class Renderer
 	static Material* defaultCircleMaterial;
 
 	static void drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color);
-	static void drawCircle(const glm::vec2& pos, float radius, const Color& color);
+	static void drawCircleWorld(const glm::vec2& pos, float radius, const Color& color);
 
 public:
 	static void init();

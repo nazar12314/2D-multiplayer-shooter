@@ -5,6 +5,7 @@
 
 #include "Collider.h"
 #include "Gizmos.h"
+#include "Input.h"
 #include "MyTime.h"
 #include "Rigidbody.h"
 #include "Solver.h"
@@ -33,6 +34,15 @@ void Physics::subscribeToEvents()
 
 void Physics::physicsLoop()
 {
+	if constexpr (MANUAL_UPDATE)
+	{
+		if (Input::wasKeyPressed(SDLK_SPACE))
+			step(Time::fixedDeltaTime, 1);
+		if (Input::isKeyDown(SDLK_SPACE) && Input::isKeyDown(SDLK_LCTRL))
+			step(Time::fixedDeltaTime, 1);
+		return;
+	}
+
 	fixedUpdateTimer -= Time::deltaTime;
 	while (fixedUpdateTimer <= 0)
 	{
@@ -46,10 +56,10 @@ void Physics::physicsLoop()
 	}
 }
 
-void Physics::step(float dt)
+void Physics::step(float dt, int substeps)
 {
 	rigidbodies.apply_changes();
-	for (int i = 0; i < SUBSTEPS; i++)
+	for (int i = 0; i < substeps; i++)
 	{
 		for (auto& rb : rigidbodies)
 			rb->step(dt / SUBSTEPS);
@@ -63,12 +73,17 @@ void Physics::step(float dt)
 void Physics::displayContactPoints_debug()
 {
 	if constexpr (!DISPLAY_CONTACT_POINTS) return;
+
+	for (auto& gizmo : gizmos)
+		Gizmos::remove(gizmo);
+	gizmos.clear();
+
 	for (auto& col : collisionStorage)
 		for (auto& point : col.contactPoints)
-			Gizmos::drawPoint(point, 0.05f, Color::red);
+			gizmos.push_back(Gizmos::drawPoint(point, 0.05f, Color::red, 999));
 	for (auto& trig : triggerStorage)
 		for (auto& point : trig.contactPoints)
-			Gizmos::drawPoint(point, 0.05f, Color::green);
+			gizmos.push_back(Gizmos::drawPoint(point, 0.05f, Color::green, 999));
 }
 
 void Physics::solveCollisions()

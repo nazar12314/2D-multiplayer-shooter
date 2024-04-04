@@ -90,7 +90,7 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 
 		// Friction
 		frictionImpulses.clear();
-		for (int i = 0; i < jValues.size(); i++)
+		for (int i = 0; i < impulses.size(); i++)
 		{
 			auto r1 = r1Values[i];
 			auto r2 = r2Values[i];
@@ -121,7 +121,7 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 			auto j = jValues[i];
 
 			glm::vec2 frictionImpulse;
-			if (std::abs(jt) <= j * sf) 
+			if (std::abs(jt) <= j * sf)
 				frictionImpulse = jt * tangent;
 			else
 				frictionImpulse = -j * tangent * df;
@@ -138,6 +138,5 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 			rb2->_velocity += frictionImpulse * rb2->_invMass;
 			rb2->_angularVelocity += Math::cross(r2Values[i], frictionImpulse) * rb2->_invInertia;
 		}
-
 	}
 }

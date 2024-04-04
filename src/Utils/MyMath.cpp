@@ -46,6 +46,11 @@ float Math::cross(glm::vec2 a, glm::vec2 b)
 {
 	return a.x * b.y - a.y * b.x;
 }
+float Math::round(float value, int digits)
+{
+	float factor = (float)std::pow(10, digits);
+	return std::round(value * factor) / factor;
+}
 
 std::tuple<float, glm::vec2> Math::findMinSeparation(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
 {
@@ -159,10 +164,7 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 				contactPoints.push_back(closestPoint);
 			}
 			else if (nearlyEqual(dis, minDis, 0.00000001f))
-			{
-				if (std::ranges::find(contactPoints, closestPoint) == contactPoints.end())
-					contactPoints.push_back(closestPoint);
-			}
+				contactPoints.push_back(closestPoint);
 		}
 	}
 
@@ -184,7 +186,8 @@ std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& ver
 			}
 			else if (nearlyEqual(dis, minDis))
 			{
-				contactPoints.push_back(closestPoint);
+				if (std::ranges::find(contactPoints, closestPoint) == contactPoints.end())
+					contactPoints.push_back(closestPoint);
 			}
 		}
 	}

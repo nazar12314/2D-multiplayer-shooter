@@ -79,12 +79,12 @@ void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& c
 	SDL_SetRenderDrawColor(SDLHandler::renderer, color.r() * 255, color.g() * 255, color.b() * 255, color.a() * 255);
 	SDL_RenderDrawLine(SDLHandler::renderer, screenP1.x, screenP1.y, screenP2.x, screenP2.y);
 }
-void Renderer::drawCircle(const glm::vec2& pos, float radius, const Color& color)
+void Renderer::drawCircleWorld(const glm::vec2& pos, float radius, const Color& color)
 {
 	defaultCircleMaterial->setColor(color);
 	renderTexWorld(defaultCircleMaterial->texture(), pos, {radius * 2, radius * 2});
 }
 void Renderer::sortSprites()
 {
-	std::sort(sprites.begin(), sprites.end(), [](const SpriteRenderer* a, const SpriteRenderer* b) { return a->_order < b->_order; });
+	std::ranges::sort(sprites, [](const SpriteRenderer* a, const SpriteRenderer* b) { return a->_order < b->_order; });
 }
