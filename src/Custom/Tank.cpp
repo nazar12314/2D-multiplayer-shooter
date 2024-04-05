@@ -19,8 +19,8 @@
 Tank::Tank(Object* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
                                                                              _explodeAtMousePosition(explodeAtMousePosition)
 {
-	auto tex = Assets::load<Texture>("sprites/square.png");
-	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), 0, Color::randomLight());
+	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
+	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight());
 	addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
 	addComponent<Rigidbody>(10, 15);
 	addComponent<TankController>();
@@ -29,8 +29,8 @@ Tank::Tank(Object* obj, bool explosiveBullets, bool explodeAtMousePosition): Com
 }
 void Tank::createGun()
 {
-	auto tex = Assets::load<Texture>("sprites/square.png");
-	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), 1, Color::randomLight());
+	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
+	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), Color::randomLight(), 1);
 	gunPivot = Object::create("gunPivot", transform())->transform();
 	gunPivot->setLocalPos(glm::vec2(0, 0.1f));
 	gun->transform()->setParent(gunPivot);

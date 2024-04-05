@@ -11,7 +11,7 @@
 class Transform;
 class Collider;
 class Component;
-class Texture;
+class Sprite;
 
 class Object final
 {

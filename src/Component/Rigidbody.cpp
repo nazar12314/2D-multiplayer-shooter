@@ -2,7 +2,7 @@
 #include "MyMath.h"
 #include "RigidBody.h"
 #include "Transform.h"
-#include "glm/gtx/string_cast.hpp"
+#include "glm/trigonometric.hpp"
 
 Rigidbody::Rigidbody(Object* obj, bool isStatic) : Component(obj), _isStatic(isStatic)
 {

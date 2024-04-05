@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "SDL.h"
+#include "SDL2_ttf.h"
 
 void SDLHandler::init(const glm::ivec2& windowSize)
 {
@@ -13,6 +14,8 @@ void SDLHandler::init(const glm::ivec2& windowSize)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	surface = SDL_GetWindowSurface(window);
 	//SDL_SetRelativeMouseMode(SDL_TRUE);
+
+	TTF_Init();
 }
 
 void SDLHandler::handleEvents()

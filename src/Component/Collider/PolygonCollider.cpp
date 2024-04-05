@@ -16,7 +16,7 @@ PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): C
 
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)
-			vertexSpritesTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
+			vertexSpritesTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
 }
 void PolygonCollider::updateVertices()
 {

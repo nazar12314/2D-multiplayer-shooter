@@ -235,7 +235,7 @@ float Math::randomFloat(float min, float max)
 {
 	return min + static_cast<float>(rand()) / (RAND_MAX / (max - min));
 }
-float Math::randomInt(int min, int max)
+int Math::randomInt(int min, int max)
 {
 	return min + rand() % (max - min);
 }

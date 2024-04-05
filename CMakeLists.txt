@@ -23,6 +23,7 @@ include_directories(libs)
 IF (WIN32)
 	include_directories(libs/SDL2/include)
 	include_directories(libs/SDL2_image)
+	include_directories(libs/SDL2_ttf)
 	link_directories(libs/SDL2/lib/x64)
 ENDIF()
 
@@ -68,15 +69,20 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/SDLUtils.h"
 	 "src/Custom/ShapeSpawner.cpp"
 	 "include/Utils/Utils.h"
-	  )
+	 "src/Component/TextRenderer.cpp"
+	 "src/Component/BaseRenderer.cpp"
+	  "src/Other/DOVirtual.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
 	target_link_libraries(${PROJECT_NAME} SDL2)
 	target_link_libraries(${PROJECT_NAME} SDL2_image)
+	target_link_libraries(${PROJECT_NAME} SDL2_ttf)
 
 	configure_file(libs/SDL2_image/SDL2_image.dll ${CMAKE_BINARY_DIR}/SDL2_image.dll COPYONLY)
 	configure_file(libs/SDL2_image/SDL2_image.lib ${CMAKE_BINARY_DIR}/SDL2_image.lib COPYONLY)
+	configure_file(libs/SDL2_ttf/SDL2_ttf.dll ${CMAKE_BINARY_DIR}/SDL2_ttf.dll COPYONLY)
+	configure_file(libs/SDL2_ttf/SDL2_ttf.lib ${CMAKE_BINARY_DIR}/SDL2_ttf.lib COPYONLY)
 ELSE()
 	find_package(SDL2 REQUIRED)
 	target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})

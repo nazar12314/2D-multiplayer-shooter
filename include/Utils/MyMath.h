@@ -34,7 +34,7 @@ public:
 	static int closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& vertices);
 
 	static float randomFloat(float min, float max);
-	static float randomInt(int min, int max);
+	static int randomInt(int min, int max);
 	static float randomValue();
 	static glm::vec2 randomVec2(float min, float max);
 	static glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);

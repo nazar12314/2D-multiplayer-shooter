@@ -1,30 +1,14 @@
 #pragma once
 
-#include "Component.h"
+#include "BaseRenderer.h"
 #include "Color.h"
 #include "glm/vec2.hpp"
 
-class Texture;
-class Material;
+class Sprite;
 
-class SpriteRenderer : public Component
+class SpriteRenderer : public BaseRenderer
 {
-	Material* _material;
-	glm::vec2 _size;
-	int _order = 0;
-
-	SpriteRenderer(Object* obj, Texture* texture, glm::vec2 size = {1, 1}, int order = 0, const Color& color = Color::white);
-	~SpriteRenderer() override;
-
-public:
-	Material* material() const;
-	glm::vec2 size() const;
-	int order() const;
-
-	void setNativeSize();
-	void setOrder(int order);
-	void setColor(const Color& color) const;
+	SpriteRenderer(Object* obj, const Sprite* texture, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
 
 	friend class Object;
-	friend class Renderer;
 };

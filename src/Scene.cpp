@@ -7,10 +7,13 @@
 #include "Rigidbody.h"
 #include "Tank.h"
 #include "Assets.h"
+#include "DOVirtual.h"
 #include "MyMath.h"
 #include "ShapeSpawner.h"
+#include "TextRenderer.h"
 #include "Transform.h"
 #include "Wall.h"
+#include "TextRenderer.h"
 
 void shapeSpawnerNoGravityWithTankScene()
 {
@@ -62,14 +65,30 @@ void impactBulletsTankScene()
 	auto tank = Object::create("Player")->addComponent<Tank>(true, true);
 	follow->setTarget(tank->obj());
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		ShapeSpawner::spawnSquare(Math::randomVec2(-10, 10));
 		ShapeSpawner::spawnCircle(Math::randomVec2(-10, 10));
 	}
 }
 
+void textAndTweensScene()
+{
+	auto cam = Object::create("Camera")->addComponent<Camera>(8);
+	auto resizer = cam->addComponent<CameraResizer>(8, 2, 8);
+
+	auto text = Object::create("Text", {0, 1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::green.withAlpha(0), 2);
+	auto text1 = Object::create("Text", {1, 0})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::red.withAlpha(0), 2);
+	auto text2 = Object::create("Text", {-1, -1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 6), Color::blue.withAlpha(0), 2);
+
+	DOVirtual::delayedCall([text] { text->setColor(text->getColor().withAlpha(1)); }, 1);
+	DOVirtual::floatTo(0, 1, 3, [text1](float value) { text1->setColor(Color::red.withAlpha(value)); });
+	DOVirtual::colorTo(Color::white.withAlpha(0), Color::blue, 3, [text2](Color value) { text2->setColor(value); });
+	DOVirtual::vec2To(text2->transform()->getPos() - glm::vec2(1, 0), text2->transform()->getPos() + glm::vec2(1, 0), 3,
+	                  [text2](glm::vec2 value) { text2->transform()->setPos(value); });
+}
+
 void Scene::create()
 {
-	impactBulletsTankScene();
+	textAndTweensScene();
 }

@@ -5,14 +5,13 @@
 #include "Color.h"
 #include "glm/glm.hpp"
 
+class BaseRenderer;
 class Material;
 class Camera;
-class SpriteRenderer;
-class Texture;
 
 class Renderer
 {
-	inline static std::vector<SpriteRenderer*> sprites {};
+	inline static std::vector<BaseRenderer*> renderers {};
 
 	inline static Material* circleMaterial = nullptr;
 	inline static Material* squareMaterial = nullptr;
@@ -25,12 +24,12 @@ public:
 	static void subscribeToEvents();
 
 	static void render();
-	static void renderSprites(const Camera* mainCamera);
+	static void renderObjects(const Camera* mainCamera);
 
 	static void renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0);
 	static void renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0);
 
-	static void sortSprites();
+	static void sortRenderers();
 
 	friend class PolygonGizmo;
 	friend class PointGizmo;

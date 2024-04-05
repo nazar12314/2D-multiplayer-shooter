@@ -7,6 +7,7 @@
 #include "SDLHandler.h"
 #include "FPSCounter.h"
 #include "Scene.h"
+#include "DOVirtual.h"
 
 void Application::start(const glm::ivec2& windowSize)
 {
@@ -31,6 +32,7 @@ void Application::loop()
 		Time::tick();
 		FPSCounter::tick();
 
+		DOVirtual::update(Time::deltaTime);
 		Object::sendCallbackAll(&Component::update);
 		Object::sendCallbackAll(&Component::lateUpdate);
 

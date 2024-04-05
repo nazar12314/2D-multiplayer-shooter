@@ -8,7 +8,6 @@
 #include "Gizmos.h"
 #include "Material.h"
 #include <algorithm>
-#include <iostream>
 
 #include "Transform.h"
 #include "glm/gtx/string_cast.hpp"
@@ -17,23 +16,23 @@ void Renderer::init()
 {
 	subscribeToEvents();
 
-	circleMaterial = new Material(Assets::load<Texture>("sprites/circle.png"));
-	squareMaterial = new Material(Assets::load<Texture>("sprites/square.png"));
+	circleMaterial = new Material(Assets::load<Sprite>("assets/sprites/circle.png"));
+	squareMaterial = new Material(Assets::load<Sprite>("assets/sprites/square.png"));
 }
 void Renderer::subscribeToEvents()
 {
 	Object::onComponentAddedGlobal += [](Component* comp)
 	{
-		if (auto sprite = dynamic_cast<SpriteRenderer*>(comp))
+		if (auto renderer = dynamic_cast<BaseRenderer*>(comp))
 		{
-			sprites.push_back(sprite);
-			sortSprites();
+			renderers.push_back(renderer);
+			sortRenderers();
 		}
 	};
 	Object::onComponentRemovedGlobal += [](Component* comp)
 	{
-		if (auto sprite = dynamic_cast<SpriteRenderer*>(comp))
-			std::erase(sprites, sprite);
+		if (auto sprite = dynamic_cast<BaseRenderer*>(comp))
+			std::erase(renderers, sprite);
 	};
 }
 
@@ -44,18 +43,19 @@ void Renderer::render()
 
 	SDL_SetRenderDrawColor(SDLHandler::renderer, 0, 0, 0, 255);
 	SDL_RenderClear(SDLHandler::renderer);
-	renderSprites(mainCamera);
+
+	renderObjects(mainCamera);
 	Gizmos::draw();
+
 	SDL_RenderPresent(SDLHandler::renderer);
 }
-void Renderer::renderSprites(const Camera* mainCamera)
+void Renderer::renderObjects(const Camera* mainCamera)
 {
-	for (auto sprite : sprites)
+	for (auto sprite : renderers)
 	{
 		if (!sprite->obj()->enabled()) continue;
-		auto screenPos = mainCamera->worldToScreenPoint(sprite->transform()->getPos());
-		auto screenSize = sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
-		renderTex(sprite->material()->texture(), screenPos, screenSize, sprite->transform()->getRot() - mainCamera->transform()->getRot());
+
+		sprite->render(mainCamera);
 	}
 }
 
@@ -79,14 +79,14 @@ void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm:
 void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width)
 {
 	squareMaterial->setColor(color);
-	renderTexWorld(squareMaterial->texture(), (p1 + p2) / 2.f, {width, distance(p1, p2)}, 90 - glm::degrees(glm::atan(p2.y - p1.y, p2.x - p1.x)));
+	renderTexWorld(squareMaterial->sdlTexture(), (p1 + p2) / 2.f, {width, distance(p1, p2)}, 90 - glm::degrees(glm::atan(p2.y - p1.y, p2.x - p1.x)));
 }
 void Renderer::drawCircleWorld(const glm::vec2& pos, float radius, const Color& color)
 {
 	circleMaterial->setColor(color);
-	renderTexWorld(circleMaterial->texture(), pos, {radius * 2, radius * 2});
+	renderTexWorld(circleMaterial->sdlTexture(), pos, {radius * 2, radius * 2});
 }
-void Renderer::sortSprites()
+void Renderer::sortRenderers()
 {
-	std::ranges::sort(sprites, [](const SpriteRenderer* a, const SpriteRenderer* b) { return a->_order < b->_order; });
+	std::ranges::sort(renderers, [](const BaseRenderer* a, const BaseRenderer* b) { return a->_order < b->_order; });
 }
