@@ -3,7 +3,7 @@
 #include "MyMath.h"
 #include "PolygonCollider.h"
 #include "Object.h"
-#include "glm/detail/func_geometric.inl"
+#include "Transform.h"
 #include "glm/ext/scalar_constants.hpp"
 
 CircleCollider::CircleCollider(Object* obj, float radius, bool isTrigger): Collider(obj, isTrigger), _radius(radius) {}
@@ -17,11 +17,11 @@ float CircleCollider::calculateInertia(float mass) const
 }
 std::optional<Collision> CircleCollider::getImpactCollision(glm::vec2 center, float radius)
 {
-	auto [sep, norm] = Math::findMinSeparation(obj->pos(), _radius, center, radius);
+	auto [sep, norm] = Math::findMinSeparation(transform()->getPos(), _radius, center, radius);
 	auto collided = sep <= 0;
 	if (!collided) return std::nullopt;
 
-	auto contactPoints = Math::findContactPoints(obj->pos(), _radius, center, radius);
+	auto contactPoints = Math::findContactPoints(transform()->getPos(), _radius, center, radius);
 	return Collision(norm, -sep, this, nullptr, contactPoints);
 }
 
@@ -35,7 +35,7 @@ std::optional<Collision> CircleCollider::getCollisionWith(PolygonCollider* other
 }
 std::optional<Collision> CircleCollider::getCollisionWith(CircleCollider* other)
 {
-	auto [sep, norm] = Math::findMinSeparation(obj->pos(), _radius, other->obj->pos(), other->_radius);
+	auto [sep, norm] = Math::findMinSeparation(transform()->getPos(), _radius, other->transform()->getPos(), other->_radius);
 	auto collided = sep <= 0;
 	if (!collided) return std::nullopt;
 
@@ -52,10 +52,10 @@ std::vector<glm::vec2> CircleCollider::findContactPoints(const PolygonCollider* 
 }
 std::vector<glm::vec2> CircleCollider::findContactPoints(const CircleCollider* other) const
 {
-	return Math::findContactPoints(obj->pos(), _radius, other->obj->pos(), other->_radius);
+	return Math::findContactPoints(transform()->getPos(), _radius, other->transform()->getPos(), other->_radius);
 }
 
 bool CircleCollider::isPointInside(const glm::vec2& point) const
 {
-	return distance(obj->pos(), point) <= _radius;
+	return distance(transform()->getPos(), point) <= _radius;
 }

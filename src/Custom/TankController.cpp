@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "glm/vec2.hpp"
 #include "Rigidbody.h"
+#include "Transform.h"
 
 TankController::TankController(Object* obj, float moveSpeed, float rotationSpeed): Component(obj), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed)
 {
@@ -21,6 +22,6 @@ void TankController::fixedUpdate()
 	if (Input::isKeyDown(SDLK_d)) rotDir -= 1;
 
 	float speedMult = Input::isKeyDown(SDLK_LSHIFT) ? 3 : 1;
-	if (moveDir != 0) rb->addForce(obj->up() * moveDir * moveSpeed * speedMult);
+	if (moveDir != 0) rb->addForce(transform()->up() * moveDir * moveSpeed * speedMult);
 	if (rotDir != 0) rb->addAngularForce(rotDir * rotationSpeed);
 }

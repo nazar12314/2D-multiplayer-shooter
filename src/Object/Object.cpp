@@ -1,6 +1,7 @@
 #include "Object.h"
 
 #include "Component.h"
+#include "Transform.h"
 #include "Assets.h"
 #include "glm/gtx/transform.hpp"
 
@@ -12,15 +13,23 @@ Object* Object::create(const std::string& name, glm::vec2 pos, float rot)
 
 	return obj;
 }
+Object* Object::create(const std::string& name, Transform* parent)
+{
+	auto obj = create(name, {0, 0}, 0);
+	obj->transform()->setParent(parent);
+	obj->transform()->setLocalPos({0, 0});
+
+	return obj;
+}
 void Object::destroy(Object* obj)
 {
 	sendCallbackAll(&Component::onDestroy);
 
-	for (Component* comp : obj->components)
+	for (Component* comp : obj->_components)
 		onComponentRemovedGlobal(comp);
 
 	objects.erase_delayed(obj);
-	delete obj;
+	_toDelete.push_back(obj);
 }
 void Object::destroyAll()
 {
@@ -32,6 +41,10 @@ void Object::destroyAll()
 
 void Object::prepareAll()
 {
+	for (Object* obj : _toDelete)
+		delete obj;
+	_toDelete.clear();
+
 	objects.apply_changes();
 	for (Object* obj : objects)
 		obj->prepare();
@@ -39,7 +52,10 @@ void Object::prepareAll()
 // -- Global --
 
 
-Object::Object(const std::string& name, glm::vec2 pos, float rot) : Transform(pos, rot), _name(name) {}
+Object::Object(const std::string& name, glm::vec2 pos, float rot) : _name(name)
+{
+	_transform = addComponent<Transform>(pos, rot);
+}
 
 std::string Object::name() const { return _name; }
 std::string Object::tag() const { return _tag; }
@@ -53,11 +69,11 @@ void Object::removeComponent(Component* component)
 {
 	component->onDestroy();
 
-	components.erase_delayed(component);
+	_components.erase_delayed(component);
 	onComponentRemovedGlobal(component);
 }
 
 void Object::prepare()
 {
-	components.apply_changes();
+	_components.apply_changes();
 }

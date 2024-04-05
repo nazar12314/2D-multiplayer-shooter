@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "SDLHandler.h"
 #include "SpriteRenderer.h"
+#include "Transform.h"
 
 Camera::Camera(Object* obj, float size): Component(obj), _size(size)
 {
@@ -19,17 +20,17 @@ void Camera::setSize(float size) { _size = size; }
 glm::vec2 Camera::screenToWorldPoint(const glm::vec2& screenPos) const
 {
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
-	auto ratio = wSize.x / wSize.y;
-	auto relPos = glm::vec2(screenPos.x / wSize.y - ratio / 2, 0.5f - screenPos.y / wSize.y);
-	return relPos * _size + obj->pos();
+	auto relPos = glm::vec2(screenPos.x / wSize.y - SDLHandler::windowAspectRatio / 2, 0.5f - screenPos.y / wSize.y);
+	auto localPos = relPos * _size;
+	return transform()->localToGlobalPos(localPos);
 }
 
 glm::vec2 Camera::worldToScreenPoint(const glm::vec2& worldPos) const
 {
-	auto relPos = (worldPos - obj->pos()) / _size;
+	auto localPos = transform()->globalToLocalPos(worldPos);
+	auto relPos = localPos / _size;
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
-	auto ratio = wSize.x / wSize.y;
-	return glm::vec2(relPos.x + ratio / 2, 0.5f - relPos.y) * wSize.y;
+	return glm::vec2(relPos.x + SDLHandler::windowAspectRatio / 2, 0.5f - relPos.y) * wSize.y;
 }
 float Camera::screenToWorldSize(float screenSize) const
 {

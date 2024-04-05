@@ -68,7 +68,7 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/SDLUtils.h"
 	 "src/Custom/ShapeSpawner.cpp"
 	 "include/Utils/Utils.h"
-	 "include/Custom/WallCreator.h" "src/Custom/WallCreator.cpp")
+	  )
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

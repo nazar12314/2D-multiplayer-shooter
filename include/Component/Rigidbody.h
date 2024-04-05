@@ -32,8 +32,8 @@ class Rigidbody : public Component
 
 	Collider* _attachedCollider = nullptr;
 
+	Rigidbody(Object* obj, bool isStatic = false);
 	Rigidbody(Object* obj, float linearDrag, float angularDrag = 0);
-	Rigidbody(Object* obj, bool isStatic = true);
 	void initCollider();
 	~Rigidbody() override;
 

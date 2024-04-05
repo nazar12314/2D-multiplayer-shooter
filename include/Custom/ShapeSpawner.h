@@ -13,8 +13,8 @@ class ShapeSpawner : public Component
 	void update() override;
 
 public:
-	static void spawnSquare(glm::vec2 spawnPos, bool enableGravity = false);
-	static void spawnCircle(glm::vec2 spawnPos, bool enableGravity = false);
+	static Object* spawnSquare(glm::vec2 spawnPos, bool enableGravity = false);
+	static Object* spawnCircle(glm::vec2 spawnPos, bool enableGravity = false);
 
 	friend class Object;
 };

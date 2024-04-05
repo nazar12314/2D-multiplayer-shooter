@@ -15,24 +15,21 @@ float Math::shortestAngle(float currentAngle, float targetAngle)
 	return angle;
 }
 
-float Math::rotateTowards(float currentAngle, float targetAngle, float maxStep)
+float Math::rotateTowardsAngle(float currentAngle, float targetAngle, float maxStep)
 {
 	float angleDiff = shortestAngle(currentAngle, targetAngle);
 	float step = std::copysign(std::min(std::abs(angleDiff), maxStep), angleDiff);
 	return currentAngle + step;
 }
+float Math::rotateTowardsDir(float currentAngle, glm::vec2 dir, float maxStep)
+{
+	float targetAngle = glm::degrees(atan2(dir.y, dir.x));
+	return rotateTowardsAngle(currentAngle, targetAngle, maxStep);
+}
 
 float Math::lerp(float a, float b, float t)
 {
 	return a + (b - a) * glm::clamp(t, 0.0f, 1.0f);
-}
-float Math::lerpUnclamped(float a, float b, float t)
-{
-	return a + (b - a) * t;
-}
-glm::vec2 Math::lerp(glm::vec2 a, glm::vec2 b, float t)
-{
-	return a + (b - a) * t;
 }
 
 float Math::distanceSquared(glm::vec2 a, glm::vec2 b)
@@ -273,5 +270,5 @@ bool Math::nearlyZero(float a, float epsilon)
 }
 bool Math::nearlyZero(glm::vec2 a, float epsilon)
 {
-	return nearlyEqual(a.x, 0) && nearlyEqual(a.y, 0);
+	return nearlyEqual(a.x, 0, epsilon) && nearlyEqual(a.y, 0, epsilon);
 }

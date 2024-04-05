@@ -12,6 +12,7 @@ public:
 	inline static SDL_Surface* surface;
 
 	inline static glm::ivec2 windowSize;
+	inline static float windowAspectRatio;
 
 	static void init(const glm::ivec2& windowSize);
 	static void handleEvents();

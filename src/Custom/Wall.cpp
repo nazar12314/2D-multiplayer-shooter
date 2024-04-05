@@ -8,8 +8,8 @@ Wall::Wall(Object* obj, glm::vec2 size): Component(obj)
 {
 	obj->setTag("Wall");
 
-	auto tex = Assets::load<Texture>("sprites/square.png");
-	addComponent<SpriteRenderer>(tex, size);
+	addComponent<SpriteRenderer>(Assets::load<Texture>("sprites/square.png"), size);
 	addComponent<PolygonCollider>(size);
-	addComponent<Rigidbody>();
+	auto rb = addComponent<Rigidbody>(true);
+	rb->setRestitution(0.5f);
 }

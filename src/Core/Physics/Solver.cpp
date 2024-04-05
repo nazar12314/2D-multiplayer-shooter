@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "MyMath.h"
 #include "Rigidbody.h"
+#include "Transform.h"
 #include "glm/geometric.hpp"
 #include "glm/gtx/string_cast.hpp"
 
@@ -16,8 +17,8 @@ void PositionSolver::solveCollisions(const std::vector<Collision>& collisions)
 
 		auto resolutionVector = collision.norm * collision.depth;
 		resolutionVector /= rb1->_invMass + rb2->_invMass;
-		rb1->moveTo(rb1->obj->pos() - resolutionVector * rb1->_invMass);
-		rb2->moveTo(rb2->obj->pos() + resolutionVector * rb2->_invMass);
+		rb1->moveTo(rb1->transform()->getPos() - resolutionVector * rb1->_invMass);
+		rb2->moveTo(rb2->transform()->getPos() + resolutionVector * rb2->_invMass);
 	}
 }
 
@@ -32,8 +33,8 @@ void ImpulseSolver::solveCollisions(const std::vector<Collision>& collisions)
 		auto e = std::min(rb1->_restitution, rb2->_restitution);
 		auto contactPoint = collision.contactPoints.size() == 1 ? collision.contactPoints[0] : (collision.contactPoints[0] + collision.contactPoints[1]) / 2.0f;
 
-		auto r1 = contactPoint - rb1->obj->pos();
-		auto r2 = contactPoint - rb2->obj->pos();
+		auto r1 = contactPoint - rb1->transform()->getPos();
+		auto r2 = contactPoint - rb2->transform()->getPos();
 
 		auto r1Perp = glm::vec2(-r1.y, r1.x);
 		auto r2Perp = glm::vec2(-r2.y, r2.x);

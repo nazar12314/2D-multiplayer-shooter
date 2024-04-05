@@ -7,6 +7,7 @@
 #include "Assets.h"
 #include "CircleCollider.h"
 #include "Object.h"
+#include "Transform.h"
 #include "glm/detail/func_trigonometric.inl"
 
 PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
@@ -48,7 +49,7 @@ std::optional<Collision> PolygonCollider::getCollisionWith(PolygonCollider* othe
 }
 std::optional<Collision> PolygonCollider::getCollisionWith(CircleCollider* other)
 {
-	auto [sep, norm] = Math::findMinSeparation(other->obj->pos(), other->radius(), _globalVertices);
+	auto [sep, norm] = Math::findMinSeparation(other->transform()->getPos(), other->radius(), _globalVertices);
 	auto collided = sep <= 0;
 	if (!collided) return std::nullopt;
 
@@ -65,7 +66,7 @@ std::vector<glm::vec2> PolygonCollider::findContactPoints(const PolygonCollider*
 }
 std::vector<glm::vec2> PolygonCollider::findContactPoints(const CircleCollider* other) const
 {
-	return Math::findContactPoints(other->obj->pos(), other->radius(), _globalVertices);
+	return Math::findContactPoints(other->transform()->getPos(), other->radius(), _globalVertices);
 }
 
 bool PolygonCollider::isPointInside(const glm::vec2& point) const
@@ -95,18 +96,18 @@ void PolygonCollider::recalculate()
 {
 	_globalVertices.resize(_vertices.size());
 	for (int i = 0; i < _vertices.size(); i++)
-		_globalVertices[i] = obj->localToGlobalPos(_vertices[i]);
+		_globalVertices[i] = transform()->localToGlobalPos(_vertices[i]);
 
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)
-			vertexSpritesTEST[i]->obj->setPos(_globalVertices[i]);
+			vertexSpritesTEST[i]->transform()->setPos(_globalVertices[i]);
 }
 
 void PolygonCollider::onDestroy()
 {
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (auto& point : vertexSpritesTEST)
-			Object::destroy(point->obj);
+			Object::destroy(point->obj());
 }
 
 float PolygonCollider::calculateMass() const

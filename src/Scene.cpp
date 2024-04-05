@@ -5,12 +5,12 @@
 #include "CameraFollow.h"
 #include "CameraResizer.h"
 #include "Rigidbody.h"
-#include "SpriteRenderer.h"
 #include "Tank.h"
 #include "Assets.h"
 #include "MyMath.h"
 #include "ShapeSpawner.h"
-#include "WallCreator.h"
+#include "Transform.h"
+#include "Wall.h"
 
 void shapeSpawnerNoGravityWithTankScene()
 {
@@ -19,7 +19,7 @@ void shapeSpawnerNoGravityWithTankScene()
 	auto resizer = cam->addComponent<CameraResizer>(8, 2, 8);
 
 	auto tank = Object::create("Player")->addComponent<Tank>();
-	follow->setTarget(tank->obj);
+	follow->setTarget(tank->obj());
 
 	Object::create("ShapeSpawner")->addComponent<ShapeSpawner>();
 }
@@ -31,8 +31,8 @@ void lotsOfShapesWithGravityScene()
 
 	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
 
-	WallCreator::createWall(glm::vec2((-5 + 0.25f) / 1.414f, -4), 45, glm::vec2(10, 0.5f));
-	WallCreator::createWall(glm::vec2((5 - 0.25f) / 1.414f, -4), -45, glm::vec2(10, 0.5f));
+	Object::create("Wall", glm::vec2((-5 + 0.25f) / 1.414f, -4), 45)->addComponent<Wall>(glm::vec2(10, 0.5f));
+	Object::create("Wall", glm::vec2((5 - 0.25f) / 1.414f, -4), -45)->addComponent<Wall>(glm::vec2(10, 0.5f));
 
 	for (int i = 0; i < 15; i++)
 	{
@@ -48,9 +48,9 @@ void shapeSpawnerWithGravity()
 
 	auto shapeSpawner = Object::create("ShapeSpawner")->addComponent<ShapeSpawner>(true);
 
-	WallCreator::createWall(glm::vec2(0, -5), 0, glm::vec2(15, 0.5f));
-	WallCreator::createWall(glm::vec2(-3, -1), 15, glm::vec2(5, 0.25f));
-	WallCreator::createWall(glm::vec2(3, 1), -15, glm::vec2(5, 0.25f));
+	Object::create("Wall", glm::vec2(0, -5), 0)->addComponent<Wall>(glm::vec2(15, 0.5f));
+	Object::create("Wall", glm::vec2(3, 1), 15)->addComponent<Wall>(glm::vec2(5, 0.25f));
+	Object::create("Wall", glm::vec2(-3, -1), -15)->addComponent<Wall>(glm::vec2(5, 0.25f));
 }
 
 void impactBulletsTankScene()
@@ -59,10 +59,10 @@ void impactBulletsTankScene()
 	auto follow = cam->addComponent<CameraFollow>(5);
 	auto resizer = cam->addComponent<CameraResizer>(8, 2, 8);
 
-	auto tank = Object::create("Player")->addComponent<Tank>(true);
-	follow->setTarget(tank->obj);
+	auto tank = Object::create("Player")->addComponent<Tank>(true, true);
+	follow->setTarget(tank->obj());
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		ShapeSpawner::spawnSquare(Math::randomVec2(-10, 10));
 		ShapeSpawner::spawnCircle(Math::randomVec2(-10, 10));

@@ -8,6 +8,10 @@
 #include "Gizmos.h"
 #include "Material.h"
 #include <algorithm>
+#include <iostream>
+
+#include "Transform.h"
+#include "glm/gtx/string_cast.hpp"
 
 void Renderer::init()
 {
@@ -48,10 +52,10 @@ void Renderer::renderSprites(const Camera* mainCamera)
 {
 	for (auto sprite : sprites)
 	{
-		if (!sprite->obj->enabled()) continue;
-		auto screenPos = mainCamera->worldToScreenPoint(sprite->obj->pos());
+		if (!sprite->obj()->enabled()) continue;
+		auto screenPos = mainCamera->worldToScreenPoint(sprite->transform()->getPos());
 		auto screenSize = sprite->size() / (glm::vec2)mainCamera->size() * (float)SDLHandler::windowSize.y;
-		renderTex(sprite->material()->texture(), screenPos, screenSize, sprite->obj->rot());
+		renderTex(sprite->material()->texture(), screenPos, screenSize, sprite->transform()->getRot() - mainCamera->transform()->getRot());
 	}
 }
 
@@ -63,7 +67,7 @@ void Renderer::renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2
 	rect.w = size.x;
 	rect.h = size.y;
 
-	SDL_RenderCopyExF(SDLHandler::renderer, tex, NULL, &rect, rot, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(SDLHandler::renderer, tex, NULL, &rect, -rot, NULL, SDL_FLIP_NONE);
 }
 void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot)
 {

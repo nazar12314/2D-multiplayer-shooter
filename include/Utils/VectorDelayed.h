@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 template <typename T> class VectorDelayed : public std::vector<T>
@@ -18,6 +19,7 @@ public:
 
 	void apply_changes()
 	{
+		if (toAdd.empty() && toRemove.empty()) return;
 		this->insert(this->end(), toAdd.begin(), toAdd.end());
 		toAdd.clear();
 

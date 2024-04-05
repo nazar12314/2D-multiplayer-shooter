@@ -5,6 +5,7 @@
 #include "MyMath.h"
 #include "MyTime.h"
 #include "Object.h"
+#include "Transform.h"
 #include "glm/common.hpp"
 
 CameraResizer::CameraResizer(Object* owner, float startSize, float sensitivity, float smoothness, bool zoomTowardsMouse) : Component(owner), targetSize(startSize),
@@ -24,5 +25,5 @@ void CameraResizer::update()
 
 	if (!zoomTowardsMouse) return;
 	auto mouseWorldPos = cam->screenToWorldPoint(Input::mousePos);
-	cam->obj->setPos(cam->obj->pos() + (prevSize - cam->size()) * (mouseWorldPos - cam->obj->pos()) / prevSize);
+	cam->transform()->setPos(cam->transform()->getPos() + (prevSize - cam->size()) * (mouseWorldPos - cam->transform()->getPos()) / prevSize);
 }

@@ -7,6 +7,8 @@ class Collider;
 
 class Component
 {
+	Object* _obj;
+
 	// -- General --
 	virtual void start() {}
 	virtual void update() {}
@@ -33,8 +35,10 @@ protected:
 	virtual ~Component();
 
 public:
-	Object* obj;
+	Object* obj() const { return _obj; }
+	Transform* transform() const { return _obj->_transform; }
 
+	// Method forwarding to Object
 	template <derived<Component> T, typename... Ts> T* addComponent(Ts... args);
 	template <derived<Component> T> void removeComponent();
 	template <derived<Component> T> bool hasComponent() const;
@@ -50,21 +54,21 @@ public:
 
 template <derived<Component> T, typename... Ts> T* Component::addComponent(Ts... args)
 {
-	return obj->addComponent<T>(args...);
+	return _obj->addComponent<T>(args...);
 }
 template <derived<Component> T> bool Component::hasComponent() const
 {
-	return obj->hasComponent<T>();
+	return _obj->hasComponent<T>();
 }
 template <derived<Component> T> T* Component::getComponent()
 {
-	return obj->getComponent<T>();
+	return _obj->getComponent<T>();
 }
 template <derived<Component> T> bool Component::tryGetComponent(T*& component) const
 {
-	return obj->tryGetComponent<T>(component);
+	return _obj->tryGetComponent<T>(component);
 }
 template <derived<Component> T> void Component::removeComponent()
 {
-	obj->removeComponent<T>();
+	_obj->removeComponent<T>();
 }

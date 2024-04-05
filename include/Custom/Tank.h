@@ -8,12 +8,15 @@ class Tank : public Component
 {
 	float _gunRotSpeed = 180;
 	float _firerate = 4;
-	SpriteRenderer* gun;
 	bool _explosiveBullets;
+	bool _explodeAtMousePosition;
 
-	float shootCooldown;
+	SpriteRenderer* gun;
+	Transform* gunPivot;
 
-	Tank(Object* obj, bool explosiveBullets = false);
+	float _shootCooldown;
+
+	Tank(Object* obj, bool explosiveBullets = false, bool explodeAtMousePosition = false);
 	void createGun();
 
 	void update() override;

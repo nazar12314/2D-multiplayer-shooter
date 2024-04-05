@@ -9,6 +9,7 @@
 #include "MyTime.h"
 #include "Rigidbody.h"
 #include "Solver.h"
+#include "Transform.h"
 #include "Utils.h"
 
 void Physics::init()
@@ -261,7 +262,8 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 
 Collider* Physics::raycastAt(const glm::vec2& point)
 {
-	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->obj->z() < b->obj->z(); });
+	colliders.apply_changes();
+	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->transform()->getZ() < b->transform()->getZ(); });
 
 	Collider* collider = nullptr;
 	for (auto& col : colliders)

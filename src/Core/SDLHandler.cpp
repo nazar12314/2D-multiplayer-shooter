@@ -7,6 +7,7 @@
 void SDLHandler::init(const glm::ivec2& windowSize)
 {
 	SDLHandler::windowSize = windowSize;
+	windowAspectRatio = (float)windowSize.x / windowSize.y;
 
 	window = SDL_CreateWindow("2D Multiplayer Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
