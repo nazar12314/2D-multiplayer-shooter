@@ -4,11 +4,11 @@
 #include "Transform.h"
 #include "glm/trigonometric.hpp"
 
-Rigidbody::Rigidbody(Object* obj, bool isStatic) : Component(obj), _isStatic(isStatic)
+Rigidbody::Rigidbody(GameObject* obj, bool isStatic) : Component(obj), _isStatic(isStatic)
 {
 	initCollider();
 }
-Rigidbody::Rigidbody(Object* obj, float linearDrag, float angularDrag): Component(obj), _isStatic(false), _linearDrag(linearDrag), _angularDrag(angularDrag)
+Rigidbody::Rigidbody(GameObject* obj, float linearDrag, float angularDrag): Component(obj), _isStatic(false), _linearDrag(linearDrag), _angularDrag(angularDrag)
 {
 	initCollider();
 }

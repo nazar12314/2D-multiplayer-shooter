@@ -17,7 +17,7 @@ class Collider : public Component
 	bool _isTrigger = false;
 	Rigidbody* _rb = nullptr;
 
-	explicit Collider(Object* obj, bool isTrigger = false);
+	explicit Collider(GameObject* obj, bool isTrigger = false);
 	~Collider() override;
 
 	void start() override;
@@ -49,7 +49,7 @@ public:
 	bool isTrigger() const;
 	void setIsTrigger(bool trigger);
 
-	friend class Object;
+	friend class GameObject;
 	friend class Physics;
 	friend class Rigidbody;
 	friend class PolygonCollider;

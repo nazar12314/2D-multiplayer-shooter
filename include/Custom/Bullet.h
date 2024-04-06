@@ -11,11 +11,11 @@ class Bullet : public Component
 	Rigidbody* rb;
 	bool _explode;
 
-	Bullet(Object* obj, float speed = 16, bool explode = false);
+	Bullet(GameObject* obj, float speed = 16, bool explode = false);
 
 	void fixedUpdate() override;
 	void onTriggerEnter(Collider* other) override;
 
 public:
-	friend class Object;
+	friend class GameObject;
 };

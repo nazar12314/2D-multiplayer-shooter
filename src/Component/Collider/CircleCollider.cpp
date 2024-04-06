@@ -2,11 +2,11 @@
 
 #include "MyMath.h"
 #include "PolygonCollider.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "Transform.h"
 #include "glm/ext/scalar_constants.hpp"
 
-CircleCollider::CircleCollider(Object* obj, float radius, bool isTrigger): Collider(obj, isTrigger), _radius(radius) {}
+CircleCollider::CircleCollider(GameObject* obj, float radius, bool isTrigger): Collider(obj, isTrigger), _radius(radius) {}
 float CircleCollider::calculateMass() const
 {
 	return glm::pi<float>() * _radius * _radius;

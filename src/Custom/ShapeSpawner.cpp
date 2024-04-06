@@ -10,12 +10,45 @@
 #include "MyTime.h"
 #include "SpriteRenderer.h"
 #include "Rigidbody.h"
+#include "Transform.h"
 #include "glm/ext/scalar_constants.hpp"
 
-Object* ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
+ShapeSpawner::ShapeSpawner(GameObject* obj, bool enableGravity, bool spawnOnClick) : Component(obj), _enableGravity(enableGravity), _spawnOnClick(spawnOnClick) { }
+
+void ShapeSpawner::update()
+{
+	if (_spawnOnClick)
+	{
+		if (_spawnTimer > 0)
+		{
+			_spawnTimer -= Time::deltaTime;
+			return;
+		}
+		_spawnTimer = _spawnDelay;
+
+		auto spawnPos = Camera::getMain()->screenToWorldPoint(Input::mousePos);
+		if (Input::isMouseButtonDown(SDL_BUTTON_LEFT))
+			spawnSquare(spawnPos, _enableGravity);
+		if (Input::isMouseButtonDown(SDL_BUTTON_RIGHT))
+			spawnCircle(spawnPos, _enableGravity);
+	}
+
+	if (_enableGravity)
+	{
+		_spawnedShapes.apply_changes();
+		for (auto shape : _spawnedShapes)
+		{
+			if (shape->transform()->getPos().y >= -30) continue;
+			GameObject::destroy(shape);
+			_spawnedShapes.erase_delayed(shape);
+		}
+	}
+}
+
+GameObject* ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto size = Math::randomFloat(0.5f, 1);
-	auto obj = Object::create("Square", spawnPos);
+	auto obj = GameObject::create("Square", spawnPos);
 	obj->setTag("Wall");
 	obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), glm::vec2(size, size), Color::randomLight());
 	obj->addComponent<PolygonCollider>(glm::vec2(size, size));
@@ -23,12 +56,13 @@ Object* ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
 	rb->setRestitution(0.5f);
 	if (enableGravity) rb->setGravity(10);
 
+	_spawnedShapes.push_back(obj);
 	return obj;
 }
-Object* ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
+GameObject* ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto radius = Math::randomFloat(0.25f, 0.5f);
-	auto obj = Object::create("Circle", spawnPos);
+	auto obj = GameObject::create("Circle", spawnPos);
 	obj->setTag("Wall");
 	obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(radius * 2, radius * 2), Color::randomLight());
 	obj->addComponent<CircleCollider>(radius);
@@ -36,21 +70,6 @@ Object* ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
 	rb->setRestitution(0.5f);
 	if (enableGravity) rb->setGravity(10);
 
+	_spawnedShapes.push_back(obj);
 	return obj;
-}
-
-void ShapeSpawner::update()
-{
-	if (_spawnTimer > 0)
-	{
-		_spawnTimer -= Time::deltaTime;
-		return;
-	}
-	_spawnTimer = spawnDelay;
-
-	auto spawnPos = Camera::getMain()->screenToWorldPoint(Input::mousePos);
-	if (Input::isMouseButtonDown(SDL_BUTTON_LEFT))
-		spawnSquare(spawnPos, enableGravity);
-	if (Input::isMouseButtonDown(SDL_BUTTON_RIGHT))
-		spawnCircle(spawnPos, enableGravity);
 }

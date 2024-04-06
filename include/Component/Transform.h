@@ -24,7 +24,7 @@ class Transform : public Component
 	Transform* _parent = nullptr;
 	std::vector<Transform*> _children;
 
-	Transform(Object* obj, glm::vec2 pos = {0, 0}, float rot = 0);
+	Transform(GameObject* obj, glm::vec2 pos = {0, 0}, float rot = 0);
 
 	void recalculateLocalMatrix();
 	void recalculateGlobalMatrix();
@@ -70,6 +70,6 @@ public:
 	glm::vec2 localToGlobalPos(const glm::vec2& pos);
 	glm::vec2 globalToLocalPos(const glm::vec2& pos);
 
-	friend class Object;
+	friend class GameObject;
 	friend class Rigidbody;
 };

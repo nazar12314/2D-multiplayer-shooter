@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "Object.h"
+#include "GameObject.h"
 
 class Collider;
 
@@ -32,8 +32,8 @@ class Rigidbody : public Component
 
 	Collider* _attachedCollider = nullptr;
 
-	Rigidbody(Object* obj, bool isStatic = false);
-	Rigidbody(Object* obj, float linearDrag, float angularDrag = 0);
+	Rigidbody(GameObject* obj, bool isStatic = false);
+	Rigidbody(GameObject* obj, float linearDrag, float angularDrag = 0);
 	void initCollider();
 	~Rigidbody() override;
 
@@ -76,7 +76,7 @@ public:
 	void applyImpulse(glm::vec2 pos, glm::vec2 impulse);
 	void applyImpact(glm::vec2 point, float radius, float force);
 
-	friend class Object;
+	friend class GameObject;
 	friend class Physics;
 	friend class Collider;
 	friend class PositionSolver;

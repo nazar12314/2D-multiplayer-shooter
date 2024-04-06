@@ -6,7 +6,7 @@
 #include "SDLHandler.h"
 #include "Transform.h"
 
-BaseRenderer::BaseRenderer(Object* obj, glm::vec2 size, const Color& color, int order) : Component(obj), _size(size), _color(color), _order(order) {}
+BaseRenderer::BaseRenderer(GameObject* obj, glm::vec2 size, const Color& color, int order) : Component(obj), _size(size), _color(color), _order(order) {}
 BaseRenderer::~BaseRenderer()
 {
 	delete _material;

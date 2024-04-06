@@ -1,7 +1,7 @@
 #include "Application.h"
 
 #include "MyTime.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "Physics.h"
 #include "Renderer.h"
 #include "SDLHandler.h"
@@ -19,7 +19,7 @@ void Application::start(const glm::ivec2& windowSize)
 	Physics::init();
 
 	Scene::create();
-	Object::sendCallbackAll(&Component::start);
+	GameObject::sendCallbackAll(&Component::start);
 }
 
 void Application::loop()
@@ -27,14 +27,14 @@ void Application::loop()
 	while (true)
 	{
 		SDLHandler::handleEvents();
-		Object::prepareAll();
+		Object::prepare();
 		Physics::physicsLoop();
 		Time::tick();
 		FPSCounter::tick();
 
+		GameObject::sendCallbackAll(&Component::update);
 		DOVirtual::update(Time::deltaTime);
-		Object::sendCallbackAll(&Component::update);
-		Object::sendCallbackAll(&Component::lateUpdate);
+		GameObject::sendCallbackAll(&Component::lateUpdate);
 
 		if (doQuit) break;
 		Renderer::render();
@@ -44,7 +44,7 @@ void Application::loop()
 
 void Application::quit()
 {
-	Object::destroyAll();
+	GameObject::destroyAll();
 
 	SDLHandler::uninit();
 }

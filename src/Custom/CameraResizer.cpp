@@ -4,11 +4,11 @@
 #include "Input.h"
 #include "MyMath.h"
 #include "MyTime.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "Transform.h"
 #include "glm/common.hpp"
 
-CameraResizer::CameraResizer(Object* owner, float startSize, float sensitivity, float smoothness, bool zoomTowardsMouse) : Component(owner), targetSize(startSize),
+CameraResizer::CameraResizer(GameObject* owner, float startSize, float sensitivity, float smoothness, bool zoomTowardsMouse) : Component(owner), targetSize(startSize),
 	sensitivity(sensitivity), smoothness(smoothness), zoomTowardsMouse(zoomTowardsMouse)
 {
 	Camera::getMain()->setSize(startSize);

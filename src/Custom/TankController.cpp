@@ -1,12 +1,12 @@
 #include "TankController.h"
 
 #include "Input.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "glm/vec2.hpp"
 #include "Rigidbody.h"
 #include "Transform.h"
 
-TankController::TankController(Object* obj, float moveSpeed, float rotationSpeed): Component(obj), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed)
+TankController::TankController(GameObject* obj, float moveSpeed, float rotationSpeed): Component(obj), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed)
 {
 	rb = obj->getComponent<Rigidbody>();
 }

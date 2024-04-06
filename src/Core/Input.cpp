@@ -51,7 +51,7 @@ void Input::handleInputEvent(const SDL_Event& event)
 		auto hitCollider = Physics::raycastAt(mouseWorldPos);
 		if (hitCollider == nullptr || hitCollider != mouseDownCollider) return;
 
-		hitCollider->obj()->sendCallback(&Component::onMouseClick);
+		hitCollider->gameObject()->sendCallback(&Component::onMouseClick);
 	}
 	else if (event.type == SDL_MOUSEMOTION)
 	{
@@ -63,11 +63,11 @@ void Input::handleInputEvent(const SDL_Event& event)
 		if (hitCollider == mouseOverCollider) return;
 
 		if (mouseOverCollider != nullptr)
-			mouseOverCollider->obj()->sendCallback(&Component::onMouseExit);
+			mouseOverCollider->gameObject()->sendCallback(&Component::onMouseExit);
 		mouseOverCollider = hitCollider;
 
 		if (hitCollider == nullptr) return;
-		hitCollider->obj()->sendCallback(&Component::onMouseEnter);
+		hitCollider->gameObject()->sendCallback(&Component::onMouseEnter);
 	}
 	else if (event.type == SDL_MOUSEWHEEL)
 	{

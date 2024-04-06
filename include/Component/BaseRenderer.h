@@ -17,7 +17,7 @@ protected:
 
 	Material* _material = nullptr;
 
-	BaseRenderer(Object* obj, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
+	BaseRenderer(GameObject* obj, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
 	~BaseRenderer() override;
 
 	virtual void render(const Camera* camera);
@@ -36,6 +36,6 @@ public:
 
 	void setNativeSize();
 
-	friend class Object;
+	friend class GameObject;
 	friend class Renderer;
 };

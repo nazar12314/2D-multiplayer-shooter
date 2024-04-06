@@ -15,8 +15,7 @@ class DOVirtual
 
 	static void update(float deltaTime);
 
-	template <typename T>
-	static Tween* valueTo(T startValue, T endValue, float time, const std::function<void(T)>& setter);
+	template <typename T> static Tween* valueTo(T startValue, T endValue, float time, const std::function<void(T)>& setter);
 
 public:
 	static Tween* delayedCall(const std::function<void()>& function, float delay);
@@ -29,12 +28,24 @@ public:
 	friend class Application;
 };
 
+enum class EaseType
+{
+	Linear = 0,
+	InQuad = 1,
+	InCubic = 2,
+	OutQuad = 3,
+	OutCubic = 4,
+	InOutQuad = 5,
+	InOutCubic = 6
+};
 
 class Tween
 {
 protected:
 	float _time;
 	float _elapsed = 0;
+	float _delay = 0;
+	EaseType _ease = EaseType::InOutQuad;
 
 	Tween(float time);
 	virtual ~Tween() = default;
@@ -45,6 +56,9 @@ protected:
 
 public:
 	void kill();
+
+	Tween* setEase(EaseType ease);
+	Tween* setDelay(float delay);
 
 	friend class DOVirtual;
 };
@@ -82,7 +96,7 @@ template <typename T> Tween* DOVirtual::valueTo(T startValue, T endValue, float 
 	return valueTo;
 }
 template <typename T> ValueTo<T>::ValueTo(T startValue, T endValue, float time, const std::function<void(T)>& setter): Tween(time), _startValue(startValue),
-                                                                                                                       _endValue(endValue), _setter(setter) {}
+	_endValue(endValue), _setter(setter) {}
 
 template <typename T> void ValueTo<T>::update(float deltaTime)
 {
@@ -94,3 +108,4 @@ template <typename T> void ValueTo<T>::finish()
 	_setter(_endValue);
 	Tween::finish();
 }
+

@@ -9,7 +9,7 @@ class TankController : public Component
 {
 	Rigidbody* rb;
 
-	TankController(Object* obj, float moveSpeed = 130, float rotationSpeed = 80);
+	TankController(GameObject* obj, float moveSpeed = 130, float rotationSpeed = 80);
 
 	void fixedUpdate() override;
 
@@ -17,5 +17,5 @@ public:
 	float moveSpeed;
 	float rotationSpeed;
 
-	friend class Object;
+	friend class GameObject;
 };

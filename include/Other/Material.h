@@ -7,7 +7,6 @@
 #include "glm/vec2.hpp"
 
 class Font;
-class Color;
 class Sprite;
 
 class Texture
@@ -16,9 +15,12 @@ class Texture
 	SDL_Texture* _texture;
 	glm::vec2 _size;
 
+	bool _usingDefaultTexture;
+
 public:
 	Texture(const Sprite* sprite);
 	Texture(const Font* font, const std::string& text, const Color& color);
+	~Texture();
 
 	SDL_Surface* surface() const;
 	SDL_Texture* texture() const;
@@ -44,4 +46,3 @@ public:
 	void setTexture(const Texture& texture);
 	void setColor(const Color& color);
 };
-

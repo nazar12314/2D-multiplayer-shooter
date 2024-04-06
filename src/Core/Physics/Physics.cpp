@@ -18,14 +18,14 @@ void Physics::init()
 }
 void Physics::subscribeToEvents()
 {
-	Object::onComponentAddedGlobal += [](Component* comp)
+	GameObject::onComponentAddedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
 			rigidbodies.push_back_delayed(rb);
 		if (auto col = dynamic_cast<Collider*>(comp))
 			colliders.push_back_delayed(col);
 	};
-	Object::onComponentRemovedGlobal += [](Component* comp)
+	GameObject::onComponentRemovedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
 			rigidbodies.erase_delayed(rb);
@@ -50,7 +50,7 @@ void Physics::physicsLoop()
 	{
 		Time::fixedTick();
 		fixedUpdateTimer += Time::fixedDeltaTime;
-		Object::sendCallbackAll(&Component::fixedUpdate);
+		GameObject::sendCallbackAll(&Component::fixedUpdate);
 
 		// !!! PHYSICS STEP !!!
 		step(Time::fixedDeltaTime);
@@ -73,6 +73,8 @@ void Physics::step(float dt, int substeps)
 
 	for (int i = 0; i < substeps; i++)
 	{
+		rigidbodies.apply_changes();
+		colliders.apply_changes();
 		for (auto& rb : rigidbodies)
 			rb->substep(dt / substeps);
 

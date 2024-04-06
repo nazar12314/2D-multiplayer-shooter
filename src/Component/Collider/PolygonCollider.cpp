@@ -6,17 +6,17 @@
 #include "SpriteRenderer.h"
 #include "Assets.h"
 #include "CircleCollider.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "Transform.h"
 #include "glm/detail/func_trigonometric.inl"
 
-PolygonCollider::PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
+PolygonCollider::PolygonCollider(GameObject* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
 {
 	updateVertices();
 
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)
-			vertexSpritesTEST.push_back(Object::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
+			vertexSpritesTEST.push_back(GameObject::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
 }
 void PolygonCollider::updateVertices()
 {
@@ -107,7 +107,7 @@ void PolygonCollider::onDestroy()
 {
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (auto& point : vertexSpritesTEST)
-			Object::destroy(point->obj());
+			GameObject::destroy(point->gameObject());
 }
 
 float PolygonCollider::calculateMass() const

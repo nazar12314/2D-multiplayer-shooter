@@ -12,7 +12,7 @@ class TextRenderer : public BaseRenderer
 	std::string _text;
 	Font* _font;
 
-	TextRenderer(Object* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0, Font* font = nullptr);
+	TextRenderer(GameObject* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0, Font* font = nullptr);
 
 	void updateTexture() const;
 
@@ -25,5 +25,5 @@ public:
 	void setColor(const Color& color) override;
 	void setFont(Font* font);
 
-	friend class Object;
+	friend class GameObject;
 };

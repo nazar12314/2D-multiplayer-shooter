@@ -30,6 +30,15 @@ Tween::Tween(float time): _time(time) {}
 
 void Tween::update(float deltaTime)
 {
+	// Delay
+	if (_delay > deltaTime)
+	{
+		_delay -= deltaTime;
+		return;
+	}
+	_delay = 0;
+
+	// Update
 	_elapsed += deltaTime;
 	if (_elapsed >= _time)
 	{
@@ -47,6 +56,16 @@ void Tween::kill()
 {
 	DOVirtual::_tweens.erase_delayed(this);
 	delete this;
+}
+Tween* Tween::setEase(EaseType ease)
+{
+	_ease = ease;
+	return this;
+}
+Tween* Tween::setDelay(float delay)
+{
+	_delay = delay;
+	return this;
 }
 
 DelayedCall::DelayedCall(const std::function<void()>& function, float delay): Tween(delay), _function(function) {}

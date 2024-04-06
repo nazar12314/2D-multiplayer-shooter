@@ -16,12 +16,12 @@ class Tank : public Component
 
 	float _shootCooldown;
 
-	Tank(Object* obj, bool explosiveBullets = false, bool explodeAtMousePosition = false);
+	Tank(GameObject* obj, bool explosiveBullets = false, bool explodeAtMousePosition = false);
 	void createGun();
 
 	void update() override;
 	void updateGunPosition() const;
 	void shoot() const;
 
-	friend class Object;
+	friend class GameObject;
 };

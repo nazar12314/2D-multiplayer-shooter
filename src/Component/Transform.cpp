@@ -4,7 +4,7 @@
 #include "MyMath.h"
 #include "glm/gtx/matrix_transform_2d.hpp"
 
-Transform::Transform(Object* obj, const glm::vec2 pos, float rot) : Component(obj), _localPos(pos), _localRot(rot)
+Transform::Transform(GameObject* obj, const glm::vec2 pos, float rot) : Component(obj), _localPos(pos), _localRot(rot)
 {
 	recalculateLocalMatrix();
 }

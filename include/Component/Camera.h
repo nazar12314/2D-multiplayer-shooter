@@ -12,7 +12,7 @@ class Camera : public Component
 
 	float _size;
 
-	Camera(Object* obj, float size = 10);
+	Camera(GameObject* obj, float size = 10);
 	~Camera() override;
 
 public:
@@ -30,5 +30,5 @@ public:
 
 	static Camera* getMain();
 
-	friend class Object;
+	friend class GameObject;
 };

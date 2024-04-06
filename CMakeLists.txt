@@ -30,9 +30,9 @@ ENDIF()
 add_executable(${PROJECT_NAME} 
 	 "src/main.cpp"
 	 "src/Core/Input.cpp"
-	 "src/Object/Object.cpp"
+	 "src/Object/GameObject.cpp"
 	 "src/Application.cpp"
-	 "src/Object/Transform.cpp"
+	 "src/Component/Transform.cpp"
 	 "src/Core/Renderer.cpp"
 	 "src/Component/Camera.cpp"
 	 "src/Core/SDLHandler.cpp"
@@ -71,7 +71,7 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/Utils.h"
 	 "src/Component/TextRenderer.cpp"
 	 "src/Component/BaseRenderer.cpp"
-	  "src/Other/DOVirtual.cpp")
+	  "src/Other/DOVirtual.cpp" "include/Object/Object.h" "src/Object/Object.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

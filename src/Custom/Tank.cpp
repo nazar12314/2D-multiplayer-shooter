@@ -5,7 +5,7 @@
 #include "Input.h"
 #include "MyMath.h"
 #include "MyTime.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "PolygonCollider.h"
 #include "Assets.h"
 #include "Physics.h"
@@ -16,7 +16,7 @@
 #include "glm/geometric.hpp"
 #include "glm/detail/func_trigonometric.inl"
 
-Tank::Tank(Object* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
+Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
                                                                              _explodeAtMousePosition(explodeAtMousePosition)
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
@@ -30,8 +30,8 @@ Tank::Tank(Object* obj, bool explosiveBullets, bool explodeAtMousePosition): Com
 void Tank::createGun()
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
-	gun = Object::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), Color::randomLight(), 1);
-	gunPivot = Object::create("gunPivot", transform())->transform();
+	gun = GameObject::create("gun")->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), Color::randomLight(), 1);
+	gunPivot = GameObject::create("gunPivot", transform())->transform();
 	gunPivot->setLocalPos(glm::vec2(0, 0.1f));
 	gun->transform()->setParent(gunPivot);
 	gun->transform()->setLocalPos(glm::vec2(gun->size().x / 2.0f, 0));
@@ -79,6 +79,6 @@ void Tank::shoot() const
 	auto dir = glm::vec2(cos(angle), sin(angle));
 
 	auto spawnPos = transform()->getPos() + dir * gun->size().x * 0.85f;
-	auto bullet = Object::create("bullet", spawnPos, gun->transform()->getRot());
+	auto bullet = GameObject::create("bullet", spawnPos, gun->transform()->getRot());
 	bullet->addComponent<Bullet>(16, _explosiveBullets);
 }

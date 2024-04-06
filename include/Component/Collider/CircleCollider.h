@@ -16,7 +16,7 @@ class CircleCollider : public Collider
 
 	bool isPointInside(const glm::vec2& point) const override;
 
-	explicit CircleCollider(Object* obj, float radius = 1, bool isTrigger = false);
+	explicit CircleCollider(GameObject* obj, float radius = 1, bool isTrigger = false);
 
 	float calculateMass() const override;
 	float calculateInertia(float mass) const override;
@@ -28,5 +28,5 @@ public:
 	float radius() const { return _radius; }
 	void setRadius(float radius) { _radius = radius; }
 
-	friend class Object;
+	friend class GameObject;
 };

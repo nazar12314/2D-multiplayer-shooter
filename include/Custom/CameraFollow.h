@@ -4,16 +4,16 @@
 
 class CameraFollow : public Component
 {
-	Object* target = nullptr;
+	GameObject* target = nullptr;
 
-	CameraFollow(Object* obj, float smoothness);
+	CameraFollow(GameObject* obj, float smoothness);
 
 	void fixedUpdate() override;
 
 public:
 	float smoothness;
 
-	void setTarget(Object* obj) { target = obj; }
+	void setTarget(GameObject* obj) { target = obj; }
 
-	friend class Object;
+	friend class GameObject;
 };

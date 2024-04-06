@@ -4,7 +4,7 @@
 #include "SpriteRenderer.h"
 #include "Assets.h"
 
-Wall::Wall(Object* obj, glm::vec2 size): Component(obj)
+Wall::Wall(GameObject* obj, glm::vec2 size): Component(obj)
 {
 	obj->setTag("Wall");
 

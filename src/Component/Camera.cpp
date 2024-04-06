@@ -1,11 +1,11 @@
 #include "Camera.h"
 
-#include "Object.h"
+#include "GameObject.h"
 #include "SDLHandler.h"
 #include "SpriteRenderer.h"
 #include "Transform.h"
 
-Camera::Camera(Object* obj, float size): Component(obj), _size(size)
+Camera::Camera(GameObject* obj, float size): Component(obj), _size(size)
 {
 	cameras.push_back(this);
 }

@@ -6,7 +6,7 @@
 
 class Wall : public Component
 {
-	explicit Wall(Object* obj, glm::vec2 size);
+	explicit Wall(GameObject* obj, glm::vec2 size);
 
-	friend class Object;
+	friend class GameObject;
 };

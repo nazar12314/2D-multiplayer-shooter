@@ -16,7 +16,7 @@ class PolygonCollider : public Collider
 
 	std::vector<SpriteRenderer*> vertexSpritesTEST {};
 
-	PolygonCollider(Object* obj, glm::vec2 size, bool isTrigger = false);
+	PolygonCollider(GameObject* obj, glm::vec2 size, bool isTrigger = false);
 	void updateVertices();
 	void recalculate() override;
 
@@ -40,6 +40,6 @@ public:
 	void size(glm::vec2 size);
 	void setSize(glm::vec2 size);
 
-	friend class Object;
+	friend class GameObject;
 	friend class CircleCollider;
 };

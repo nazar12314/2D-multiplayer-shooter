@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include "Object.h"
+#include "GameObject.h"
 #include "Camera.h"
 #include "SpriteRenderer.h"
 #include "SDLHandler.h"
@@ -21,7 +21,7 @@ void Renderer::init()
 }
 void Renderer::subscribeToEvents()
 {
-	Object::onComponentAddedGlobal += [](Component* comp)
+	GameObject::onComponentAddedGlobal += [](Component* comp)
 	{
 		if (auto renderer = dynamic_cast<BaseRenderer*>(comp))
 		{
@@ -29,7 +29,7 @@ void Renderer::subscribeToEvents()
 			sortRenderers();
 		}
 	};
-	Object::onComponentRemovedGlobal += [](Component* comp)
+	GameObject::onComponentRemovedGlobal += [](Component* comp)
 	{
 		if (auto sprite = dynamic_cast<BaseRenderer*>(comp))
 			std::erase(renderers, sprite);
@@ -53,7 +53,7 @@ void Renderer::renderObjects(const Camera* mainCamera)
 {
 	for (auto sprite : renderers)
 	{
-		if (!sprite->obj()->enabled()) continue;
+		if (!sprite->gameObject()->active()) continue;
 
 		sprite->render(mainCamera);
 	}

@@ -2,10 +2,10 @@
 
 #include "MyMath.h"
 #include "MyTime.h"
-#include "Object.h"
+#include "GameObject.h"
 #include "Transform.h"
 
-CameraFollow::CameraFollow(Object* obj, float smoothness): Component(obj), smoothness(smoothness) { }
+CameraFollow::CameraFollow(GameObject* obj, float smoothness): Component(obj), smoothness(smoothness) { }
 
 void CameraFollow::fixedUpdate()
 {
