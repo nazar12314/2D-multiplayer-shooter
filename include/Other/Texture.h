@@ -18,7 +18,7 @@ class Texture
 	bool _usingDefaultTexture;
 
 public:
-	Texture(const Sprite* sprite);
+	Texture(const Sprite* sprite, const Color& color = Color::white);
 	Texture(const Font* font, const std::string& text, const Color& color);
 	~Texture();
 
@@ -28,21 +28,5 @@ public:
 
 	float getRatio() const;
 
-	friend class Material;
-};
-
-class Material
-{
-	Texture _texture;
-	SDL_Texture* _clonedSDLTexture = nullptr;
-
-public:
-	Material(const Texture& texture, const Color& color = Color::white);
-	~Material();
-
-	const Texture& texture() const;
-	SDL_Texture* sdlTexture() const;
-
-	void setTexture(const Texture& texture);
 	void setColor(const Color& color);
 };

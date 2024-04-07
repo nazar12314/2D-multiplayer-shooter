@@ -62,7 +62,7 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/Assets.cpp"
 	 "include/Utils/Concepts.h"
 	 "src/Utils/Color.cpp"
-	 "src/Other/Material.cpp"
+	 "src/Other/Texture.cpp"
 	 "src/Core/Physics/Solver.cpp"
 	 "include/Core/Physics/Collision.h"
 	 "src/Other/Gizmos.cpp"

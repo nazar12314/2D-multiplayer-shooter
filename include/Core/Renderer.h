@@ -5,16 +5,16 @@
 #include "Color.h"
 #include "glm/glm.hpp"
 
+class Texture;
 class BaseRenderer;
-class Material;
 class Camera;
 
 class Renderer
 {
 	inline static std::vector<BaseRenderer*> renderers {};
 
-	inline static Material* circleMaterial = nullptr;
-	inline static Material* squareMaterial = nullptr;
+	inline static Texture* circleTex = nullptr;
+	inline static Texture* squareTex = nullptr;
 
 	static void drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width = 3);
 	static void drawCircleWorld(const glm::vec2& pos, float radius, const Color& color);

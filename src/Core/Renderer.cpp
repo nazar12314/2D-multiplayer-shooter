@@ -6,18 +6,16 @@
 #include "SDLHandler.h"
 #include "Assets.h"
 #include "Gizmos.h"
-#include "Material.h"
 #include <algorithm>
 
-#include "Transform.h"
-#include "glm/gtx/string_cast.hpp"
+#include "Texture.h"
 
 void Renderer::init()
 {
 	subscribeToEvents();
 
-	circleMaterial = new Material(Assets::load<Sprite>("assets/sprites/circle.png"));
-	squareMaterial = new Material(Assets::load<Sprite>("assets/sprites/square.png"));
+	circleTex = new Texture(Assets::load<Sprite>("assets/sprites/circle.png"));
+	squareTex = new Texture(Assets::load<Sprite>("assets/sprites/square.png"));
 }
 void Renderer::subscribeToEvents()
 {
@@ -78,13 +76,13 @@ void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm:
 
 void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width)
 {
-	squareMaterial->setColor(color);
-	renderTexWorld(squareMaterial->sdlTexture(), (p1 + p2) / 2.f, {width, distance(p1, p2)}, 90 - glm::degrees(glm::atan(p2.y - p1.y, p2.x - p1.x)));
+	squareTex->setColor(color);
+	renderTexWorld(squareTex->texture(), (p1 + p2) / 2.f, {width, distance(p1, p2)}, 90 - glm::degrees(glm::atan(p2.y - p1.y, p2.x - p1.x)));
 }
 void Renderer::drawCircleWorld(const glm::vec2& pos, float radius, const Color& color)
 {
-	circleMaterial->setColor(color);
-	renderTexWorld(circleMaterial->sdlTexture(), pos, {radius * 2, radius * 2});
+	circleTex->setColor(color);
+	renderTexWorld(circleTex->texture(), pos, {radius * 2, radius * 2});
 }
 void Renderer::sortRenderers()
 {

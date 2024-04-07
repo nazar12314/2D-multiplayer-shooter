@@ -65,7 +65,7 @@ void impactBulletsTankScene()
 	auto tank = GameObject::create("Player")->addComponent<Tank>(true);
 	follow->setTarget(tank->gameObject());
 
-	auto shapeSpawner = GameObject::create("ShapeSpawner")->addComponent<ShapeSpawner>();
+	auto shapeSpawner = GameObject::create("ShapeSpawner")->addComponent<ShapeSpawner>(false, false);
 
 	for (int i = 0; i < 50; i++)
 	{
@@ -94,5 +94,5 @@ void textAndTweensScene()
 
 void Scene::create()
 {
-	textAndTweensScene();
+	impactBulletsTankScene();
 }

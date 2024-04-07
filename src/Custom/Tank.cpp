@@ -14,7 +14,6 @@
 #include "Rigidbody.h"
 #include "Transform.h"
 #include "glm/geometric.hpp"
-#include "glm/detail/func_trigonometric.inl"
 
 Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
                                                                                  _explodeAtMousePosition(explodeAtMousePosition)

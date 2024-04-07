@@ -4,7 +4,6 @@
 
 #include "Component.h"
 #include "glm/vec2.hpp"
-#include "glm/detail/func_packing_simd.inl"
 
 class Camera : public Component
 {

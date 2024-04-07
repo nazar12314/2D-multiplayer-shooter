@@ -8,7 +8,6 @@
 #include "CircleCollider.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "glm/detail/func_trigonometric.inl"
 
 PolygonCollider::PolygonCollider(GameObject* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
 {

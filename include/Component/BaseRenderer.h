@@ -2,10 +2,10 @@
 
 #include "Component.h"
 #include "Color.h"
+#include "Renderer.h"
 
 class Texture;
 class Camera;
-class Material;
 
 class BaseRenderer : public Component
 {
@@ -15,7 +15,7 @@ protected:
 	int _order = 0;
 	bool _preserveAspect = false;
 
-	Material* _material = nullptr;
+	Texture* _texture = nullptr;
 
 	BaseRenderer(GameObject* obj, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
 
@@ -26,7 +26,7 @@ protected:
 public:
 	~BaseRenderer() override;
 
-	Material* material() const;
+	Texture* texture() const;
 	int order() const;
 	glm::vec2 size() const;
 

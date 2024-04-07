@@ -14,7 +14,7 @@ class TextRenderer : public BaseRenderer
 
 	TextRenderer(GameObject* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0, Font* font = nullptr);
 
-	void updateTexture() const;
+	void updateTexture();
 
 public:
 	std::string getText() const { return _text; }
