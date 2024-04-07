@@ -35,7 +35,6 @@ class Rigidbody : public Component
 	Rigidbody(GameObject* obj, bool isStatic = false);
 	Rigidbody(GameObject* obj, float linearDrag, float angularDrag = 0);
 	void initCollider();
-	~Rigidbody() override;
 
 	void step(float dt);
 	void substep(float dt);
@@ -44,6 +43,8 @@ class Rigidbody : public Component
 	void resetCollider();
 
 public:
+	~Rigidbody() override;
+
 	bool isStatic() const { return _isStatic; }
 	float mass() const { return _mass; }
 	float invMass() const { return _invMass; }

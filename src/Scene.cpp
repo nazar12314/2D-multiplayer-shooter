@@ -89,10 +89,10 @@ void textAndTweensScene()
 	auto tween = DOVirtual::vec2To(text2->transform()->getPos() - glm::vec2(1, 0), text2->transform()->getPos() + glm::vec2(1, 0), 3,
 	                               [text2](glm::vec2 value) { text2->transform()->setPos(value); });
 
-	DOVirtual::delayedCall([tween] { tween->kill(); }, 1);
+	//DOVirtual::delayedCall([tween] { tween->kill(); }, 1);
 }
 
 void Scene::create()
 {
-	shapeSpawnerWithGravity();
+	textAndTweensScene();
 }

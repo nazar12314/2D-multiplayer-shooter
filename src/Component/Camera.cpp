@@ -15,7 +15,10 @@ Camera::~Camera()
 }
 
 float Camera::size() const { return _size; }
+int Camera::priority() const { return _priority; }
+
 void Camera::setSize(float size) { _size = size; }
+void Camera::setPriority(int priority) { _priority = priority; }
 
 glm::vec2 Camera::screenToWorldPoint(const glm::vec2& screenPos) const
 {
@@ -56,6 +59,6 @@ glm::vec2 Camera::worldToScreenSize(const glm::vec2& worldSize) const
 Camera* Camera::getMain()
 {
 	if (cameras.empty()) return nullptr;
-	auto lambda = [](const Camera* a, const Camera* b) { return a->priority < b->priority; };
+	auto lambda = [](const Camera* a, const Camera* b) { return a->_priority < b->_priority; };
 	return *std::ranges::max_element(cameras, lambda);
 }

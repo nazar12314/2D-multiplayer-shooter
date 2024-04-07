@@ -9,15 +9,15 @@ class ShapeSpawner : public Component
 	bool _enableGravity;
 	bool _spawnOnClick;
 
-	VectorDelayed<GameObject*> _spawnedShapes;
+	VectorDelayed<GameObjectSPtr> _spawnedShapes;
 
 	explicit ShapeSpawner(GameObject* obj, bool enableGravity = false, bool spawnOnClick = true);
 
 	void update() override;
 
 public:
-	GameObject* spawnSquare(glm::vec2 spawnPos, bool enableGravity = false);
-	GameObject* spawnCircle(glm::vec2 spawnPos, bool enableGravity = false);
+	GameObjectSPtr spawnSquare(glm::vec2 spawnPos, bool enableGravity = false);
+	GameObjectSPtr spawnCircle(glm::vec2 spawnPos, bool enableGravity = false);
 
 	friend class GameObject;
 };

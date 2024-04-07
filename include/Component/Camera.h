@@ -11,15 +11,18 @@ class Camera : public Component
 	inline static std::vector<Camera*> cameras {};
 
 	float _size;
+	int _priority = 0;
 
 	Camera(GameObject* obj, float size = 10);
-	~Camera() override;
 
 public:
-	int priority = 0;
+	~Camera() override;
 
 	float size() const;
+	int priority() const;
+
 	void setSize(float size);
+	void setPriority(int priority);
 
 	glm::vec2 screenToWorldPoint(const glm::vec2& screenPos) const;
 	glm::vec2 worldToScreenPoint(const glm::vec2& worldPos) const;
@@ -31,4 +34,5 @@ public:
 	static Camera* getMain();
 
 	friend class GameObject;
+	friend std::unique_ptr<Camera>::deleter_type;
 };

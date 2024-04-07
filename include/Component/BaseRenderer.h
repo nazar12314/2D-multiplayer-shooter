@@ -18,13 +18,14 @@ protected:
 	Material* _material = nullptr;
 
 	BaseRenderer(GameObject* obj, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
-	~BaseRenderer() override;
 
 	virtual void render(const Camera* camera);
 
 	glm::vec2 getFinalSize() const;
 
 public:
+	~BaseRenderer() override;
+
 	Material* material() const;
 	int order() const;
 	glm::vec2 size() const;

@@ -29,7 +29,7 @@ void Renderer::subscribeToEvents()
 			sortRenderers();
 		}
 	};
-	GameObject::onComponentRemovedGlobal += [](Component* comp)
+	GameObject::onComponentDestroyedGlobal += [](Component* comp)
 	{
 		if (auto sprite = dynamic_cast<BaseRenderer*>(comp))
 			std::erase(renderers, sprite);

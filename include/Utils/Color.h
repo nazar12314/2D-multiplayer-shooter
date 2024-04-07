@@ -65,4 +65,8 @@ struct Color
 };
 
 
-inline std::ostream& operator<<(std::ostream& os, const Color& c);
+inline std::ostream& operator<<(std::ostream& os, const Color& c)
+{
+	os << "Color(" << c.r() << ", " << c.g() << ", " << c.b() << ", " << c.a() << ")";
+	return os;
+}

@@ -7,8 +7,9 @@
 void Gizmos::draw()
 {
 	gizmos.apply_changes();
-	for (auto& gizmo : gizmos)
+	for (int i = 0; i < gizmos.size(); i++)
 	{
+		auto gizmo = gizmos[i];
 		gizmo->draw();
 
 		gizmo->duration -= Time::deltaTime;

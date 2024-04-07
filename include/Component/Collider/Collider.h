@@ -18,7 +18,6 @@ class Collider : public Component
 	Rigidbody* _rb = nullptr;
 
 	explicit Collider(GameObject* obj, bool isTrigger = false);
-	~Collider() override;
 
 	void start() override;
 	virtual void recalculate() {}
@@ -46,6 +45,8 @@ class Collider : public Component
 	virtual float calculateInertia(float mass) const = 0;
 
 public:
+	~Collider() override;
+
 	bool isTrigger() const;
 	void setIsTrigger(bool trigger);
 

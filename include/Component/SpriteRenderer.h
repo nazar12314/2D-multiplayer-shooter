@@ -8,7 +8,7 @@ class Sprite;
 
 class SpriteRenderer : public BaseRenderer
 {
-	SpriteRenderer(GameObject* obj, const Sprite* texture, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
+	SpriteRenderer(GameObject* obj, const Sprite* sprite, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
 
 	friend class GameObject;
 };

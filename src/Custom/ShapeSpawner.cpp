@@ -36,16 +36,18 @@ void ShapeSpawner::update()
 	if (_enableGravity)
 	{
 		_spawnedShapes.apply_changes();
-		for (auto shape : _spawnedShapes)
+		for (int i = 0; i < _spawnedShapes.size(); i++)
 		{
+			auto shape = _spawnedShapes[i];
 			if (shape->transform()->getPos().y >= -30) continue;
-			GameObject::destroy(shape);
+
+			destroy(shape.get());
 			_spawnedShapes.erase_delayed(shape);
 		}
 	}
 }
 
-GameObject* ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
+GameObjectSPtr ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto size = Math::randomFloat(0.5f, 1);
 	auto obj = GameObject::create("Square", spawnPos);
@@ -59,7 +61,7 @@ GameObject* ShapeSpawner::spawnSquare(glm::vec2 spawnPos, bool enableGravity)
 	_spawnedShapes.push_back(obj);
 	return obj;
 }
-GameObject* ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
+GameObjectSPtr ShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
 {
 	auto radius = Math::randomFloat(0.25f, 0.5f);
 	auto obj = GameObject::create("Circle", spawnPos);

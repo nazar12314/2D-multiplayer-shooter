@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Object.h"
 #include "GameObject.h"
 #include "Concepts.h"
 
 class Collider;
+class Component;
 
 class Component : public Object
 {
@@ -37,20 +39,13 @@ protected:
 	void destroyImmediate() override;
 
 public:
-	GameObject* gameObject() const
-	{
-		throwIfDestroyed();
-		return _gameObject;
-	}
-	Transform* transform() const
-	{
-		throwIfDestroyed();
-		return _gameObject->transform();
-	}
+	~Component() override {}
+
+	GameObject* gameObject() const;
+	Transform* transform() const;
 
 	// Method forwarding to Object
-	template <derived<Component> T, typename... Ts> T* addComponent(Ts... args);
-	template <derived<Component> T> void removeComponent();
+	template <derived<Component> T, typename... Ts> T* addComponent(Ts&&... args);
 	template <derived<Component> T> bool hasComponent() const;
 	template <derived<Component> T> T* getComponent();
 	template <derived<Component> T> bool tryGetComponent(T*& component) const;
@@ -62,9 +57,9 @@ public:
 	friend class Input;
 };
 
-template <derived<Component> T, typename... Ts> T* Component::addComponent(Ts... args)
+template <derived<Component> T, typename... Ts> T* Component::addComponent(Ts&&... args)
 {
-	return _gameObject->addComponent<T>(args...);
+	return _gameObject->addComponent<T>(std::forward<Ts>(args)...);
 }
 template <derived<Component> T> bool Component::hasComponent() const
 {
@@ -77,8 +72,4 @@ template <derived<Component> T> T* Component::getComponent()
 template <derived<Component> T> bool Component::tryGetComponent(T*& component) const
 {
 	return _gameObject->tryGetComponent<T>(component);
-}
-template <derived<Component> T> void Component::removeComponent()
-{
-	_gameObject->removeComponent<T>();
 }

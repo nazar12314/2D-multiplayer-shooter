@@ -19,15 +19,14 @@ void Application::start(const glm::ivec2& windowSize)
 	Physics::init();
 
 	Scene::create();
-	GameObject::sendCallbackAll(&Component::start);
 }
 
 void Application::loop()
 {
 	while (true)
 	{
-		SDLHandler::handleEvents();
 		Object::prepare();
+		SDLHandler::handleEvents();
 		Physics::physicsLoop();
 		Time::tick();
 		FPSCounter::tick();
@@ -38,7 +37,6 @@ void Application::loop()
 
 		if (doQuit) break;
 		Renderer::render();
-
 	}
 }
 

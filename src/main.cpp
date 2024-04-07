@@ -12,6 +12,5 @@ void main_game()
 int main(int argc, char* argv[])
 {
 	main_game();
-
 	return 0;
 }

@@ -16,6 +16,5 @@ class Bullet : public Component
 	void fixedUpdate() override;
 	void onTriggerEnter(Collider* other) override;
 
-public:
 	friend class GameObject;
 };

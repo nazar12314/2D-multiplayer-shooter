@@ -10,7 +10,6 @@
 #include "Rigidbody.h"
 #include "Solver.h"
 #include "Transform.h"
-#include "Utils.h"
 
 void Physics::init()
 {
@@ -21,11 +20,11 @@ void Physics::subscribeToEvents()
 	GameObject::onComponentAddedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
-			rigidbodies.push_back_delayed(rb);
+			rigidbodies.push_back(rb);
 		if (auto col = dynamic_cast<Collider*>(comp))
-			colliders.push_back_delayed(col);
+			colliders.push_back(col);
 	};
-	GameObject::onComponentRemovedGlobal += [](Component* comp)
+	GameObject::onComponentDestroyedGlobal += [](Component* comp)
 	{
 		if (auto rb = dynamic_cast<Rigidbody*>(comp))
 			rigidbodies.erase_delayed(rb);
@@ -68,15 +67,15 @@ void Physics::step(float dt, int substeps)
 
 	rigidbodies.apply_changes();
 	colliders.apply_changes();
-	for (auto& rb : rigidbodies)
-		rb->step(dt);
+	for (int i = 0; i < rigidbodies.size(); i++)
+		rigidbodies[i]->step(dt);
 
 	for (int i = 0; i < substeps; i++)
 	{
 		rigidbodies.apply_changes();
 		colliders.apply_changes();
-		for (auto& rb : rigidbodies)
-			rb->substep(dt / substeps);
+		for (int j = 0; j < rigidbodies.size(); j++)
+			rigidbodies[j]->substep(dt / substeps);
 
 		solveCollisions();
 
@@ -267,20 +266,17 @@ Collider* Physics::raycastAt(const glm::vec2& point)
 	colliders.apply_changes();
 	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->transform()->getZ() < b->transform()->getZ(); });
 
-	Collider* collider = nullptr;
-	for (auto& col : colliders)
+	for (int i = colliders.size() - 1; i >= 0; i--)
 	{
+		auto col = colliders[i];
 		if (col->isPointInside(point))
-		{
-			collider = col;
-			break;
-		}
+			return col;
 	}
-	return collider;
+	return nullptr;
 }
 
 void Physics::createImpact(const glm::vec2& point, float radius, float force)
 {
-	for (auto& rb : rigidbodies)
-		rb->applyImpact(point, radius, force);
+	for (int i = 0; i < rigidbodies.size(); i++)
+		rigidbodies[i]->applyImpact(point, radius, force);
 }

@@ -7,7 +7,7 @@ class PolygonCollider;
 
 class TankController : public Component
 {
-	Rigidbody* rb;
+	Rigidbody* rb = nullptr;
 
 	TankController(GameObject* obj, float moveSpeed = 130, float rotationSpeed = 80);
 

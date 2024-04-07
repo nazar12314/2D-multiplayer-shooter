@@ -134,9 +134,3 @@ Color operator*(Color c, float v)
 {
 	return {c.x * v, c.y * v, c.z * v};
 }
-
-std::ostream& operator<<(std::ostream& os, const Color& c)
-{
-	os << "(" << c.r() << ", " << c.g() << ", " << c.b() << ")";
-	return os;
-}

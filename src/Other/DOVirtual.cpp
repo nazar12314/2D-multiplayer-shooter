@@ -3,8 +3,8 @@
 void DOVirtual::update(float deltaTime)
 {
 	_tweens.apply_changes();
-	for (auto call : _tweens)
-		call->update(deltaTime);
+	for (int i = 0; i < _tweens.size(); i++)
+		_tweens[i]->update(deltaTime);
 }
 
 Tween* DOVirtual::delayedCall(const std::function<void()>& function, float delay)

@@ -49,6 +49,7 @@ Texture::Texture(const Font* font, const std::string& text, const Color& color):
 {
 	_surface = TTF_RenderText_Blended(font->font(), text.data(), color.toSDLColor());
 	if (_surface == nullptr) return;
+
 	_texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, _surface);
 	_size = {_surface->w, _surface->h};
 }

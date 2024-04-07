@@ -6,14 +6,14 @@
 #include "glm/gtx/transform.hpp"
 
 // -- Global --
-GameObject* GameObject::create(const std::string& name, glm::vec2 pos, float rot)
+GameObjectSPtr GameObject::create(const std::string& name, glm::vec2 pos, float rot)
 {
-	auto obj = new GameObject(name, pos, rot);
-	gameObjects.push_back_delayed(obj);
+	auto obj = create_internal(name, pos, rot);
+	gameObjects.push_back(obj);
 
 	return obj;
 }
-GameObject* GameObject::create(const std::string& name, Transform* parent)
+GameObjectSPtr GameObject::create(const std::string& name, Transform* parent)
 {
 	auto obj = create(name, {0, 0}, 0);
 	obj->transform()->setParent(parent);
@@ -24,30 +24,28 @@ GameObject* GameObject::create(const std::string& name, Transform* parent)
 
 void GameObject::destroyAll()
 {
-	for (GameObject* obj : gameObjects)
-		destroy(obj);
+	for (int i = 0; i < gameObjects.size(); i++)
+		destroy(gameObjects[i].get());
 }
 void GameObject::prepare()
 {
 	gameObjects.apply_changes();
-	for (GameObject* obj : gameObjects)
-		obj->_components.apply_changes();
+	for (int i = 0; i < gameObjects.size(); i++)
+		gameObjects[i]->_components.apply_changes();
 }
 
-GameObject::GameObject(const std::string& name, glm::vec2 pos, float rot) : Object(), _name(name)
-{
-	_transform = addComponent<Transform>(pos, rot);
-}
+GameObject::GameObject(const std::string& name, glm::vec2 pos, float rot) : _name(name), _transform(addComponent<Transform>(pos, rot)) { }
+
 void GameObject::destroyInternal()
 {
 	if (_isDestroyed) return;
-	for (Component* comp : _components)
-		destroy(comp);
+	for (const auto& comp : _components)
+		destroy(comp.get());
 }
 void GameObject::destroyImmediate()
 {
 	Object::destroyImmediate();
-	gameObjects.erase_delayed(this);
+	gameObjects.erase_delayed_if([this](const GameObjectSPtr& obj) { return obj.get() == this; });
 }
 
 std::string GameObject::name() const

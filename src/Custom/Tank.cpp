@@ -17,7 +17,7 @@
 #include "glm/detail/func_trigonometric.inl"
 
 Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
-                                                                             _explodeAtMousePosition(explodeAtMousePosition)
+                                                                                 _explodeAtMousePosition(explodeAtMousePosition)
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight());
