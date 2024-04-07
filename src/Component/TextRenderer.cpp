@@ -27,7 +27,7 @@ void TextRenderer::setText(const std::string& text)
 void TextRenderer::setColor(const Color& color)
 {
 	_color = color;
-	updateTexture();
+	_material->setColor(color);
 }
 void TextRenderer::setFont(Font* font)
 {

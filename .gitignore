@@ -21,3 +21,4 @@ CMakeSettings.json
 libs/SDL2/
 libs/SDL2_image/
 libs/SDL2_ttf/
+libs/SDL2_net/

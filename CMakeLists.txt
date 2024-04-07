@@ -71,7 +71,9 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/Utils.h"
 	 "src/Component/TextRenderer.cpp"
 	 "src/Component/BaseRenderer.cpp"
-	  "src/Other/DOVirtual.cpp" "include/Object/Object.h" "src/Object/Object.cpp" "src/Utils/Utils.cpp")
+	  "src/Other/DOVirtual.cpp"
+	  "src/Object/Object.cpp"
+	  "src/Utils/Utils.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
