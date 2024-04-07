@@ -11,8 +11,6 @@
 
 void Application::start(const glm::ivec2& windowSize)
 {
-	srand(time(NULL));
-
 	SDLHandler::init(windowSize);
 	Renderer::init();
 	Time::init();

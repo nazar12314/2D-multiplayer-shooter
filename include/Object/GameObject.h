@@ -6,7 +6,7 @@
 #include <utility>
 
 #include "Action.h"
-#include "VectorDelayed.h"
+#include "VectorSafe.h"
 #include "Concepts.h"
 #include "Object.h"
 #include "glm/vec2.hpp"
@@ -24,7 +24,7 @@ class GameObject : public Object
 {
 	// -- Global --
 public:
-	inline static VectorDelayed<GameObjectSPtr> gameObjects {};
+	inline static VectorSafe<GameObjectSPtr> gameObjects {};
 
 	inline static Action<Component*> onComponentAddedGlobal;
 	inline static Action<Component*> onComponentDestroyedGlobal;
@@ -44,7 +44,7 @@ private:
 	std::string _tag;
 	bool _active = true;
 
-	VectorDelayedRef<ComponentUPtr> _components {};
+	VectorSafeRef<ComponentUPtr> _components {};
 	Transform* _transform;
 
 	GameObject(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);

@@ -62,7 +62,7 @@ void Input::handleInputEvent(const SDL_Event& event)
 		auto hitCollider = Physics::raycastAt(mouseWorldPos);
 		if (hitCollider == mouseOverCollider) return;
 
-		if (mouseOverCollider != nullptr)
+		if (mouseOverCollider != nullptr && !mouseOverCollider->isDestroyed())
 			mouseOverCollider->gameObject()->sendCallback(&Component::onMouseExit);
 		mouseOverCollider = hitCollider;
 

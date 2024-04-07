@@ -26,9 +26,10 @@ protected:
 public:
 	~BaseRenderer() override;
 
-	Texture* texture() const;
-	int order() const;
 	glm::vec2 size() const;
+	Color color() const;
+	int order() const;
+	Texture* texture() const;
 
 	void setSize(const glm::vec2& size);
 	void setOrder(int order);

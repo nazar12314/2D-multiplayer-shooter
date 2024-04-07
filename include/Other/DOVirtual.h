@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "Color.h"
-#include "VectorDelayed.h"
+#include "VectorSafe.h"
 #include "glm/vec2.hpp"
 
 
@@ -11,7 +11,7 @@ class Tween;
 
 class DOVirtual
 {
-	inline static VectorDelayed<Tween*> _tweens;
+	inline static VectorSafe<Tween*> _tweens;
 
 	static void update(float deltaTime);
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-template <typename T> class VectorDelayed : public std::vector<T>
+template <typename T> class VectorSafe : public std::vector<T>
 {
 	std::vector<T> toRemove {};
 
@@ -30,7 +30,7 @@ public:
 	}
 };
 
-template <typename T> class VectorDelayedRef : public std::vector<T>
+template <typename T> class VectorSafeRef : public std::vector<T>
 {
 	std::vector<std::reference_wrapper<const T>> toRemove{};
 

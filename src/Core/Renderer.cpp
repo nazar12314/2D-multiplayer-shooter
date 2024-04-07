@@ -39,13 +39,18 @@ void Renderer::render()
 	auto mainCamera = Camera::getMain();
 	if (mainCamera == nullptr) return;
 
-	SDL_SetRenderDrawColor(SDLHandler::renderer, 0, 0, 0, 255);
-	SDL_RenderClear(SDLHandler::renderer);
+	renderClear();
 
 	renderObjects(mainCamera);
 	Gizmos::draw();
 
 	SDL_RenderPresent(SDLHandler::renderer);
+}
+void Renderer::renderClear()
+{
+	auto bgColor = Camera::getMain()->bgColor();
+	SDL_SetRenderDrawColor(SDLHandler::renderer, bgColor.r() * 255, bgColor.g() * 255, bgColor.b() * 255, 255);
+	SDL_RenderClear(SDLHandler::renderer);
 }
 void Renderer::renderObjects(const Camera* mainCamera)
 {

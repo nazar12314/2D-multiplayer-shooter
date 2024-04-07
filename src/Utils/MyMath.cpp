@@ -1,7 +1,5 @@
 #include "MyMath.h"
 
-#include <iostream>
-
 #include "Gizmos.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include "glm/gtx/closest_point.hpp"
@@ -233,11 +231,11 @@ int Math::closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& ve
 
 float Math::randomFloat(float min, float max)
 {
-	return min + static_cast<float>(rand()) / (RAND_MAX / (max - min));
+	return std::uniform_real_distribution(min, max)(gen);
 }
 int Math::randomInt(int min, int max)
 {
-	return min + rand() % (max - min);
+	return std::uniform_int_distribution(min, max)(gen);
 }
 float Math::randomValue()
 {

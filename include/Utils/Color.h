@@ -61,6 +61,9 @@ struct Color
 	static Color fromColor32(uint32_t color32);
 	static Color lerp(const Color& c1, const Color& c2, float value);
 
+	Color darken(float factor) const;
+	Color lighten(float factor) const;
+
 	SDL_Color toSDLColor() const;
 };
 

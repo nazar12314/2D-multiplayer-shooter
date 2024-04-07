@@ -38,6 +38,7 @@ glm::vec2 BaseRenderer::getFinalSize() const
 Texture* BaseRenderer::texture() const { return _texture; }
 int BaseRenderer::order() const { return _order; }
 glm::vec2 BaseRenderer::size() const { return _size; }
+Color BaseRenderer::color() const { return _color; }
 
 
 void BaseRenderer::setSize(const glm::vec2& size) { this->_size = size; }

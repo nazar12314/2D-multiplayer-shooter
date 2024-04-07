@@ -3,14 +3,14 @@
 #include <vector>
 
 #include "Color.h"
-#include "VectorDelayed.h"
+#include "VectorSafe.h"
 #include "glm/vec2.hpp"
 
 class Gizmo;
 
 class Gizmos
 {
-	inline static VectorDelayed<Gizmo*> gizmos {};
+	inline static VectorSafe<Gizmo*> gizmos {};
 
 	static void draw();
 

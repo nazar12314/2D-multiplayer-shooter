@@ -24,6 +24,7 @@ public:
 	static void subscribeToEvents();
 
 	static void render();
+	static void renderClear();
 	static void renderObjects(const Camera* mainCamera);
 
 	static void renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0);

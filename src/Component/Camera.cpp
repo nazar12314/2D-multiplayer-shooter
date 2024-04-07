@@ -5,7 +5,7 @@
 #include "SpriteRenderer.h"
 #include "Transform.h"
 
-Camera::Camera(GameObject* obj, float size): Component(obj), _size(size)
+Camera::Camera(GameObject* obj, float size, const Color& bgColor): Component(obj), _size(size), _bgColor(bgColor)
 {
 	cameras.push_back(this);
 }
@@ -16,9 +16,11 @@ Camera::~Camera()
 
 float Camera::size() const { return _size; }
 int Camera::priority() const { return _priority; }
+Color Camera::bgColor() const { return _bgColor; }
 
 void Camera::setSize(float size) { _size = size; }
 void Camera::setPriority(int priority) { _priority = priority; }
+void Camera::setBgColor(const Color& color) { _bgColor = color; }
 
 glm::vec2 Camera::screenToWorldPoint(const glm::vec2& screenPos) const
 {

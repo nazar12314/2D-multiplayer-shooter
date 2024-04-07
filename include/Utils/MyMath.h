@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 #include <vector>
 
 #include "glm/fwd.hpp"
@@ -7,6 +8,8 @@
 
 class Math
 {
+	inline static std::mt19937_64 gen {std::random_device()()};
+
 	static float shortestAngle(float currentAngle, float targetAngle);
 
 public:

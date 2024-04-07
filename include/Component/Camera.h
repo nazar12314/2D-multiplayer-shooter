@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Color.h"
 #include "Component.h"
 #include "glm/vec2.hpp"
 
@@ -11,17 +12,20 @@ class Camera : public Component
 
 	float _size;
 	int _priority = 0;
+	Color _bgColor;
 
-	Camera(GameObject* obj, float size = 10);
+	Camera(GameObject* obj, float size = 10, const Color& bgColor = Color::black);
 
 public:
 	~Camera() override;
 
 	float size() const;
 	int priority() const;
+	Color bgColor() const;
 
 	void setSize(float size);
 	void setPriority(int priority);
+	void setBgColor(const Color& color);
 
 	glm::vec2 screenToWorldPoint(const glm::vec2& screenPos) const;
 	glm::vec2 worldToScreenPoint(const glm::vec2& worldPos) const;

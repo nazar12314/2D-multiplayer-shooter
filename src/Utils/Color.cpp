@@ -115,6 +115,14 @@ Color Color::lerp(const Color& c1, const Color& c2, float value)
 	auto b = c1.b() + (c2.b() - c1.b()) * value;
 	return {r, g, b};
 }
+Color Color::darken(float factor) const
+{
+	return {x * (1 - factor), y * (1 - factor), z * (1 - factor)};
+}
+Color Color::lighten(float factor) const
+{
+	return {x + (1 - x) * factor, y + (1 - y) * factor, z + (1 - z) * factor};
+}
 
 SDL_Color Color::toSDLColor() const
 {

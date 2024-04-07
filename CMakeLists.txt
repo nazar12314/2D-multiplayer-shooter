@@ -14,6 +14,7 @@ include_directories(include/Component)
 include_directories(include/Component/Collider)
 include_directories(include/Core)
 include_directories(include/Custom)
+include_directories(include/Custom/Example)
 include_directories(include/Core/Physics)
 include_directories(include/Object)
 include_directories(include/Other)
@@ -38,27 +39,24 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/SDLHandler.cpp"
 	 "src/Component/SpriteRenderer.cpp"
 	 "src/Component/Component.cpp"
-	 "src/Custom/CameraFollow.cpp"
+	 "src/Custom/Example/ECameraFollow.cpp"
 	 "src/Scene.cpp"
-	 "src/Custom/TankController.cpp"
+	 "src/Custom/Example/ETankController.cpp"
 	 "src/Component/Collider/PolygonCollider.cpp"
 	 "src/Component/Collider/CircleCollider.cpp"
 	 "src/Component/Rigidbody.cpp"
 	 "src/Core/Physics/Physics.cpp"
 	 "src/Core/MyTime.cpp"
-	 "src/Custom/Tank.cpp"
+	 "src/Custom/Example/ETank.cpp"
 	 "src/Utils/MyMath.cpp" 
-	 "src/Custom/Bullet.cpp"
-	 "src/Custom/CameraResizer.cpp"
+	 "src/Custom/Example/EBullet.cpp"
+	 "src/Custom/Example/ECameraResizer.cpp"
 	 "include/Core/FPSCounter.h"
 	 "src/Component/Collider/Collider.cpp"
-	 "src/Custom/Wall.cpp"
+	 "src/Custom/Example/EWall.cpp"
 	 "src/Multiplayer/Client.cpp"
 	 "src/Multiplayer/Server.cpp"
 	 "src/Multiplayer/MessageQueue.cpp"
-	 "include/Multiplayer/Client.h"
-	 "include/Multiplayer/Server.h"
-	 "include/Multiplayer/MessageQueue.h"
 	 "src/Core/Assets.cpp"
 	 "include/Utils/Concepts.h"
 	 "src/Utils/Color.cpp"
@@ -67,13 +65,21 @@ add_executable(${PROJECT_NAME}
 	 "include/Core/Physics/Collision.h"
 	 "src/Other/Gizmos.cpp"
 	 "include/Utils/SDLUtils.h"
-	 "src/Custom/ShapeSpawner.cpp"
+	 "src/Custom/Example/EShapeSpawner.cpp"
 	 "include/Utils/Utils.h"
 	 "src/Component/TextRenderer.cpp"
 	 "src/Component/BaseRenderer.cpp"
 	  "src/Other/DOVirtual.cpp"
 	  "src/Object/Object.cpp"
-	  "src/Utils/Utils.cpp")
+	  "src/Utils/Utils.cpp"
+	  "src/Custom/Example/ExampleScenes.cpp"
+	  "src/Custom/CameraFollow.cpp"
+	  "src/Custom/CameraResizer.cpp"
+	  "src/Custom/Tank.cpp"
+	  "src/Custom/TankController.cpp"
+	  "src/Custom/Bullet.cpp"
+	  "include/Custom/Singleton.h"
+	  "src/Custom/MapManager.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
