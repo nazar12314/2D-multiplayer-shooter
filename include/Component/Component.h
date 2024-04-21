@@ -13,24 +13,54 @@ class Component : public Object
 	bool _enabled = true;
 
 	// -- General --
+
+	// Called right after the component is created
+	virtual void awake() {}
+
+	// Called after the component is created and after awake
 	virtual void start() {}
+
+	// Called every frame
 	virtual void update() {}
+
+	// Called every frame after update
 	virtual void lateUpdate() {}
+
+	// Called every fixed frame
 	virtual void fixedUpdate() {}
+
+	// Called on component destruction
 	virtual void onDestroy() {}
 
 	// -- Collision --
+
+	// Called when a collision starts
 	virtual void onCollisionEnter(Collider* other) {}
+
+	// Called when a collision stays, every frame
 	virtual void onCollisionStay(Collider* other) {}
+
+	// Called when a collision ends
 	virtual void onCollisionExit(Collider* other) {}
 
+	// Called when a trigger starts
 	virtual void onTriggerEnter(Collider* other) {}
+
+	// Called when a trigger stays, every frame
 	virtual void onTriggerStay(Collider* other) {}
+
+	// Called when a trigger ends
 	virtual void onTriggerExit(Collider* other) {}
 
 	// -- Mouse Events --
+
+	// Called when the mouse enters the collider
 	virtual void onMouseEnter() { }
+
+	// Called when the mouse exits the collider
 	virtual void onMouseExit() { }
+
+	// Called on mouse click on the collider
 	virtual void onMouseClick() { }
 
 protected:

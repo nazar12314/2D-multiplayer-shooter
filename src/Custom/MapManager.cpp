@@ -35,7 +35,7 @@ SpriteRenderer* MapManager::createWall(const glm::vec2& pos, const glm::vec2& si
 
 	auto wall = GameObject::create("Wall", pos)->addComponent<SpriteRenderer>(sprite, size);
 	wall->gameObject()->setTag("Wall");
-	wall->addComponent<PolygonCollider>(size);
+	wall->addComponent<BoxCollider>(size);
 	wall->addComponent<Rigidbody>(true);
 
 	return wall;

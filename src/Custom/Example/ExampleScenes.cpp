@@ -7,14 +7,12 @@
 #include "Rigidbody.h"
 #include "ETank.h"
 #include "Assets.h"
-#include "DOVirtual.h"
+#include "DOTween.h"
 #include "MyMath.h"
 #include "EShapeSpawner.h"
 #include "TextRenderer.h"
 #include "Transform.h"
 #include "EWall.h"
-#include "TextRenderer.h"
-#include "ExampleScenes.h"
 
 
 namespace examples
@@ -38,13 +36,13 @@ namespace examples
 
 		auto shapeSpawner = GameObject::create("ShapeSpawner")->addComponent<EShapeSpawner>(true);
 
-		GameObject::create("Wall", glm::vec2((-5 + 0.25f) / 1.414f, -4), 45)->addComponent<EWall>(glm::vec2(10, 0.5f));
-		GameObject::create("Wall", glm::vec2((5 - 0.25f) / 1.414f, -4), -45)->addComponent<EWall>(glm::vec2(10, 0.5f));
+		GameObject::create("Wall", glm::vec2((-5 + 0.25f) / 1.414f, -4), -45)->addComponent<EWall>(glm::vec2(10, 0.5f));
+		GameObject::create("Wall", glm::vec2((5 - 0.25f) / 1.414f, -4), 45)->addComponent<EWall>(glm::vec2(10, 0.5f));
 
 		for (int i = 0; i < 15; i++)
 		{
-			shapeSpawner->spawnSquare(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
-			shapeSpawner->spawnCircle(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)));
+			shapeSpawner->spawnSquare(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)), true);
+			shapeSpawner->spawnCircle(glm::vec2(Math::randomFloat(-4, 4), Math::randomFloat(0, 5)), true);
 		}
 	}
 

@@ -4,7 +4,8 @@
 #include "Rigidbody.h"
 #include "CameraFollow.h"
 #include "CameraResizer.h"
-#include "DOVirtual.h"
+#include "DOTween.h"
+#include "ExampleScenes.h"
 #include "Tank.h"
 #include "MapManager.h"
 #include "MyMath.h"
@@ -24,7 +25,7 @@ void game()
 
 void Scene::create()
 {
-	//examples::ExampleScenes::shapeSpawnerWithGravity();
+	examples::ExampleScenes::shapeSpawnerWithGravity();
 
-	game();
+	//game();
 }

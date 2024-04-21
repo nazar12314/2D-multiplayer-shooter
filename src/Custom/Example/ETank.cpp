@@ -18,11 +18,11 @@
 namespace examples
 {
 	ETank::ETank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
-	                                                                                 _explodeAtMousePosition(explodeAtMousePosition)
+	                                                                                   _explodeAtMousePosition(explodeAtMousePosition)
 	{
 		auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 		addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight());
-		addComponent<PolygonCollider>(glm::vec2(1, 1.2f));
+		addComponent<BoxCollider>(glm::vec2(1, 1.2f));
 		addComponent<Rigidbody>(10, 15);
 		addComponent<ETankController>();
 

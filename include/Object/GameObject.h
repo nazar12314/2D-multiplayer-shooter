@@ -102,6 +102,7 @@ template <derived<Component> T, typename... Ts> T* GameObject::addComponent(Ts&&
 	auto componentPtr = component.get();
 	_components.push_back(std::move(component));
 
+	componentPtr->awake();
 	onComponentAddedGlobal(componentPtr);
 	componentPtr->start();
 	return componentPtr;

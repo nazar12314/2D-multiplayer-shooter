@@ -11,7 +11,7 @@ namespace examples
 		obj->setTag("Wall");
 
 		addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), size);
-		addComponent<PolygonCollider>(size);
+		addComponent<BoxCollider>(size);
 		auto rb = addComponent<Rigidbody>(true);
 		rb->setRestitution(0.5f);
 	}

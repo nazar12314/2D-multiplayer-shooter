@@ -10,14 +10,14 @@ class PolygonCollider : public Collider
 {
 	constexpr static bool DISPLAY_VERTICES_DEBUG = false;
 
-	glm::vec2 _size {0, 0};
+protected:
 	std::vector<glm::vec2> _vertices {};
 	std::vector<glm::vec2> _globalVertices {};
 
 	std::vector<SpriteRenderer*> vertexSpritesTEST {};
 
-	PolygonCollider(GameObject* obj, glm::vec2 size, bool isTrigger = false);
-	void updateVertices();
+	PolygonCollider(GameObject* obj, const std::vector<glm::vec2>& vertices, bool isTrigger = false);
+
 	void recalculate() override;
 
 	std::optional<Collision> getCollisionWith(Collider* other) override;
@@ -37,9 +37,23 @@ class PolygonCollider : public Collider
 	float calculateInertia(float mass) const override;
 
 public:
-	void size(glm::vec2 size);
-	void setSize(glm::vec2 size);
+	void setVertices(const std::vector<glm::vec2>& vertices);
 
 	friend class GameObject;
 	friend class CircleCollider;
+};
+
+class BoxCollider : public PolygonCollider
+{
+	glm::vec2 _size;
+
+	BoxCollider(GameObject* obj, glm::vec2 size = {1, 1}, bool isTrigger = false);
+
+	static std::vector<glm::vec2> calculateBoxVertices(glm::vec2 size);
+
+public:
+	glm::vec2 size() const;
+	void setSize(glm::vec2 size);
+
+	friend class GameObject;
 };

@@ -7,7 +7,7 @@
 #include "SDLHandler.h"
 #include "FPSCounter.h"
 #include "Scene.h"
-#include "DOVirtual.h"
+#include "DOTween.h"
 
 void Application::start(const glm::ivec2& windowSize)
 {

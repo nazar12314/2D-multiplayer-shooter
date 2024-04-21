@@ -54,7 +54,7 @@ namespace examples
 		auto obj = GameObject::create("Square", spawnPos);
 		obj->setTag("Wall");
 		obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), glm::vec2(size, size), Color::randomLight());
-		obj->addComponent<PolygonCollider>(glm::vec2(size, size));
+		obj->addComponent<BoxCollider>(glm::vec2(size, size));
 		auto rb = obj->addComponent<Rigidbody>(enableGravity ? 0 : 5, enableGravity ? 0 : 5);
 		rb->setRestitution(0.5f);
 		if (enableGravity) rb->setGravity(10);

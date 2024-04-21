@@ -9,22 +9,12 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-PolygonCollider::PolygonCollider(GameObject* obj, glm::vec2 size, bool isTrigger): Collider(obj, isTrigger), _size(size)
+PolygonCollider::PolygonCollider(GameObject* obj, const std::vector<glm::vec2>& vertices, bool isTrigger) : Collider(obj, isTrigger), _vertices(vertices)
 {
-	updateVertices();
-
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)
-			vertexSpritesTEST.push_back(GameObject::create("pointTEMP")->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
-}
-void PolygonCollider::updateVertices()
-{
-	// TODO: generalize for any number of vertices
-	_vertices.resize(4);
-	_vertices[0] = {-_size.x / 2, -_size.y / 2}; // bottom left
-	_vertices[1] = {-_size.x / 2, +_size.y / 2}; // top left
-	_vertices[2] = {+_size.x / 2, +_size.y / 2}; // top right
-	_vertices[3] = {+_size.x / 2, -_size.y / 2}; // bottom right;
+			vertexSpritesTEST.push_back(GameObject::create("pointTEMP")
+				->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(0.1f, 0.1f)));
 }
 
 std::optional<Collision> PolygonCollider::getCollisionWith(Collider* other)
@@ -81,7 +71,7 @@ bool PolygonCollider::isPointInside(const glm::vec2& point) const
 	}
 	return c;
 }
-std::optional<Collision> PolygonCollider::getImpactCollision(glm::vec2 center, float radius) 
+std::optional<Collision> PolygonCollider::getImpactCollision(glm::vec2 center, float radius)
 {
 	auto [sep, norm] = Math::findMinSeparation(center, radius, _globalVertices);
 	auto collided = sep <= 0;
@@ -106,7 +96,7 @@ void PolygonCollider::onDestroy()
 {
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (auto& point : vertexSpritesTEST)
-			GameObject::destroy(point->gameObject());
+			destroy(point->gameObject());
 }
 
 float PolygonCollider::calculateMass() const
@@ -134,9 +124,27 @@ float PolygonCollider::calculateInertia(float mass) const
 	return mass / 6 * sum1 / sum2;
 }
 
-void PolygonCollider::size(glm::vec2 size) { _size = size; }
-void PolygonCollider::setSize(glm::vec2 size)
+void PolygonCollider::setVertices(const std::vector<glm::vec2>& vertices)
+{
+	_vertices = vertices;
+	recalculate();
+}
+
+BoxCollider::BoxCollider(GameObject* obj, glm::vec2 size, bool isTrigger) : PolygonCollider(obj, calculateBoxVertices(size), isTrigger), _size(size) {}
+
+std::vector<glm::vec2> BoxCollider::calculateBoxVertices(glm::vec2 size)
+{
+	return {
+		{-size.x / 2, -size.y / 2}, // bottom left
+		{-size.x / 2, +size.y / 2}, // top left
+		{+size.x / 2, +size.y / 2}, // top right
+		{+size.x / 2, -size.y / 2} // bottom right
+	};
+}
+
+glm::vec2 BoxCollider::size() const { return _size; }
+void BoxCollider::setSize(glm::vec2 size)
 {
 	_size = size;
-	updateVertices();
+	setVertices(calculateBoxVertices(size));
 }

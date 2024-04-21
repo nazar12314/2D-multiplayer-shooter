@@ -6,7 +6,7 @@ template <typename T> class Singleton : public Component
 {
 	inline static T* m_instance = nullptr;
 
-	void start() override
+	void awake() override
 	{
 		if (m_instance != nullptr)
 		{
@@ -27,4 +27,6 @@ public:
 			m_instance = new T();
 		return m_instance;
 	}
+
+	friend class GameObject;
 };
