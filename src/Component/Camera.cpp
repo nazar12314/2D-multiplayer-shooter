@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include <algorithm>
+
 #include "GameObject.h"
 #include "SDLHandler.h"
 #include "SpriteRenderer.h"

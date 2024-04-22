@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "Color.h"
 #include "Concepts.h"
-#include "SDL2_ttf.h"
+#include "SDL_ttf.h"
 
 class Asset;
 

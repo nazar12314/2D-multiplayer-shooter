@@ -16,6 +16,6 @@ namespace examples
 	public:
 		void setTarget(GameObject* obj);
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

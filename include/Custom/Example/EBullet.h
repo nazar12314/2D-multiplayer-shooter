@@ -18,6 +18,6 @@ namespace examples
 		void fixedUpdate() override;
 		void onTriggerEnter(Collider* other) override;
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

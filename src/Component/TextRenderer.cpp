@@ -1,7 +1,5 @@
 #include "TextRenderer.h"
 
-#include <iostream>
-
 #include "Assets.h"
 #include "Texture.h"
 

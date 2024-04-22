@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Camera.h"
 #include "Physics.h"
+#include <algorithm>
 
 void Input::clear()
 {

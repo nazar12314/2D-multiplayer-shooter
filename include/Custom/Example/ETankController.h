@@ -19,6 +19,6 @@ namespace examples
 		float moveSpeed;
 		float rotationSpeed;
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

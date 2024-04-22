@@ -16,6 +16,6 @@ namespace examples
 	public:
 		void update() override;
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

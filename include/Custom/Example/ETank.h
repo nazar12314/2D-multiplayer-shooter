@@ -25,6 +25,6 @@ namespace examples
 		void updateGunPosition() const;
 		void shoot() const;
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

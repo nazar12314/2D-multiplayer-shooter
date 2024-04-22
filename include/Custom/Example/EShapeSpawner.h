@@ -21,6 +21,6 @@ namespace examples
 		GameObjectSPtr spawnSquare(glm::vec2 spawnPos, bool enableGravity = false);
 		GameObjectSPtr spawnCircle(glm::vec2 spawnPos, bool enableGravity = false);
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }

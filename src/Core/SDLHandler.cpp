@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "SDL.h"
-#include "SDL2_ttf.h"
+#include "SDL_ttf.h"
 
 void SDLHandler::init(const glm::ivec2& windowSize)
 {

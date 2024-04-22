@@ -76,7 +76,6 @@ public:
 	friend class Input;
 	friend class Application;
 	friend class Physics;
-	friend class GameObject;
 
 private:
 	// For shared_ptr creation

@@ -9,6 +9,6 @@ namespace examples
 	{
 		explicit EWall(GameObject* obj, glm::vec2 size);
 
-		friend class GameObject;
+		friend class ::GameObject;
 	};
 }
