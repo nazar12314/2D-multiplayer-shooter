@@ -54,9 +54,6 @@ add_executable(${PROJECT_NAME}
 	 "include/Core/FPSCounter.h"
 	 "src/Component/Collider/Collider.cpp"
 	 "src/Custom/Example/EWall.cpp"
-	 "src/Multiplayer/Client.cpp"
-	 "src/Multiplayer/Server.cpp"
-	 "src/Multiplayer/MessageQueue.cpp"
 	 "src/Core/Assets.cpp"
 	 "include/Utils/Concepts.h"
 	 "src/Utils/Color.cpp"
@@ -79,7 +76,7 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/TankController.cpp"
 	  "src/Custom/Bullet.cpp"
 	  "include/Custom/Singleton.h"
-	  "src/Custom/MapManager.cpp")
+	  "src/Custom/MapManager.cpp" include/Multiplayer/net_modules.h include/Multiplayer/net_modules.h include/Multiplayer/Client.h include/Multiplayer/Server.h)
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
@@ -117,6 +114,8 @@ ELSE()
 		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
 		find_package(SDL2_net REQUIRED)
 		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_net::SDL2_net)
+		find_package(SDL2_ttf REQUIRED)
+		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf)
 	endif ()
 
 	find_package(Boost 1.71.0 REQUIRED)
