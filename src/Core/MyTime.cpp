@@ -6,20 +6,20 @@
 
 void Time::init()
 {
-	time = getRealTime();
+	_time = getRealTime();
 }
 
 void Time::tick()
 {
 	auto realTime = getRealTime();
-	unscaledDeltaTime = glm::clamp(realTime - _lastTickTime, 0.0f, maxDeltaTime);
-	deltaTime = unscaledDeltaTime * timeScale;
-	time = _lastTickTime = realTime;
+	_unscaledDeltaTime = glm::clamp(realTime - _lastTickTime, 0.0f, maxDeltaTime);
+	_deltaTime = _unscaledDeltaTime * timeScale;
+	_time = _lastTickTime = realTime;
 }
 
 void Time::fixedTick()
 {
-	time += fixedDeltaTime;
+	_time += fixedDeltaTime;
 }
 
 float Time::getRealTime()

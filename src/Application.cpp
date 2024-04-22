@@ -30,7 +30,7 @@ void Application::loop()
 		FPSCounter::tick();
 
 		GameObject::sendCallbackAll(&Component::update);
-		DOVirtual::update(Time::deltaTime);
+		DOVirtual::update(Time::deltaTime());
 		GameObject::sendCallbackAll(&Component::lateUpdate);
 
 		if (doQuit) break;

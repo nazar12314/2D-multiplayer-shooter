@@ -1,5 +1,8 @@
 #pragma once
+
 #include <iostream>
+
+#include "MyTime.h"
 
 class FPSCounter
 {
@@ -16,16 +19,16 @@ public:
 	static void tick()
 	{
 		frames++;
-		if (Time::time - lastTime >= FPS_UPDATE_DELAY)
+		if (Time::_time - lastTime >= FPS_UPDATE_DELAY)
 		{
-			fps = frames / (Time::time - lastTime);
-			lastTime = Time::time;
+			fps = frames / (Time::_time - lastTime);
+			lastTime = Time::_time;
 			frames = 0;
 		}
 
-		if (showFPS && Time::time - lastFPSPrintTime >= FPS_UPDATE_DELAY)
+		if (showFPS && Time::_time - lastFPSPrintTime >= FPS_UPDATE_DELAY)
 		{
-			lastFPSPrintTime = Time::time;
+			lastFPSPrintTime = Time::_time;
 			std::cout << "FPS: " << fps << std::endl;
 		}
 	}

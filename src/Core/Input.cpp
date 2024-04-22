@@ -10,7 +10,7 @@ void Input::clear()
 	keysReleased.clear();
 	mouseButtonsPressed.clear();
 	mouseButtonsReleased.clear();
-	mouseWheelValue = 0;
+	_mouseWheelValue = 0;
 }
 
 void Input::handleInputEvent(const SDL_Event& event)
@@ -39,7 +39,7 @@ void Input::handleInputEvent(const SDL_Event& event)
 		mouseButtonsPressed.push_back(event.button.button);
 		mouseButtonsCurrentlyDown.push_back(event.button.button);
 
-		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(_mousePos);
 		mouseDownCollider = Physics::raycastAt(mouseWorldPos);
 	}
 	else if (event.type == SDL_MOUSEBUTTONUP)
@@ -47,7 +47,7 @@ void Input::handleInputEvent(const SDL_Event& event)
 		mouseButtonsReleased.push_back(event.button.button);
 		std::erase(mouseButtonsCurrentlyDown, event.button.button);
 
-		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(_mousePos);
 		auto hitCollider = Physics::raycastAt(mouseWorldPos);
 		if (hitCollider == nullptr || hitCollider != mouseDownCollider) return;
 
@@ -55,10 +55,10 @@ void Input::handleInputEvent(const SDL_Event& event)
 	}
 	else if (event.type == SDL_MOUSEMOTION)
 	{
-		mousePos.x = event.motion.x;
-		mousePos.y = event.motion.y;
+		_mousePos.x = event.motion.x;
+		_mousePos.y = event.motion.y;
 
-		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
+		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(_mousePos);
 		auto hitCollider = Physics::raycastAt(mouseWorldPos);
 		if (hitCollider == mouseOverCollider) return;
 
@@ -71,7 +71,7 @@ void Input::handleInputEvent(const SDL_Event& event)
 	}
 	else if (event.type == SDL_MOUSEWHEEL)
 	{
-		mouseWheelValue = event.wheel.y;
+		_mouseWheelValue = event.wheel.y;
 	}
 }
 
@@ -100,3 +100,6 @@ bool Input::isMouseButtonDown(Uint8 button)
 {
 	return std::ranges::find(mouseButtonsCurrentlyDown, button) != mouseButtonsCurrentlyDown.end();
 }
+
+glm::ivec2 Input::mousePos() { return _mousePos; }
+float Input::mouseWheelValue() { return _mouseWheelValue; }

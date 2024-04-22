@@ -15,7 +15,7 @@ class Transform : public Component
 	glm::mat3 _localMatrixInv = glm::mat3(1);
 
 	bool isDirty = true;
-	bool hasChanged = true;
+	bool hasChanged = true; // Used by Rigidbody
 
 	// Caching global matrix
 	glm::mat3 _matrixCached = glm::mat3(1);

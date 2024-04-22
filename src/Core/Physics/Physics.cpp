@@ -44,7 +44,7 @@ void Physics::physicsLoop()
 		return;
 	}
 
-	fixedUpdateTimer -= Time::deltaTime;
+	fixedUpdateTimer -= Time::deltaTime();
 	while (fixedUpdateTimer <= 0)
 	{
 		Time::fixedTick();

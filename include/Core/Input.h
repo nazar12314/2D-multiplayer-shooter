@@ -20,12 +20,12 @@ class Input
 	inline static Collider* mouseOverCollider = nullptr;
 	inline static Collider* mouseDownCollider = nullptr;
 
+	inline static glm::ivec2 _mousePos {};
+	inline static float _mouseWheelValue = 0;
+
 	static void clear();
 	static void handleInputEvent(const SDL_Event& event);
-
 public:
-	inline static glm::ivec2 mousePos {};
-	inline static float mouseWheelValue = 0;
 
 	// SDLK_{X} - X key, e.g. SDLK_w - W key
 	static bool wasKeyPressed(SDL_Keycode key);
@@ -36,6 +36,9 @@ public:
 	static bool wasMouseButtonPressed(Uint8 button);
 	static bool wasMouseButtonReleased(Uint8 button);
 	static bool isMouseButtonDown(Uint8 button);
+
+	static glm::ivec2 mousePos();
+	static float mouseWheelValue();
 
 	friend class SDLHandler;
 };

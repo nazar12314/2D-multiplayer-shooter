@@ -12,7 +12,7 @@ void Gizmos::draw()
 		auto gizmo = gizmos[i];
 		gizmo->draw();
 
-		gizmo->duration -= Time::deltaTime;
+		gizmo->duration -= Time::deltaTime();
 		if (gizmo->duration <= 0)
 		{
 			gizmos.erase_delayed(gizmo);

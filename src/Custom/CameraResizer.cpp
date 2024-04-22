@@ -19,11 +19,11 @@ void CameraResizer::update()
 	auto cam = Camera::getMain();
 
 	//targetSize = glm::clamp(targetSize - sensitivity * Input::mouseWheelValue, 0.1f, 50.0f);
-	targetSize -= targetSize / 10 * sensitivity * Input::mouseWheelValue;
+	targetSize -= targetSize / 10 * sensitivity * Input::mouseWheelValue();
 	auto prevSize = cam->size();
-	cam->setSize(Math::lerp(cam->size(), targetSize, smoothness * Time::deltaTime));
+	cam->setSize(Math::lerp(cam->size(), targetSize, smoothness * Time::deltaTime()));
 
 	if (!zoomTowardsMouse) return;
-	auto mouseWorldPos = cam->screenToWorldPoint(Input::mousePos);
+	auto mouseWorldPos = cam->screenToWorldPoint(Input::mousePos());
 	cam->transform()->setPos(cam->transform()->getPos() + (prevSize - cam->size()) * (mouseWorldPos - cam->transform()->getPos()) / prevSize);
 }

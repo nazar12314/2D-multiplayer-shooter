@@ -22,12 +22,12 @@ namespace examples
 		{
 			if (_spawnTimer > 0)
 			{
-				_spawnTimer -= Time::deltaTime;
+				_spawnTimer -= Time::deltaTime();
 				return;
 			}
 			_spawnTimer = _spawnDelay;
 
-			auto spawnPos = Camera::getMain()->screenToWorldPoint(Input::mousePos);
+			auto spawnPos = Camera::getMain()->screenToWorldPoint(Input::mousePos());
 			if (Input::isMouseButtonDown(SDL_BUTTON_LEFT))
 				spawnSquare(spawnPos, _enableGravity);
 			if (Input::isMouseButtonDown(SDL_BUTTON_RIGHT))
@@ -52,9 +52,10 @@ namespace examples
 	{
 		auto size = Math::randomFloat(0.5f, 1);
 		auto obj = GameObject::create("Square", spawnPos);
+		obj->transform()->setScale(glm::vec2(size, size));
 		obj->setTag("Wall");
-		obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), glm::vec2(size, size), Color::randomLight());
-		obj->addComponent<BoxCollider>(glm::vec2(size, size));
+		obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), glm::vec2(1, 1), Color::randomLight());
+		obj->addComponent<BoxCollider>(glm::vec2(1, 1));
 		auto rb = obj->addComponent<Rigidbody>(enableGravity ? 0 : 5, enableGravity ? 0 : 5);
 		rb->setRestitution(0.5f);
 		if (enableGravity) rb->setGravity(10);
@@ -64,11 +65,12 @@ namespace examples
 	}
 	GameObjectSPtr EShapeSpawner::spawnCircle(glm::vec2 spawnPos, bool enableGravity)
 	{
-		auto radius = Math::randomFloat(0.25f, 0.5f);
+		auto size = Math::randomFloat(0.5f, 1.0f);
 		auto obj = GameObject::create("Circle", spawnPos);
+		obj->transform()->setScale(glm::vec2(size, size));
 		obj->setTag("Wall");
-		obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(radius * 2, radius * 2), Color::randomLight());
-		obj->addComponent<CircleCollider>(radius);
+		obj->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/circle.png"), glm::vec2(1, 1), Color::randomLight());
+		obj->addComponent<CircleCollider>(0.5f);
 		auto rb = obj->addComponent<Rigidbody>(enableGravity ? 0 : 5, enableGravity ? 0 : 5);
 		rb->setRestitution(0.5f);
 		if (enableGravity) rb->setGravity(10);

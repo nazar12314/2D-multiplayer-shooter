@@ -11,7 +11,7 @@ BaseRenderer::~BaseRenderer()
 {
 	delete _texture;
 }
-void BaseRenderer::render(const Camera* camera)
+void BaseRenderer::render(const Camera* camera) const
 {
 	auto texture = _texture->texture();
 	if (texture == nullptr) return;
@@ -24,15 +24,15 @@ void BaseRenderer::render(const Camera* camera)
 
 glm::vec2 BaseRenderer::getFinalSize() const
 {
-	if (!_preserveAspect) return _size;
+	if (!_preserveAspect) return _size * transform()->getScale();
 
-	auto ratio = _texture->getRatio();
 	auto size = _size;
+	auto ratio = _texture->getRatio();
 	if (size.x / size.y > ratio)
 		size.x = size.y * ratio;
 	else
 		size.y = size.x / ratio;
-	return size;
+	return size * transform()->getScale();
 }
 
 Texture* BaseRenderer::texture() const { return _texture; }

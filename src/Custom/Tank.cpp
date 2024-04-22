@@ -55,7 +55,7 @@ void Tank::update()
 		_shootCooldown = 1.0f / _firerate;
 		if (_explodeAtMousePosition)
 		{
-			auto mousePos = Input::mousePos;
+			auto mousePos = Input::mousePos();
 			auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
 			Physics::createImpact(mouseWorldPos, 5.0f, 10.0f);
 		}
@@ -63,17 +63,17 @@ void Tank::update()
 			shoot();
 	}
 	else
-		_shootCooldown -= Time::deltaTime;
+		_shootCooldown -= Time::deltaTime();
 }
 
 void Tank::updateGunPosition() const
 {
-	auto mousePos = Input::mousePos;
+	auto mousePos = Input::mousePos();
 	auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
 
 	auto targetDir = normalize(mouseWorldPos - transform()->getPos());
 
-	float rotateBy = _gunRotSpeed * Time::deltaTime;
+	float rotateBy = _gunRotSpeed * Time::deltaTime();
 	auto newRot = Math::rotateTowardsDir(gunPivot->transform()->getRot(), targetDir, rotateBy);
 	if (!Math::nearlyEqual(newRot, gunPivot->transform()->getRot()))
 		gunPivot->transform()->setRot(newRot);

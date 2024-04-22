@@ -19,7 +19,7 @@ protected:
 
 	BaseRenderer(GameObject* obj, glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0);
 
-	virtual void render(const Camera* camera);
+	void render(const Camera* camera) const;
 
 	glm::vec2 getFinalSize() const;
 
