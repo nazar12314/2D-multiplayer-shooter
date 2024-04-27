@@ -12,6 +12,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 include_directories(include)
 include_directories(include/Component)
 include_directories(include/Component/Collider)
+include_directories(include/Component/Renderer)
 include_directories(include/Core)
 include_directories(include/Custom)
 include_directories(include/Custom/Example)
@@ -37,7 +38,7 @@ add_executable(${PROJECT_NAME}
 	 "src/Core/Renderer.cpp"
 	 "src/Component/Camera.cpp"
 	 "src/Core/SDLHandler.cpp"
-	 "src/Component/SpriteRenderer.cpp"
+	 "src/Component/Renderer/SpriteRenderer.cpp"
 	 "src/Component/Component.cpp"
 	 "src/Custom/Example/ECameraFollow.cpp"
 	 "src/Scene.cpp"
@@ -64,8 +65,8 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/SDLUtils.h"
 	 "src/Custom/Example/EShapeSpawner.cpp"
 	 "include/Utils/Utils.h"
-	 "src/Component/TextRenderer.cpp"
-	 "src/Component/BaseRenderer.cpp"
+	 "src/Component/Renderer/TextRenderer.cpp"
+	 "src/Component/Renderer/BaseRenderer.cpp"
 	  "src/Other/DOTween.cpp"
 	  "src/Object/Object.cpp"
 	  "src/Utils/Utils.cpp"
@@ -80,7 +81,8 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/TankEffects.cpp"
 	  "include/Multiplayer/net_modules.h"
 	  "include/Multiplayer/Client.h"
-	  "include/Multiplayer/Server.h")
+	  "include/Multiplayer/Server.h"
+	  "src/Component/Renderer/ParticleSystem.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

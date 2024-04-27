@@ -13,7 +13,7 @@
 
 void game()
 {
-	auto cam = GameObject::create("Camera")->addComponent<Camera>(8, Color::gray);
+	auto cam = GameObject::create("Camera")->addComponent<Camera>(8, Color::GRAY);
 	auto follow = cam->addComponent<CameraFollow>(5);
 	auto resizer = cam->addComponent<CameraResizer>(20, 2, 8);
 

@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "Color.h"
+#include "MyMath.h"
 #include "VectorSafe.h"
 #include "glm/vec2.hpp"
 
@@ -33,17 +34,6 @@ public:
 	friend class Tween;
 	friend class Application;
 	friend class Object;
-};
-
-enum class EaseType
-{
-	Linear = 0,
-	InQuad = 1,
-	InCubic = 2,
-	OutQuad = 3,
-	OutCubic = 4,
-	InOutQuad = 5,
-	InOutCubic = 6
 };
 
 class Tween
@@ -117,7 +107,7 @@ template <typename T> ValueTo<T>::ValueTo(T startValue, T endValue, float time, 
 
 template <typename T> void ValueTo<T>::update(float deltaTime)
 {
-	_setter(_startValue + (_endValue - _startValue) * (_elapsed / _time));
+	_setter(_startValue + (_endValue - _startValue) * Math::evaluateEase(_ease, _elapsed / _time));
 	Tween::update(deltaTime);
 }
 template <typename T> void ValueTo<T>::finish()

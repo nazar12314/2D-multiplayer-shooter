@@ -85,7 +85,7 @@ void PolygonCollider::recalculate()
 {
 	_globalVertices.resize(_vertices.size());
 	for (int i = 0; i < _vertices.size(); i++)
-		_globalVertices[i] = transform()->localToGlobalPos(_vertices[i]);
+		_globalVertices[i] = transform()->localToWorldPos(_vertices[i]);
 
 	if constexpr (DISPLAY_VERTICES_DEBUG)
 		for (int i = 0; i < _vertices.size(); i++)

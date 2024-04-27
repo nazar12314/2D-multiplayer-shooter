@@ -28,7 +28,7 @@ public:
 	static void renderObjects(const Camera* mainCamera);
 
 	static void renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0);
-	static void renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0);
+	static void renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot = 0, const Camera* camera = nullptr);
 
 	static void sortRenderers();
 

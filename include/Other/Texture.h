@@ -18,7 +18,7 @@ class Texture
 	bool _usingDefaultTexture;
 
 public:
-	Texture(const Sprite* sprite, const Color& color = Color::white);
+	Texture(const Sprite* sprite, const Color& color = Color::WHITE);
 	Texture(const Font* font, const std::string& text, const Color& color);
 	~Texture();
 

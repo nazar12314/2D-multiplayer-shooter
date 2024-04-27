@@ -18,7 +18,7 @@ Texture::Texture(const Sprite* sprite, const Color& color) : _surface(sprite->su
 {
 	_size = {_surface->w, _surface->h};
 
-	if (color != Color::white)
+	if (color != Color::WHITE)
 		setColor(color);
 }
 Texture::Texture(const Font* font, const std::string& text, const Color& color) : _usingDefaultTexture(false)

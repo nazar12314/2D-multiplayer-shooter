@@ -14,7 +14,7 @@ class Camera : public Component
 	int _priority = 0;
 	Color _bgColor;
 
-	Camera(GameObject* obj, float size = 10, const Color& bgColor = Color::black);
+	Camera(GameObject* obj, float size = 10, const Color& bgColor = Color::BLACK);
 
 public:
 	~Camera() override;

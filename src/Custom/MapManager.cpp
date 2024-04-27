@@ -24,7 +24,7 @@ SpriteRenderer* MapManager::createGround(const glm::vec2& pos, const glm::vec2& 
 {
 	auto sprite = Assets::load<Sprite>("assets/sprites/square.png");
 
-	auto ground = GameObject::create("Ground", pos)->addComponent<SpriteRenderer>(sprite, size, Color::cyan.darken(0.8f), -999);
+	auto ground = GameObject::create("Ground", pos)->addComponent<SpriteRenderer>(sprite, size, Color::CYAN.darken(0.8f), -999);
 	ground->gameObject()->setTag("Ground");
 
 	return ground;

@@ -15,7 +15,7 @@ namespace examples
 	EBullet::EBullet(GameObject* obj, float speed, bool explode): Component(obj), _speed(speed), _explode(explode)
 	{
 		auto tex = Assets::load<Sprite>("assets/sprites/circle.png");
-		addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), Color::red);
+		addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), Color::RED);
 		addComponent<CircleCollider>(0.1f, true);
 		rb = addComponent<Rigidbody>(true);
 	}

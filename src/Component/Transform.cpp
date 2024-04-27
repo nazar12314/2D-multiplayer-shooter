@@ -135,7 +135,7 @@ glm::vec2 Transform::down() { return glm::rotate(glm::vec2_down, glm::radians(ge
 glm::vec2 Transform::left() { return glm::rotate(glm::vec2_left, glm::radians(getRot())); }
 glm::vec2 Transform::right() { return glm::rotate(glm::vec2_right, glm::radians(getRot())); }
 
-glm::vec2 Transform::localToGlobalPos(const glm::vec2& pos)
+glm::vec2 Transform::localToWorldPos(const glm::vec2& pos)
 {
 	return getMatrixInv() * glm::vec3(pos, 1);
 }

@@ -25,19 +25,8 @@ float Math::rotateTowardsDir(float currentAngle, glm::vec2 dir, float maxStep)
 	return rotateTowardsAngle(currentAngle, targetAngle, maxStep);
 }
 
-float Math::lerp(float a, float b, float t)
-{
-	return a + (b - a) * glm::clamp(t, 0.0f, 1.0f);
-}
-
-float Math::distanceSquared(glm::vec2 a, glm::vec2 b)
-{
-	return (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
-}
-float Math::cross(glm::vec2 a, glm::vec2 b)
-{
-	return a.x * b.y - a.y * b.x;
-}
+float Math::distanceSquared(glm::vec2 a, glm::vec2 b) { return (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y); }
+float Math::cross(glm::vec2 a, glm::vec2 b) { return a.x * b.y - a.y * b.x; }
 float Math::round(float value, int digits)
 {
 	float factor = (float)std::pow(10, digits);
@@ -130,10 +119,7 @@ bool Math::intersects(glm::vec2 centerA, float radiusA, const std::vector<glm::v
 	auto [sep, norm] = findMinSeparation(centerA, radiusA, verticesB);
 	return sep <= 0;
 }
-bool Math::intersects(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB)
-{
-	return glm::distance(centerA, centerB) - radiusA - radiusB <= 0;
-}
+bool Math::intersects(glm::vec2 centerA, float radiusA, glm::vec2 centerB, float radiusB) { return glm::distance(centerA, centerB) - radiusA - radiusB <= 0; }
 
 std::vector<glm::vec2> Math::findContactPoints(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB)
 {
@@ -229,44 +215,33 @@ int Math::closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& ve
 	return index;
 }
 
-float Math::randomFloat(float min, float max)
-{
-	return std::uniform_real_distribution(min, max)(gen);
-}
-int Math::randomInt(int min, int max)
-{
-	return std::uniform_int_distribution(min, max)(gen);
-}
-float Math::randomValue()
-{
-	return randomFloat(0, 1);
-}
-glm::vec2 Math::randomVec2(float min, float max)
-{
-	return glm::vec2(randomFloat(min, max), randomFloat(min, max));
-}
-glm::vec2 Math::randomVec2(glm::vec2 min, glm::vec2 max)
-{
-	return glm::vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y));
-}
-glm::vec2 Math::randomDir()
-{
-	return normalize(randomVec2(-1, 1));
-}
+float Math::randomFloat(float min, float max) { return std::uniform_real_distribution(min, max)(gen); }
+int Math::randomInt(int min, int max) { return std::uniform_int_distribution(min, max)(gen); }
+float Math::randomValue() { return randomFloat(0, 1); }
+glm::vec2 Math::randomVec2(float min, float max) { return glm::vec2(randomFloat(min, max), randomFloat(min, max)); }
+glm::vec2 Math::randomVec2(glm::vec2 min, glm::vec2 max) { return glm::vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y)); }
+glm::vec2 Math::randomDir() { return normalize(randomVec2(-1, 1)); }
 
-bool Math::nearlyEqual(float a, float b, float epsilon)
+bool Math::nearlyEqual(float a, float b, float epsilon) { return std::abs(a - b) < epsilon; }
+bool Math::nearlyEqual(glm::vec2 a, glm::vec2 b, float epsilon) { return nearlyEqual(a.x, b.x, epsilon) && nearlyEqual(a.y, b.y, epsilon); }
+bool Math::nearlyZero(float a, float epsilon) { return nearlyEqual(a, 0, epsilon); }
+bool Math::nearlyZero(glm::vec2 a, float epsilon) { return nearlyEqual(a.x, 0, epsilon) && nearlyEqual(a.y, 0, epsilon); }
+
+float Math::evaluateEase(EaseType ease, float t)
 {
-	return std::abs(a - b) < epsilon;
-}
-bool Math::nearlyEqual(glm::vec2 a, glm::vec2 b, float epsilon)
-{
-	return nearlyEqual(a.x, b.x, epsilon) && nearlyEqual(a.y, b.y, epsilon);
-}
-bool Math::nearlyZero(float a, float epsilon)
-{
-	return nearlyEqual(a, 0, epsilon);
-}
-bool Math::nearlyZero(glm::vec2 a, float epsilon)
-{
-	return nearlyEqual(a.x, 0, epsilon) && nearlyEqual(a.y, 0, epsilon);
+	switch (ease)
+	{
+	case EaseType::Linear: return t;
+	case EaseType::InQuad: return t * t;
+	case EaseType::InCubic: return t * t * t;
+	case EaseType::InQuart: return t * t * t * t;
+	case EaseType::OutQuad: return 1 - (float)pow(1 - t, 2);
+	case EaseType::OutCubic: return 1 - (float)pow(1 - t, 3);
+	case EaseType::OutQuart: return 1 - (float)pow(1 - t, 4);
+	case EaseType::InOutQuad: return t < 0.5 ? 2 * t * t : 1 - (float)pow(-2 * t + 2, 2) / 2;
+	case EaseType::InOutCubic: return t < 0.5 ? 4 * t * t * t : 1 - (float)pow(-2 * t + 2, 3) / 2;
+	case EaseType::InOutQuart: return t < 0.5 ? 8 * t * t * t * t : 1 - (float)pow(-2 * t + 2, 4) / 2;
+	}
+
+	throw std::runtime_error("Unknown ease type: " + (int)ease);
 }

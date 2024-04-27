@@ -32,11 +32,11 @@ void TankEffects::update()
 
 void TankEffects::spawnSmokeParticle() const
 {
-	auto spawnPos = transform()->localToGlobalPos({Math::randomFloat(-0.25f, 0.25f), -0.5f});
+	auto spawnPos = transform()->localToWorldPos({Math::randomFloat(-0.25f, 0.25f), -0.5f});
 	auto smoke = GameObject::create("Smoke", spawnPos)->transform();
 	smoke->addComponent<SpriteRenderer>(Assets::load<Sprite>("assets/sprites/square.png"), glm::vec2(0.1f, 0.1f), Color(0.8f, 0.8f, 0.8f), -1);
 
 	float dur = Math::randomFloat(0.5f, 1.0f);
-	smoke->doScale({0, 0}, dur);
-	smoke->doMove(smoke->getPos() + glm::vec2(0, 0.5f), dur)->onComplete([smoke] { destroy(smoke->gameObject()); });
+	smoke->doScale({0, 0}, dur)->setEase(EaseType::Linear);
+	smoke->doMove(smoke->getPos() + glm::vec2(0, 0.5f), dur)->onComplete([smoke] { destroy(smoke->gameObject()); })->setEase(EaseType::Linear);
 }

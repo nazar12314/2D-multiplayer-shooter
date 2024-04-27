@@ -29,7 +29,7 @@ glm::vec2 Camera::screenToWorldPoint(const glm::vec2& screenPos) const
 	auto wSize = (glm::vec2)SDLHandler::windowSize;
 	auto relPos = glm::vec2(screenPos.x / wSize.y - SDLHandler::windowAspectRatio / 2, 0.5f - screenPos.y / wSize.y);
 	auto localPos = relPos * _size;
-	return transform()->localToGlobalPos(localPos);
+	return transform()->localToWorldPos(localPos);
 }
 
 glm::vec2 Camera::worldToScreenPoint(const glm::vec2& worldPos) const

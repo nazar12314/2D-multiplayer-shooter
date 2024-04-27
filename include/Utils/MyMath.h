@@ -6,6 +6,20 @@
 #include "glm/vec2.hpp"
 #include "glm/mat3x3.hpp"
 
+enum class EaseType
+{
+	Linear = 0,
+	InQuad = 1,
+	OutQuad = 2,
+	InOutQuad = 3,
+	InCubic = 4,
+	OutCubic = 5,
+	InOutCubic = 6,
+	InQuart = 7,
+	OutQuart = 8,
+	InOutQuart = 9,
+};
+
 class Math
 {
 	inline static std::mt19937_64 gen {std::random_device()()};
@@ -20,7 +34,9 @@ public:
 	static float cross(glm::vec2 a, glm::vec2 b);
 
 	static float round(float value, int digits = 0);
-	static float lerp(float a, float b, float t);
+
+	template <typename T> requires requires(T& t1, T& t2) { t1 + t2; t1 * t2; }
+	static T lerp(const T& a, const T& b, float t, EaseType ease = EaseType::Linear);
 
 	static std::tuple<float, glm::vec2> findMinSeparation(const std::vector<glm::vec2>& verticesA, const std::vector<glm::vec2>& verticesB);
 	static std::tuple<float, glm::vec2> findMinSeparation(glm::vec2 centerA, float radiusA, const std::vector<glm::vec2>& verticesB);
@@ -48,10 +64,18 @@ public:
 
 	static bool nearlyZero(float a, float epsilon = 0.0001f);
 	static bool nearlyZero(glm::vec2 a, float epsilon = 0.0001f);
+
+	static float evaluateEase(EaseType ease, float t);
 };
+
+template <typename T> requires requires(T& t1, T& t2) { t1 + t2; t1 * t2; }
+T Math::lerp(const T& a, const T& b, float t, EaseType ease) { return a + (b - a) * evaluateEase(ease, glm::clamp(t, 0.0f, 1.0f)); }
 
 namespace glm
 {
+	inline static constexpr vec2 vec2_zero = {0, 0};
+	inline static constexpr vec2 vec2_one = {1, 1};
+
 	inline static constexpr vec2 vec2_up = {0, 1};
 	inline static constexpr vec2 vec2_down = {0, -1};
 	inline static constexpr vec2 vec2_left = {-1, 0};

@@ -93,12 +93,12 @@ void Physics::displayGizmos_debug()
 	if constexpr (DISPLAY_GIZMOS_CONTACTS_DEBUG)
 		for (auto& col : collisionStorage)
 			for (auto& point : col.contactPoints)
-				gizmos.push_back(Gizmos::drawPoint(point, 0.03f, Color::red, 999));
+				gizmos.push_back(Gizmos::drawPoint(point, 0.03f, Color::RED, 999));
 
 	if constexpr (DISPLAY_GIZMOS_NORMALS_DEBUG)
 		for (auto& col : collisionStorage)
 			for (auto& point : col.contactPoints)
-				gizmos.push_back(Gizmos::drawVector(point, col.norm, glm::clamp(col.depth * 250, 0.0f, 5.0f), Color::green, 999));
+				gizmos.push_back(Gizmos::drawVector(point, col.norm, glm::clamp(col.depth * 250, 0.0f, 5.0f), Color::GREEN, 999));
 }
 void Physics::clearGizmos_debug()
 {

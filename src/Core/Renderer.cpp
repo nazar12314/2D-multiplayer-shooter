@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "Texture.h"
+#include "Transform.h"
 
 void Renderer::init()
 {
@@ -72,11 +73,13 @@ void Renderer::renderTex(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2
 
 	SDL_RenderCopyExF(SDLHandler::renderer, tex, NULL, &rect, -rot, NULL, SDL_FLIP_NONE);
 }
-void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot)
+void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm::vec2& size, float rot, const Camera* camera)
 {
-	auto screenPos = Camera::getMain()->worldToScreenPoint(pos);
-	auto screenSize = Camera::getMain()->worldToScreenSize(size);
-	renderTex(tex, screenPos, screenSize, rot);
+	camera = camera == nullptr ? Camera::getMain() : camera;
+
+	auto screenPos = camera->worldToScreenPoint(pos);
+	auto screenSize = camera->worldToScreenSize(size);
+	renderTex(tex, screenPos, screenSize, rot - camera->transform()->getRot());
 }
 
 void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width)

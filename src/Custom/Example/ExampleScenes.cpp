@@ -81,13 +81,13 @@ namespace examples
 		auto cam = GameObject::create("Camera")->addComponent<Camera>(8);
 		auto resizer = cam->addComponent<ECameraResizer>(8, 2, 8);
 
-		auto text = GameObject::create("Text", {0, 1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::green.withAlpha(0), 2);
-		auto text1 = GameObject::create("Text", {1, 0})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::red.withAlpha(0), 2);
-		auto text2 = GameObject::create("Text", {-1, -1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 6), Color::blue.withAlpha(0), 2);
+		auto text = GameObject::create("Text", {0, 1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::GREEN.withAlpha(0), 2);
+		auto text1 = GameObject::create("Text", {1, 0})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 5), Color::RED.withAlpha(0), 2);
+		auto text2 = GameObject::create("Text", {-1, -1})->addComponent<TextRenderer>("Hello, World!", glm::vec2(5, 6), Color::BLUE.withAlpha(0), 2);
 
 		DOVirtual::delayedCall([text] { text->setColor(text->getColor().withAlpha(1)); }, 1);
-		DOVirtual::floatTo(0, 1, 3, [text1](float value) { text1->setColor(Color::red.withAlpha(value)); });
-		DOVirtual::colorTo(Color::white.withAlpha(0), Color::blue, 3, [text2](Color value) { text2->setColor(value); });
+		DOVirtual::floatTo(0, 1, 3, [text1](float value) { text1->setColor(Color::RED.withAlpha(value)); });
+		DOVirtual::colorTo(Color::WHITE.withAlpha(0), Color::BLUE, 3, [text2](Color value) { text2->setColor(value); });
 		auto tween = DOVirtual::vec2To(text2->transform()->getPos() - glm::vec2(1, 0), text2->transform()->getPos() + glm::vec2(1, 0), 3,
 		                               [text2](glm::vec2 value) { text2->transform()->setPos(value); });
 

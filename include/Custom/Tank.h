@@ -18,6 +18,8 @@ class Tank : public Component
 
 	Tank(GameObject* obj, bool explosiveBullets = false, bool explodeAtMousePosition = false);
 	void createGun();
+	void createParts();
+	void createParticles() const;
 
 	void update() override;
 	void updateGunPosition() const;

@@ -92,7 +92,7 @@ PointGizmo::PointGizmo(glm::vec2 pos, float radius, const Color& color, float du
 void PointGizmo::draw() const
 {
 	auto sizeMult = Camera::getMain()->size();
-	Renderer::drawCircleWorld(pos, sizeMult * (radius + 0.015f) / 7.0f, Color::white);
+	Renderer::drawCircleWorld(pos, sizeMult * (radius + 0.015f) / 7.0f, Color::WHITE);
 	Renderer::drawCircleWorld(pos, sizeMult * radius / 7, color);
 }
 

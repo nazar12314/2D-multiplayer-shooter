@@ -15,11 +15,11 @@ class Gizmos
 	static void draw();
 
 public:
-	static Gizmo* drawLine(glm::vec2 p1, glm::vec2 p2, const Color& color = Color::green, float dur = 0.01f);
-	static Gizmo* drawRect(glm::vec2 pos, glm::vec2 size, const Color& color = Color::green, float dur = 0.01f);
-	static Gizmo* drawCircle(glm::vec2 pos, float radius, const Color& color = Color::green, float dur = 0.01f);
-	static Gizmo* drawPoint(glm::vec2 pos, float radius, const Color& color = Color::green, float dur = 0.01f);
-	static Gizmo* drawVector(glm::vec2 pos, glm::vec2 dir, float length = 1, const Color& color = Color::green, float dur = 0.01f);
+	static Gizmo* drawLine(glm::vec2 p1, glm::vec2 p2, const Color& color = Color::GREEN, float dur = 0.01f);
+	static Gizmo* drawRect(glm::vec2 pos, glm::vec2 size, const Color& color = Color::GREEN, float dur = 0.01f);
+	static Gizmo* drawCircle(glm::vec2 pos, float radius, const Color& color = Color::GREEN, float dur = 0.01f);
+	static Gizmo* drawPoint(glm::vec2 pos, float radius, const Color& color = Color::GREEN, float dur = 0.01f);
+	static Gizmo* drawVector(glm::vec2 pos, glm::vec2 dir, float length = 1, const Color& color = Color::GREEN, float dur = 0.01f);
 
 	static void remove(Gizmo* gizmo);
 

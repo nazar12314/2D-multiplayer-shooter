@@ -9,27 +9,27 @@ struct Color
 {
 	float x, y, z, w;
 
-	Color(float r, float g, float b, float a = 1) : x(r), y(g), z(b), w(a) {}
-	Color(int r, int g, int b, int a = 255) : x(static_cast<float>(r) / 255.f), y(static_cast<float>(g) / 255.f), z(static_cast<float>(b) / 255.f),
+	constexpr Color(float r, float g, float b, float a = 1) : x(r), y(g), z(b), w(a) {}
+	constexpr Color(int r, int g, int b, int a = 255) : x(static_cast<float>(r) / 255.f), y(static_cast<float>(g) / 255.f), z(static_cast<float>(b) / 255.f),
 	                                          w(static_cast<float>(a) / 255.f) {}
-	Color(glm::vec3 rgb, float a = 1) : x(rgb.x), y(rgb.y), z(rgb.z), w(a) {}
-	Color() : Color {0, 0, 0, 0} {}
+	constexpr Color(glm::vec3 rgb, float a = 1) : x(rgb.x), y(rgb.y), z(rgb.z), w(a) {}
+	constexpr Color() : Color {0, 0, 0, 0} {}
 
-	static Color white;
-	static Color black;
-	static Color red;
-	static Color green;
-	static Color blue;
-	static Color yellow;
-	static Color cyan;
-	static Color magenta;
-	static Color gray;
+	static const Color WHITE;
+	static const Color BLACK;
+	static const Color RED;
+	static const Color GREEN;
+	static const Color BLUE;
+	static const Color YELLOW;
+	static const Color CYAN;
+	static const Color MAGENTA;
+	static const Color GRAY;
 
-	static Color dark_green;
-	static Color sky_blue;
-	static Color gold;
-	static Color pink;
-	static Color hot_pink;
+	static const Color DARK_GREEN;
+	static const Color SKY_BLUE;
+	static const Color GOLD;
+	static const Color PINK;
+	static const Color HOT_PINK;
 
 	static Color random();
 	static Color randomLight();

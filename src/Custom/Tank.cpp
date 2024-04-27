@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "PolygonCollider.h"
 #include "Assets.h"
+#include "ParticleSystem.h"
 #include "Physics.h"
 #include "SpriteRenderer.h"
 #include "TankController.h"
@@ -24,17 +25,11 @@ Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition):
 	addComponent<BoxCollider>(glm::vec2(1, 1.2f));
 	addComponent<Rigidbody>(4, 8);
 	addComponent<TankController>();
-	addComponent<TankEffects>();
+	//addComponent<TankEffects>();
 
 	createGun();
-
-	auto leftPart = GameObject::create("leftPart", transform())->transform();
-	leftPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
-	leftPart->setLocalPos(glm::vec2(-0.4f, 0));
-
-	auto rightPart = GameObject::create("rightPart", transform())->transform();
-	rightPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
-	rightPart->setLocalPos(glm::vec2(0.4f, 0));
+	createParts();
+	createParticles();
 }
 void Tank::createGun()
 {
@@ -46,6 +41,31 @@ void Tank::createGun()
 	gun->transform()->setLocalPos(glm::vec2(gun->size().x / 2.0f, 0));
 
 	updateGunPosition();
+}
+void Tank::createParts()
+{
+	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
+	auto leftPart = GameObject::create("leftPart", transform())->transform();
+	leftPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
+	leftPart->setLocalPos(glm::vec2(-0.4f, 0));
+
+	auto rightPart = GameObject::create("rightPart", transform())->transform();
+	rightPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
+	rightPart->setLocalPos(glm::vec2(0.4f, 0));
+}
+void Tank::createParticles() const
+{
+	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
+	auto particleSystem = GameObject::create("particles", transform())->addComponent<ParticleSystem>(tex, Color::WHITE, -1);
+	particleSystem->transform()->setLocalPos(glm::vec2(0, -0.5f));
+	particleSystem->emissionRate().set(5);
+	particleSystem->rateOverDistance().set(2.0f);
+	particleSystem->lifetime().set(0.5f, 1);
+	particleSystem->speed().set(0.4f, 1);
+	particleSystem->rot().set(0, 360);
+	particleSystem->scale().set(0.2f, 0.4f, 0, 0);
+	particleSystem->color().set(Color::randomLight(), Color::randomLight());
+	particleSystem->setShape(glm::vec2(0.4f, 0.0f));
 }
 
 void Tank::update()

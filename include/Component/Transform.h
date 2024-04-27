@@ -69,7 +69,7 @@ public:
 	glm::vec2 left();
 	glm::vec2 right();
 
-	glm::vec2 localToGlobalPos(const glm::vec2& pos);
+	glm::vec2 localToWorldPos(const glm::vec2& pos);
 	glm::vec2 globalToLocalPos(const glm::vec2& pos);
 
 	friend class GameObject;

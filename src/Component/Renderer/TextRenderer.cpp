@@ -3,7 +3,7 @@
 #include "Assets.h"
 #include "Texture.h"
 
-TextRenderer::TextRenderer(GameObject* obj, const std::string& text, glm::vec2 size, const Color& color, int order, Font* font) : BaseRenderer(obj, size, color, order),
+TextRenderer::TextRenderer(GameObject* obj, const std::string& text, glm::vec2 size, const Color& color, int order, Font* font) : RectRenderer(obj, size, color, order),
 	_text(text), _font(font)
 {
 	if (_font == nullptr)

@@ -7,12 +7,12 @@
 
 class Font;
 
-class TextRenderer : public BaseRenderer
+class TextRenderer : public RectRenderer
 {
 	std::string _text;
 	Font* _font;
 
-	TextRenderer(GameObject* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::white, int order = 0, Font* font = nullptr);
+	TextRenderer(GameObject* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::WHITE, int order = 0, Font* font = nullptr);
 
 	void updateTexture();
 
