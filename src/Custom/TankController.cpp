@@ -22,6 +22,13 @@ void TankController::fixedUpdate()
 	if (Input::isKeyDown(SDLK_d)) rotDir -= 1;
 
 	float speedMult = Input::isKeyDown(SDLK_LSHIFT) ? 3 : 1;
-	if (moveDir != 0) rb->addForce(transform()->up() * moveDir * moveSpeed * speedMult);
+	if (moveDir != 0)
+	{
+		_isMoving = true;
+		rb->addForce(transform()->up() * moveDir * moveSpeed * speedMult);
+	}
+	else _isMoving = false;
 	if (rotDir != 0) rb->addAngularForce(rotDir * rotationSpeed);
 }
+
+bool TankController::isMoving() const { return _isMoving; }

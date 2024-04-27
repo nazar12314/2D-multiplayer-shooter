@@ -2,7 +2,9 @@
 
 #include <stdexcept>
 
+#include "DOTween.h"
 #include "GameObject.h"
+#include "Transform.h"
 
 void Object::prepare()
 {
@@ -15,8 +17,15 @@ void Object::prepare()
 void Object::destroy(Object* obj)
 {
 	if (obj->_isDestroyed) return;
-	obj->destroyInternal();
+	if (dynamic_cast<Transform*>(obj))
+		throw std::runtime_error("Cannot destroy Transform component, you should destroy GameObject itself.");
+
+	obj->preDestroyInternal();
 	_toDestroy.push_back(obj);
+}
+void Object::destroy(const GameObjectSPtr& obj)
+{
+	destroy(obj.get());
 }
 
 void Object::destroyImmediate()
@@ -30,3 +39,10 @@ void Object::throwIfDestroyed() const
 }
 
 bool Object::isDestroyed() const { return _isDestroyed; }
+
+void Object::doKill() const
+{
+	for (Tween* tween : DOVirtual::_tweens)
+		if (tween->_target == this)
+			tween->kill();
+}

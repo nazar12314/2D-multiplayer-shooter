@@ -49,6 +49,9 @@ void Tween::update(float deltaTime)
 
 void Tween::finish()
 {
+	if (_onComplete)
+		_onComplete();
+
 	DOVirtual::_tweens.erase_delayed(this);
 	delete this;
 }
@@ -65,6 +68,16 @@ Tween* Tween::setEase(EaseType ease)
 Tween* Tween::setDelay(float delay)
 {
 	_delay = delay;
+	return this;
+}
+Tween* Tween::onComplete(const std::function<void()>& onComplete)
+{
+	_onComplete = onComplete;
+	return this;
+}
+Tween* Tween::setTarget(Object* target)
+{
+	_target = target;
 	return this;
 }
 

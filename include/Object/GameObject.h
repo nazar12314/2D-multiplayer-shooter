@@ -49,7 +49,7 @@ private:
 
 	GameObject(const std::string& name = "New Object", glm::vec2 pos = {0, 0}, float rot = 0);
 
-	void destroyInternal() override;
+	void preDestroyInternal() override;
 	void destroyImmediate() override;
 
 	template <typename... Ts> void sendCallback(void (Component::*func)(Ts...), Ts... args);

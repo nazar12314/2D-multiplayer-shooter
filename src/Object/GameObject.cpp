@@ -36,11 +36,11 @@ void GameObject::prepare()
 
 GameObject::GameObject(const std::string& name, glm::vec2 pos, float rot) : _name(name), _transform(addComponent<Transform>(pos, rot)) { }
 
-void GameObject::destroyInternal()
+void GameObject::preDestroyInternal()
 {
 	if (_isDestroyed) return;
 	for (const auto& comp : _components)
-		destroy(comp.get());
+		_toDestroy.push_back(comp.get());
 }
 void GameObject::destroyImmediate()
 {

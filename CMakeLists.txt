@@ -76,7 +76,11 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/TankController.cpp"
 	  "src/Custom/Bullet.cpp"
 	  "include/Custom/Singleton.h"
-	  "src/Custom/MapManager.cpp" include/Multiplayer/net_modules.h include/Multiplayer/net_modules.h include/Multiplayer/Client.h include/Multiplayer/Server.h)
+	  "src/Custom/MapManager.cpp"
+	  "src/Custom/TankEffects.cpp"
+	  "include/Multiplayer/net_modules.h"
+	  "include/Multiplayer/Client.h"
+	  "include/Multiplayer/Server.h")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
@@ -88,6 +92,8 @@ IF (WIN32)
 	configure_file(libs/SDL2_image/SDL2_image.lib ${CMAKE_BINARY_DIR}/SDL2_image.lib COPYONLY)
 	configure_file(libs/SDL2_ttf/SDL2_ttf.dll ${CMAKE_BINARY_DIR}/SDL2_ttf.dll COPYONLY)
 	configure_file(libs/SDL2_ttf/SDL2_ttf.lib ${CMAKE_BINARY_DIR}/SDL2_ttf.lib COPYONLY)
+
+	set(_WIN32_WINDOWS)
 ELSE()
 	find_package(SDL2 REQUIRED)
 	target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
@@ -117,9 +123,9 @@ ELSE()
 		find_package(SDL2_ttf REQUIRED)
 		target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_ttf::SDL2_ttf)
 	endif ()
-
-	find_package(Boost 1.71.0 REQUIRED)
-	target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
-	target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 ENDIF()
+
+find_package(Boost 1.71.0 REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 

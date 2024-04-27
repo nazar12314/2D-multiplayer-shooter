@@ -7,6 +7,7 @@
 #include "glm/vec2.hpp"
 
 
+class Object;
 class Tween;
 
 class DOVirtual
@@ -20,12 +21,18 @@ class DOVirtual
 public:
 	static Tween* delayedCall(const std::function<void()>& function, float delay);
 
+	/* Interpolates between startValue and endValue over time using setter function. */
 	static Tween* floatTo(float startValue, float endValue, float time, const std::function<void(float)>& setter);
+
+	/* Interpolates between startValue and endValue over time using setter function. */
 	static Tween* vec2To(const glm::vec2& startValue, const glm::vec2& endValue, float time, const std::function<void(glm::vec2)>& setter);
+
+	/* Interpolates between startValue and endValue over time using setter function. */
 	static Tween* colorTo(const Color& startValue, const Color& endValue, float time, const std::function<void(Color)>& setter);
 
 	friend class Tween;
 	friend class Application;
+	friend class Object;
 };
 
 enum class EaseType
@@ -47,6 +54,10 @@ protected:
 	float _delay = 0;
 	EaseType _ease = EaseType::InOutQuad;
 
+	Object* _target = nullptr;
+
+	std::function<void()> _onComplete = nullptr;
+
 	Tween(float time);
 	virtual ~Tween() = default;
 
@@ -59,8 +70,11 @@ public:
 
 	Tween* setEase(EaseType ease);
 	Tween* setDelay(float delay);
+	Tween* onComplete(const std::function<void()>& onComplete);
+	Tween* setTarget(Object* target);
 
 	friend class DOVirtual;
+	friend class Object;
 };
 
 class DelayedCall : public Tween
@@ -86,6 +100,9 @@ template <typename T> class ValueTo : public Tween
 	void update(float deltaTime) override;
 	void finish() override;
 
+public:
+	Tween* from(T value);
+
 	friend class DOVirtual;
 };
 
@@ -107,5 +124,11 @@ template <typename T> void ValueTo<T>::finish()
 {
 	_setter(_endValue);
 	Tween::finish();
+}
+
+template <typename T> Tween* ValueTo<T>::from(T value)
+{
+	_startValue = value;
+	return this;
 }
 

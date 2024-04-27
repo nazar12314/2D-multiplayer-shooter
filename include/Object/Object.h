@@ -1,6 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <vector>
+
+class GameObject;
+using GameObjectSPtr = std::shared_ptr<GameObject>;
 
 class Object
 {
@@ -12,6 +16,9 @@ class Object
 public:
 	/* Destroys the object after the current frame */
 	static void destroy(Object* obj);
+
+	/* Destroys the object after the current frame */
+	static void destroy(const GameObjectSPtr& obj);
 	// -- Global --
 
 protected:
@@ -20,7 +27,7 @@ protected:
 	Object() = default;
 	virtual ~Object() = default;
 
-	virtual void destroyInternal() {}
+	virtual void preDestroyInternal() {}
 	virtual void destroyImmediate();
 	void throwIfDestroyed() const;
 
@@ -28,4 +35,9 @@ public:
 	bool isDestroyed() const;
 
 	friend class Application;
+	friend class GameObject;
+
+
+	// DOTween
+	void doKill() const;
 };

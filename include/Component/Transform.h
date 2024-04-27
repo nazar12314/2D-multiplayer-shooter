@@ -4,6 +4,8 @@
 #include "glm/vec2.hpp"
 #include "glm/mat3x3.hpp"
 
+class Tween;
+
 class Transform : public Component
 {
 	glm::vec2 _localPos;
@@ -72,4 +74,18 @@ public:
 
 	friend class GameObject;
 	friend class Rigidbody;
+
+	// DOTween
+	Tween* doMove(const glm::vec2& endValue, float time);
+	Tween* doRotate(float endValue, float time);
+	Tween* doScale(const glm::vec2& endValue, float time);
+
+	Tween* doLocalMove(const glm::vec2& endValue, float time);
+	Tween* doLocalRotate(float endValue, float time);
+	Tween* doLocalScale(const glm::vec2& endValue, float time);
+
+	Tween* doMoveX(float endValue, float time);
+	Tween* doMoveY(float endValue, float time);
+	Tween* doLocalMoveX(float endValue, float time);
+	Tween* doLocalMoveY(float endValue, float time);
 };

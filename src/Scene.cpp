@@ -25,7 +25,7 @@ void game()
 
 void Scene::create()
 {
-	examples::ExampleScenes::shapeSpawnerWithGravity();
+	//examples::ExampleScenes::shapeSpawnerNoGravityWithTankScene();
 
-	//game();
+	game();
 }

@@ -12,6 +12,7 @@
 #include "SpriteRenderer.h"
 #include "TankController.h"
 #include "Rigidbody.h"
+#include "TankEffects.h"
 #include "Transform.h"
 #include "glm/geometric.hpp"
 
@@ -23,6 +24,7 @@ Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition):
 	addComponent<BoxCollider>(glm::vec2(1, 1.2f));
 	addComponent<Rigidbody>(4, 8);
 	addComponent<TankController>();
+	addComponent<TankEffects>();
 
 	createGun();
 
