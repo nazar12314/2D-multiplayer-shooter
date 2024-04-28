@@ -2,28 +2,31 @@
 
 #include "Component.h"
 
+class TankRemoteController;
 class SpriteRenderer;
 
 class Tank : public Component
 {
-	float _gunRotSpeed = 180;
 	float _firerate = 4;
-	bool _explosiveBullets;
-	bool _explodeAtMousePosition;
 
-	SpriteRenderer* gun;
-	Transform* gunPivot;
+	bool _controlledByPlayer;
 
-	float _shootCooldown;
+	SpriteRenderer* _gun = nullptr;
+	Transform* _gunPivot = nullptr;
 
-	Tank(GameObject* obj, bool explosiveBullets = false, bool explodeAtMousePosition = false);
+	float _shootTimer = 0;
+
+	Tank(GameObject* obj, bool controlledByPlayer);
+
+	void start() override;
 	void createGun();
 	void createParts();
-	void createParticles() const;
+	void createParticles();
 
 	void update() override;
-	void updateGunPosition() const;
 	void shoot() const;
 
 	friend class GameObject;
+	friend class TankRemoteController;
+	friend class TankPlayerController;
 };

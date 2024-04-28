@@ -9,18 +9,25 @@
 #include "Tank.h"
 #include "MapManager.h"
 #include "MyMath.h"
+#include "PlayerManager.h"
 
 
 void game()
 {
+	// Camera
 	auto cam = GameObject::create("Camera")->addComponent<Camera>(8, Color::GRAY);
 	auto follow = cam->addComponent<CameraFollow>(5);
-	auto resizer = cam->addComponent<CameraResizer>(20, 2, 8);
+	cam->addComponent<CameraResizer>(20, 2, 8);
 
-	auto tank = GameObject::create("Player", Math::randomVec2(-18.0f, 18.0f))->addComponent<Tank>(true);
-	follow->setTarget(tank->gameObject());
-
+	// Singletons
+	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
+
+	// Players
+	auto player1Main = PlayerManager::instance()->addPlayer("Player 1", true);
+	auto player2 = PlayerManager::instance()->addPlayer("Player 2", false);
+
+	follow->setTarget(player1Main->tank()->transform());
 }
 
 void Scene::create()

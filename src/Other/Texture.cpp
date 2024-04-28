@@ -1,5 +1,7 @@
 #include "Texture.h"
 
+#include <iostream>
+
 #include "Assets.h"
 #include "SDLHandler.h"
 

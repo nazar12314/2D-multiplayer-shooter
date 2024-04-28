@@ -11,11 +11,11 @@ void CameraFollow::fixedUpdate()
 {
 	if (target == nullptr) return;
 
-	auto newPos = mix(transform()->getPos(), target->transform()->getPos(), _smoothness * Time::fixedDeltaTime);
+	auto newPos = mix(transform()->getPos(), target->getPos(), _smoothness * Time::fixedDeltaTime);
 	if (Math::nearlyEqual(transform()->getPos(), newPos)) return;
 	transform()->setPos(newPos);
 }
-void CameraFollow::setTarget(GameObject* obj)
+void CameraFollow::setTarget(Transform* obj)
 {
 	target = obj;
 }

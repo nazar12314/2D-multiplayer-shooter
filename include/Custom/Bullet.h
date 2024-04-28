@@ -11,7 +11,9 @@ class Bullet : public Component
 	Rigidbody* rb;
 	bool _explode;
 
-	Bullet(GameObject* obj, float speed = 16, bool explode = false);
+	float _immuneTimer = 0.02f;
+
+	Bullet(GameObject* obj, float speed = 25, bool explode = false);
 
 	void fixedUpdate() override;
 	void onTriggerEnter(Collider* other) override;

@@ -24,7 +24,7 @@ public:
 	static T* instance()
 	{
 		if (m_instance == nullptr)
-			m_instance = new T();
+			m_instance = GameObject::create()->addComponent<T>();
 		return m_instance;
 	}
 

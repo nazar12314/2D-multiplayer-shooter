@@ -57,15 +57,12 @@ void ParticleSystem::updateProperties()
 void ParticleSystem::updateAlive()
 {
 	auto dt = Time::deltaTime();
-	for (int i = 0; i < _particles.size(); i++)
+	for (int i = _particles.size() - 1; i >= 0; i--)
 	{
 		auto& p = _particles[i];
 		p.aliveTime += dt;
 		if (p.aliveTime >= p.lifetime)
-		{
 			_particles.erase(_particles.begin() + i);
-			i--;
-		}
 	}
 }
 
@@ -73,10 +70,12 @@ void ParticleSystem::render(const Camera* camera) const
 {
 	for (const auto& p : _particles)
 	{
-		auto color = p.color.evalAt(p.aliveTime);
+		float t = p.aliveTime / p.lifetime;
+
+		auto color = p.color.evalAt(t);
 		_texture->setColor(color);
 
-		auto size = glm::vec2_one * p.scale.evalAt(p.aliveTime);
+		auto size = glm::vec2_one * p.scale.evalAt(t);
 		Renderer::renderTexWorld(_texture->texture(), p.pos, size, p.rot, camera);
 	}
 }

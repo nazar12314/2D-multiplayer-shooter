@@ -11,49 +11,52 @@
 #include "ParticleSystem.h"
 #include "Physics.h"
 #include "SpriteRenderer.h"
-#include "TankController.h"
+#include "TankPlayerController.h"
 #include "Rigidbody.h"
-#include "TankEffects.h"
 #include "Transform.h"
-#include "glm/geometric.hpp"
+#include "TankRemoteController.h"
 
-Tank::Tank(GameObject* obj, bool explosiveBullets, bool explodeAtMousePosition): Component(obj), _explosiveBullets(explosiveBullets),
-                                                                                 _explodeAtMousePosition(explodeAtMousePosition)
+Tank::Tank(GameObject* obj, bool controlledByPlayer): Component(obj), _controlledByPlayer(controlledByPlayer) {}
+
+void Tank::start()
 {
+	gameObject()->setTag("Tank");
+
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
-	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight());
+	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight().darken(0.15f));
 	addComponent<BoxCollider>(glm::vec2(1, 1.2f));
 	addComponent<Rigidbody>(4, 8);
-	addComponent<TankController>();
-	//addComponent<TankEffects>();
 
 	createGun();
 	createParts();
 	createParticles();
+
+	if (_controlledByPlayer)
+		addComponent<TankPlayerController>();
+	else
+		addComponent<TankRemoteController>();
 }
 void Tank::createGun()
 {
-	gunPivot = GameObject::create("gunPivot", transform())->transform();
-	gunPivot->setLocalPos(glm::vec2(0, 0.1f));
+	_gunPivot = GameObject::create("gunPivot", transform())->transform();
+	_gunPivot->setLocalPos(glm::vec2(0, 0.1f));
 
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
-	gun = GameObject::create("gun", gunPivot)->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), getComponent<SpriteRenderer>()->color().lighten(0.5f), 2);
-	gun->transform()->setLocalPos(glm::vec2(gun->size().x / 2.0f, 0));
-
-	updateGunPosition();
+	_gun = GameObject::create("gun", _gunPivot)->addComponent<SpriteRenderer>(tex, glm::vec2(0.7f, 0.2f), getComponent<SpriteRenderer>()->color().lighten(0.5f), 2);
+	_gun->transform()->setLocalPos(glm::vec2(_gun->size().x / 2.0f, 0));
 }
 void Tank::createParts()
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 	auto leftPart = GameObject::create("leftPart", transform())->transform();
-	leftPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
+	leftPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.3f), 1);
 	leftPart->setLocalPos(glm::vec2(-0.4f, 0));
 
 	auto rightPart = GameObject::create("rightPart", transform())->transform();
-	rightPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.35f), 1);
+	rightPart->addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 1.2f), getComponent<SpriteRenderer>()->color().darken(0.3f), 1);
 	rightPart->setLocalPos(glm::vec2(0.4f, 0));
 }
-void Tank::createParticles() const
+void Tank::createParticles()
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 	auto particleSystem = GameObject::create("particles", transform())->addComponent<ParticleSystem>(tex, Color::WHITE, -1);
@@ -64,49 +67,29 @@ void Tank::createParticles() const
 	particleSystem->speed().set(0.4f, 1);
 	particleSystem->rot().set(0, 360);
 	particleSystem->scale().set(0.2f, 0.4f, 0, 0);
-	particleSystem->color().set(Color::randomLight(), Color::randomLight());
+	particleSystem->color().set(getComponent<SpriteRenderer>()->color(), Color::randomLight(), Color::randomLight().withAlpha(0.4f), Color::randomLight().withAlpha(0.4f));
 	particleSystem->setShape(glm::vec2(0.4f, 0.0f));
 }
 
 void Tank::update()
 {
-	updateGunPosition();
+	if (!_controlledByPlayer) return;
 
-	if (_shootCooldown <= 0 && (Input::isKeyDown(SDLK_SPACE) || Input::isMouseButtonDown(SDL_BUTTON_LEFT)))
+	if (_shootTimer <= 0 && (Input::isKeyDown(SDLK_SPACE) || Input::isMouseButtonDown(SDL_BUTTON_LEFT)))
 	{
-		_shootCooldown = 1.0f / _firerate;
-		if (_explodeAtMousePosition)
-		{
-			auto mousePos = Input::mousePos();
-			auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
-			Physics::createImpact(mouseWorldPos, 5.0f, 10.0f);
-		}
-		else
-			shoot();
+		_shootTimer = 1.0f / _firerate;
+		shoot();
 	}
 	else
-		_shootCooldown -= Time::deltaTime();
-}
-
-void Tank::updateGunPosition() const
-{
-	auto mousePos = Input::mousePos();
-	auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
-
-	auto targetDir = normalize(mouseWorldPos - transform()->getPos());
-
-	float rotateBy = _gunRotSpeed * Time::deltaTime();
-	auto newRot = Math::rotateTowardsDir(gunPivot->transform()->getRot(), targetDir, rotateBy);
-	if (!Math::nearlyEqual(newRot, gunPivot->transform()->getRot()))
-		gunPivot->transform()->setRot(newRot);
+		_shootTimer -= Time::deltaTime();
 }
 
 void Tank::shoot() const
 {
-	float angle = glm::radians(gun->transform()->getRot());
+	float angle = glm::radians(_gun->transform()->getRot());
 	auto dir = glm::vec2(cos(angle), sin(angle));
 
-	auto spawnPos = gun->transform()->getPos() + dir * gun->size().x * 0.5f;
-	auto bullet = GameObject::create("bullet", spawnPos, gun->transform()->getRot());
-	bullet->addComponent<Bullet>(16, _explosiveBullets);
+	auto spawnPos = _gun->transform()->getPos() + dir * _gun->size().x * 0.5f;
+	auto bullet = GameObject::create("bullet", spawnPos, _gun->transform()->getRot());
+	bullet->addComponent<Bullet>(16, true);
 }

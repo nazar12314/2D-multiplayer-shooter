@@ -5,23 +5,23 @@
 #include "glm/vec3.hpp"
 #include "glm/geometric.hpp"
 
-const Color Color::WHITE = { 1.f, 1.f, 1.f };
-const Color Color::BLACK = { 0.f, 0.f, 0.f };
-const Color Color::RED = { 1.f, 0.f, 0.f };
-const Color Color::GREEN = { 0.f, 1.f, 0.f };
-const Color Color::BLUE = { 0.f, 0.f, 1.f };
-const Color Color::YELLOW = { 1.f, 1.f, 0.f };
-const Color Color::CYAN = { 0.f, 1.f, 1.f };
-const Color Color::MAGENTA = { 1.f, 0.f, 1.f };
-const Color Color::GRAY = { 0.2f, 0.2f, 0.2f };
-	  
-const Color Color::DARK_GREEN = { 0.f, 0.5f, 0.f };
-const Color Color::SKY_BLUE = { .529f, .808f, .922f };
-const Color Color::GOLD = { 1.f, .843f, 0.f };
-const Color Color::PINK = { 255, 192, 203 };
+const Color Color::WHITE = {1.f, 1.f, 1.f};
+const Color Color::BLACK = {0.f, 0.f, 0.f};
+const Color Color::RED = {1.f, 0.f, 0.f};
+const Color Color::GREEN = {0.f, 1.f, 0.f};
+const Color Color::BLUE = {0.f, 0.f, 1.f};
+const Color Color::YELLOW = {1.f, 1.f, 0.f};
+const Color Color::CYAN = {0.f, 1.f, 1.f};
+const Color Color::MAGENTA = {1.f, 0.f, 1.f};
+const Color Color::GRAY = {0.2f, 0.2f, 0.2f};
+
+const Color Color::DARK_GREEN = {0.f, 0.5f, 0.f};
+const Color Color::SKY_BLUE = {.529f, .808f, .922f};
+const Color Color::GOLD = {1.f, .843f, 0.f};
+const Color Color::PINK = {255, 192, 203};
 const Color Color::HOT_PINK = {255, 105, 180};
 
-Color Color::random() { return {Math::randomValue(), Math::randomValue(), Math::randomValue() }; }
+Color Color::random() { return {Math::randomValue(), Math::randomValue(), Math::randomValue()}; }
 
 Color Color::randomLight()
 {
@@ -55,8 +55,8 @@ Color& Color::operator*=(Color c)
 	return *this;
 }
 
-Color Color::operator*(Color c) const { return {x * c.x, y * c.y, z * c.z}; }
-Color Color::operator*(float v) const { return {x * v, y * v, z * v}; }
+Color Color::operator*(Color c) const { return {x * c.x, y * c.y, z * c.z, w * c.w}; }
+Color Color::operator*(float v) const { return {x * v, y * v, z * v, w * v}; }
 
 Color& Color::operator+=(Color c)
 {
@@ -65,7 +65,7 @@ Color& Color::operator+=(Color c)
 	z += c.z;
 	return *this;
 }
-Color Color::operator+(Color c) const { return {x + c.x, y + c.y, z + c.z}; }
+Color Color::operator+(Color c) const { return {x + c.x, y + c.y, z + c.z, w + c.w}; }
 
 Color& Color::operator-=(Color c)
 {
@@ -74,7 +74,7 @@ Color& Color::operator-=(Color c)
 	z -= c.z;
 	return *this;
 }
-Color Color::operator-(Color c) const { return {x - c.x, y - c.y, z - c.z}; }
+Color Color::operator-(Color c) const { return {x - c.x, y - c.y, z - c.z, w - c.w}; }
 bool Color::operator==(const Color& c) const { return x == c.x && y == c.y && z == c.z && w == c.w; }
 bool Color::operator!=(const Color& c) const { return x != c.x || y != c.y || z != c.z || w != c.w; }
 
@@ -99,7 +99,8 @@ Color Color::lerp(const Color& c1, const Color& c2, float value)
 	auto r = c1.r() + (c2.r() - c1.r()) * value;
 	auto g = c1.g() + (c2.g() - c1.g()) * value;
 	auto b = c1.b() + (c2.b() - c1.b()) * value;
-	return {r, g, b};
+	auto a = c1.a() + (c2.a() - c1.a()) * value;
+	return {r, g, b, a};
 }
 Color Color::darken(float factor) const { return {x * (1 - factor), y * (1 - factor), z * (1 - factor)}; }
 Color Color::lighten(float factor) const { return {x + (1 - x) * factor, y + (1 - y) * factor, z + (1 - z) * factor}; }
@@ -114,5 +115,5 @@ SDL_Color Color::toSDLColor() const
 	};
 }
 
-Color operator*(float v, Color c) { return {c.x * v, c.y * v, c.z * v}; }
-Color operator*(Color c, float v) { return {c.x * v, c.y * v, c.z * v}; }
+Color operator*(float v, Color c) { return {c.x * v, c.y * v, c.z * v, c.w * v}; }
+Color operator*(Color c, float v) { return {c.x * v, c.y * v, c.z * v, c.w * v}; }

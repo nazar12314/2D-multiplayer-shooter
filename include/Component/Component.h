@@ -89,17 +89,17 @@ public:
 
 template <derived<Component> T, typename... Ts> T* Component::addComponent(Ts&&... args)
 {
-	return _gameObject->addComponent<T>(std::forward<Ts>(args)...);
+	return gameObject()->addComponent<T>(std::forward<Ts>(args)...);
 }
 template <derived<Component> T> bool Component::hasComponent() const
 {
-	return _gameObject->hasComponent<T>();
+	return gameObject()->hasComponent<T>();
 }
 template <derived<Component> T> T* Component::getComponent()
 {
-	return _gameObject->getComponent<T>();
+	return gameObject()->getComponent<T>();
 }
 template <derived<Component> T> bool Component::tryGetComponent(T*& component) const
 {
-	return _gameObject->tryGetComponent<T>(component);
+	return gameObject()->tryGetComponent<T>(component);
 }

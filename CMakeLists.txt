@@ -74,15 +74,16 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/CameraFollow.cpp"
 	  "src/Custom/CameraResizer.cpp"
 	  "src/Custom/Tank.cpp"
-	  "src/Custom/TankController.cpp"
+	  "src/Custom/TankPlayerController.cpp"
 	  "src/Custom/Bullet.cpp"
 	  "include/Custom/Singleton.h"
 	  "src/Custom/MapManager.cpp"
-	  "src/Custom/TankEffects.cpp"
 	  "include/Multiplayer/net_modules.h"
 	  "include/Multiplayer/Client.h"
 	  "include/Multiplayer/Server.h"
-	  "src/Component/Renderer/ParticleSystem.cpp")
+	  "src/Component/Renderer/ParticleSystem.cpp"
+	  "src/Custom/TankRemoteController.cpp"
+	  "src/Custom/PlayerManager.cpp" )
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

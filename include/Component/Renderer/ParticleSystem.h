@@ -42,7 +42,7 @@ template <typename T> struct RangedCurve
 
 	void set(const T& value);
 	void set(const T& min, const T& max);
-	void set(const T& minFrom, const T& maxFrom, const T& minTo, const T& maxTo);
+	void set(const T& minFrom, const T& maxFrom, const T& minTo, const T& maxTo, EaseType ease = EaseType::Linear);
 };
 
 
@@ -142,8 +142,8 @@ template <typename T> void RangedCurve<T>::set(const T& min, const T& max)
 	this->min.set(min);
 	this->max.set(max);
 }
-template <typename T> void RangedCurve<T>::set(const T& minFrom, const T& maxFrom, const T& minTo, const T& maxTo)
+template <typename T> void RangedCurve<T>::set(const T& minFrom, const T& maxFrom, const T& minTo, const T& maxTo, EaseType ease)
 {
-	min.set(minFrom, minTo);
-	max.set(maxFrom, maxTo);
+	min.set(minFrom, minTo, ease);
+	max.set(maxFrom, maxTo, ease);
 }

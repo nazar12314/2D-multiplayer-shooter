@@ -1,6 +1,7 @@
 #include "Component.h"
 
 Component::Component(GameObject* gameObject) : _gameObject(gameObject) { }
+
 void Component::destroyImmediate()
 {
 	onDestroy();
@@ -18,6 +19,5 @@ GameObject* Component::gameObject() const
 }
 Transform* Component::transform() const
 {
-	throwIfDestroyed();
-	return _gameObject->transform();
+	return gameObject()->transform();
 }

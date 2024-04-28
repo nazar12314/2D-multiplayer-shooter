@@ -20,12 +20,16 @@ Bullet::Bullet(GameObject* obj, float speed, bool explode): Component(obj), _spe
 
 void Bullet::fixedUpdate()
 {
+	_immuneTimer -= Time::fixedDeltaTime;
 	rb->moveTo(transform()->getPos() + transform()->right() * _speed * Time::fixedDeltaTime);
 }
 
 void Bullet::onTriggerEnter(Collider* other)
 {
-	if (other->gameObject()->tag() != "Wall") return;
+	if (_immuneTimer > 0) return;
+
+	std::basic_string tag = other->gameObject()->tag();
+	if (tag != "Wall" && tag != "Tank") return;
 
 	if (_explode)
 		Physics::createImpact(transform()->getPos(), 5.0f, 10.0f);
