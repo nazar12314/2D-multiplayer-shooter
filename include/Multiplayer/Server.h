@@ -77,7 +77,7 @@ public:
 			{
 				//                std::cout << "Received message ID: " << msg_ptr->header.id << ", Size: " << msg_ptr->header.size << std::endl;
 
-				auto objDesc = msg_ptr->template get_body<net::ObjectDescription>();
+				auto objDesc = msg_ptr->template get_body<net::PlayerGameData>();
 
 				std::cout << "Object ID: " << objDesc.id << std::endl;
 				std::cout << "Object Name: " << objDesc.name << std::endl;

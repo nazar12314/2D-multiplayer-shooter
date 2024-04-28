@@ -16,10 +16,12 @@ class Multiplayer : public Singleton<Multiplayer>
 	Multiplayer(GameObject* obj, bool isServer);
 
 	void start() override;
+	void addMainPlayer() const;
 
 	void fixedUpdate() override;
 
 	void updateServer() const;
+	void updateServerSyncClients() const;
 
 	void updateClient() const;
 	void updateClientSend() const;

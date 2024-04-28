@@ -25,11 +25,7 @@ void game()
 	GameObject::create("MapManager")->addComponent<MapManager>();
 	GameObject::create("Multiplayer")->addComponent<Multiplayer>(true);
 
-	// Players
-	auto player1Main = PlayerManager::instance()->addPlayer("Player 1", true);
-	auto player2 = PlayerManager::instance()->addPlayer("Player 2", false);
-
-	follow->setTarget(player1Main->tank()->transform());
+	follow->setTarget(PlayerManager::instance()->getMainPlayer()->tank()->transform());
 }
 
 void Scene::create()

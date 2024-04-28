@@ -3,18 +3,20 @@
 #include "Component.h"
 #include "Singleton.h"
 
+#include <boost/uuid/uuid.hpp>
+
 class Tank;
 
 class Player
 {
-	int _id;
+	boost::uuids::uuid _id;
 	std::string _name;
 	Tank* _tank;
 
 public:
-	Player(int id, const std::string& name, Tank* tank);
+	Player(boost::uuids::uuid id, const std::string& name, Tank* tank);
 
-	int id() const;
+	boost::uuids::uuid id() const;
 	std::string name() const;
 	Tank* tank() const;
 
@@ -23,15 +25,13 @@ public:
 
 class PlayerManager : public Singleton<PlayerManager>
 {
-	inline static int nextId = 0;
-
 	std::vector<std::unique_ptr<Player>> players;
 
 	PlayerManager(GameObject* obj) : Singleton(obj) {}
 
 public:
-	Player* addPlayer(const std::string& name, bool isMain);
-	Player* getPlayer(int id) const;
+	Player* addPlayer(const std::string& name, bool isMain, boost::uuids::uuid id = {});
+	Player* getPlayer(boost::uuids::uuid id) const;
 	Player* getMainPlayer() const;
 
 	friend class GameObject;

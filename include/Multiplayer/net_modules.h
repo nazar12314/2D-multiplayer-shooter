@@ -4,9 +4,8 @@
 #include <boost/lockfree/queue.hpp>
 #include <iostream>
 #include <memory>
-#include <set>
 #include <deque>
-#include <thread>
+#include <boost/uuid/uuid.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -49,13 +48,19 @@ namespace net {
         }
     };
 
-    struct ObjectDescription {
-        int id;
+    struct PlayerGameData {
+	    boost::uuids::uuid id;
         char name[20];
 
         glm::vec2 position;
         float rotation;
     };
+
+    struct PlayerConnectionData
+    {
+	    boost::uuids::uuid id;
+		char name[20];
+	};
 
     enum class MessageType : uint32_t
     {
