@@ -25,7 +25,7 @@ namespace net {
         std::vector<uint8_t> body;
 
         Message() = default;
-        Message(const Message<T>& other)
+        Message(const Message& other)
                 :
                 header(other.header), body(other.body) {}
 
@@ -51,7 +51,7 @@ namespace net {
 
     struct ObjectDescription {
         int id;
-        std::string name;
+        char name[20];
 
         glm::vec2 position;
         float rotation;
@@ -68,7 +68,6 @@ namespace net {
 
     template <typename T>
     class Connection : public std::enable_shared_from_this<Connection<T>> {
-
     public:
         enum class owner
         {
@@ -87,8 +86,7 @@ namespace net {
         boost::lockfree::queue<Message<T>*>& messages_queue;
 
     public:
-        explicit Connection(tcp::socket socket, boost::lockfree::queue<Message<T>*>& queue, owner parent_type = owner::server)
-                :
+        explicit Connection(tcp::socket socket, boost::lockfree::queue<Message<T>*>& queue, owner parent_type = owner::server):
                 socket(std::move(socket)), messages_queue(queue), parent_type(parent_type) {}
 
         void start()
@@ -98,11 +96,8 @@ namespace net {
 
         void add_message_to_queue()
         {
-            if (parent_type == owner::server)
-            {
-                auto msg_copy = new Message<T>(read_msg_);
-                messages_queue.push(msg_copy);
-            }
+            auto msg_copy = new Message<T>(read_msg_);
+            messages_queue.push(msg_copy);
 
             read_header();
         }

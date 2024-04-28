@@ -32,18 +32,13 @@ template <typename T> class Server
 		});
 	}
 
-	void run_service()
-	{
-		io_context.run();
-	}
-
 public:
 	explicit Server(short port) :
 		acceptor(io_context, tcp::endpoint(tcp::v4(), port))
 	{
 		work = std::make_unique<boost::asio::io_context::work>(io_context);
 		start_accept();
-		io_context_thread = std::thread([this] { run_service(); });
+		io_context_thread = std::thread([this] { io_context.run(); });
 	}
 
 	~Server()
@@ -57,7 +52,7 @@ public:
 			loop_thread.join();
 	}
 
-	template <typename DataType> void message_clients(net::MessageType msg_type, const DataType& message_body)
+	template <typename DataType> void message_clients(T msg_type, const DataType& message_body)
 	{
 		for (auto& connection : connections)
 		{
