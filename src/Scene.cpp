@@ -23,7 +23,7 @@ void game()
 	// Singletons
 	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
-	GameObject::create("Multiplayer")->addComponent<Multiplayer>(true);
+	GameObject::create("Multiplayer")->addComponent<Multiplayer>(false);
 
 	follow->setTarget(PlayerManager::instance()->getMainPlayer()->tank()->transform());
 }

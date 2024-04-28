@@ -52,16 +52,15 @@ void Multiplayer::updateServerSyncClients() const
 		auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
 		_server->message_clients(msg_ptr->msg->header.id, body, msg_ptr->owner);
 
-
 		std::cout << "Server received message: " << msg_ptr->msg->header.id << std::endl;
 	}
 }
 void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const
 {
-	auto mainPlayer = PlayerManager::instance()->getMainPlayer();
+	auto body = msg_ptr->msg->get_body<net::PlayerConnectionData>();
 	for (const auto& player : PlayerManager::instance()->players)
 	{
-		if (player->id() == mainPlayer->id()) continue;
+		if (player->id() == body.id) continue;
 
 		net::PlayerConnectionData data;
 		data.id = player->id();
@@ -86,8 +85,6 @@ void Multiplayer::updateClientSend() const
 	data.rotation = self->tank()->transform()->getRot();
 
 	_client->send_message(net::MessageType::UPDATE_PLAYER, data);
-
-	std::cout << "Client sent message: UPDATE_PLAYER: " << self->id() << std::endl;
 }
 void Multiplayer::updateClientReceive() const
 {
@@ -102,17 +99,21 @@ void Multiplayer::updateClientReceive() const
 			auto body = msg_ptr->get_body<net::PlayerGameData>();
 
 			auto player = PlayerManager::instance()->getPlayer(body.id);
+			if (!player)
+			{
+				std::cout << "Player not found: " << body.id << std::endl;
+				continue;
+			}
+
 			player->tank()->transform()->setPos(body.position);
 			player->tank()->transform()->setRot(body.rotation);
-
-			std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 
 			break;
 		}
 		case net::MessageType::ADD_PLAYER: {
 			auto body = msg_ptr->get_body<net::PlayerConnectionData>();
 
-			PlayerManager::instance()->addPlayer(body.name, false);
+			PlayerManager::instance()->addPlayer(body.name, false, body.id);
 
 			std::cout << "Client received message: ADD_PLAYER: " << body.name << std::endl;
 			break;
