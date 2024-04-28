@@ -23,6 +23,7 @@ class Multiplayer : public Singleton<Multiplayer>
 
 	void updateServer() const;
 	void updateServerSyncClients() const;
+	void syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const;
 
 	void updateClient() const;
 	void updateClientSend() const;

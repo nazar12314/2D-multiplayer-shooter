@@ -46,13 +46,30 @@ void Multiplayer::updateServerSyncClients() const
 	net::OwnedMessage<net::MessageType>* msg_ptr;
 	while (_server->message_queue.pop(msg_ptr))
 	{
+		if (msg_ptr->msg->header.id == net::MessageType::ADD_PLAYER)
+			syncNewPlayer(msg_ptr);
+
 		auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
 		_server->message_clients(msg_ptr->msg->header.id, body, msg_ptr->owner);
+
 
 		std::cout << "Server received message: " << msg_ptr->msg->header.id << std::endl;
 	}
 }
+void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const
+{
+	auto mainPlayer = PlayerManager::instance()->getMainPlayer();
+	for (const auto& player : PlayerManager::instance()->players)
+	{
+		if (player->id() == mainPlayer->id()) continue;
 
+		net::PlayerConnectionData data;
+		data.id = player->id();
+		memcpy(data.name, player->name().c_str(), player->name().size());
+
+		_server->message_client(msg_ptr->owner, net::MessageType::ADD_PLAYER, data);
+	}
+}
 
 void Multiplayer::updateClient() const
 {

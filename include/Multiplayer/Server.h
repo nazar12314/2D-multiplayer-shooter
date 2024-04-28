@@ -63,6 +63,14 @@ public:
 			connection->write(msg);
 		}
 	}
+	template <typename DataType> void message_client(std::shared_ptr<net::Connection<T>> client, T msg_type, const DataType& message_body)
+	{
+		net::Message<T> msg;
+		msg.header.id = msg_type;
+		msg.set_body(message_body);
+
+		client->write(msg);
+	}
 
 	friend class Multiplayer;
 };

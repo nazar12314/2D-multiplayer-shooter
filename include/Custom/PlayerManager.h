@@ -33,4 +33,5 @@ public:
 	Player* getMainPlayer() const;
 
 	friend class GameObject;
+	friend class Multiplayer;
 };
