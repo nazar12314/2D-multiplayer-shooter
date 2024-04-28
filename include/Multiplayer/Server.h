@@ -49,21 +49,24 @@ public:
     ~Server()
     {
         work.reset();
+
         if (io_context_thread.joinable())
         {
             io_context_thread.join();
         }
     }
 
-    void message_clients(const std::string& message)
+    template <typename DataType>
+    void message_clients(net::MessageType msg_type, const DataType& message_body)
     {
         for (auto& connection : connections)
         {
             if (connection->is_connected())
             {
                 net::Message<T> msg;
-                msg.header.id = T::GREETING;
-                msg.set_body(message);
+                msg.header.id = msg_type;
+                msg.set_body(message_body);
+
                 connection->write(msg);
             }
         }
@@ -77,7 +80,7 @@ public:
         {
             if (msg_ptr)
             {
-                std::cout << "Received message ID: " << msg_ptr->header.id << ", Size: " << msg_ptr->header.size << std::endl;
+//                std::cout << "Received message ID: " << msg_ptr->header.id << ", Size: " << msg_ptr->header.size << std::endl;
 
                 auto objDesc = msg_ptr->template get_body<net::ObjectDescription>();
 
