@@ -4,6 +4,7 @@
 #include "PlayerManager.h"
 #include "Tank.h"
 #include "Transform.h"
+#include "glm/gtx/string_cast.hpp"
 #include "Multiplayer/Client.h"
 #include "Multiplayer/Server.h"
 
@@ -42,13 +43,13 @@ void Multiplayer::updateServer() const
 }
 void Multiplayer::updateServerSyncClients() const
 {
-	net::Message<net::MessageType>* msg_ptr;
+	net::OwnedMessage<net::MessageType>* msg_ptr;
 	while (_server->message_queue.pop(msg_ptr))
 	{
-		auto body = msg_ptr->get_body<net::PlayerGameData>();
-		_server->message_clients(msg_ptr->header.id, body);
+		auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
+		_server->message_clients(msg_ptr->msg->header.id, body, msg_ptr->owner);
 
-		//std::cout << "Server received message: " << (int)msg_ptr->header.id << std::endl;
+		std::cout << "Server received message: " << msg_ptr->msg->header.id << std::endl;
 	}
 }
 
@@ -68,17 +69,16 @@ void Multiplayer::updateClientSend() const
 	data.rotation = self->tank()->transform()->getRot();
 
 	_client->send_message(net::MessageType::UPDATE_PLAYER, data);
+
+	std::cout << "Client sent message: UPDATE_PLAYER: " << self->id() << std::endl;
 }
 void Multiplayer::updateClientReceive() const
 {
 	net::OwnedMessage<net::MessageType>* omsg_ptr;
 	while (_client->message_queue.pop(omsg_ptr))
 	{
-		//auto body = msg_ptr->get_body<net::ObjectDescription>();
-		//std::cout << "Client received message: " << body.id << std::endl;
-		//std::cout << "Client received message: " << body.name << std::endl;
-
 		net::Message<net::MessageType>* msg_ptr = omsg_ptr->msg;
+
 		switch (msg_ptr->header.id)
 		{
 		case net::MessageType::UPDATE_PLAYER: {
@@ -87,12 +87,17 @@ void Multiplayer::updateClientReceive() const
 			auto player = PlayerManager::instance()->getPlayer(body.id);
 			player->tank()->transform()->setPos(body.position);
 			player->tank()->transform()->setRot(body.rotation);
+
+			std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
+
 			break;
 		}
 		case net::MessageType::ADD_PLAYER: {
 			auto body = msg_ptr->get_body<net::PlayerConnectionData>();
 
 			PlayerManager::instance()->addPlayer(body.name, false);
+
+			std::cout << "Client received message: ADD_PLAYER: " << body.name << std::endl;
 			break;
 		}
 		}

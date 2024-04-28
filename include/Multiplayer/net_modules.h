@@ -68,7 +68,7 @@ namespace net
 		char name[20];
 	};
 
-	enum class MessageType : uint32_t
+	enum MessageType
 	{
 		SERVER_STATUS,
 		ADD_PLAYER,
@@ -118,6 +118,8 @@ namespace net
 	{
 		Message<T>* msg;
 		std::shared_ptr<Connection<T>> owner = nullptr;
+
+		OwnedMessage(Message<T>* msg): msg(msg) {}
 	};
 
 	template <typename T> Connection<T>::Connection(tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type):
