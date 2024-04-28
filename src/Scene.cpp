@@ -15,6 +15,10 @@
 
 void game()
 {
+	bool isServer;
+	std::cout << "Server (1) or Client (0)? ";
+	std::cin >> isServer;
+
 	// Camera
 	auto cam = GameObject::create("Camera")->addComponent<Camera>(8, Color::GRAY);
 	auto follow = cam->addComponent<CameraFollow>(5);
@@ -23,7 +27,7 @@ void game()
 	// Singletons
 	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
-	GameObject::create("Multiplayer")->addComponent<Multiplayer>(false);
+	GameObject::create("Multiplayer")->addComponent<Multiplayer>(isServer);
 
 	follow->setTarget(PlayerManager::instance()->getMainPlayer()->tank()->transform());
 }

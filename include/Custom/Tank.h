@@ -13,6 +13,7 @@ class Tank : public Component
 
 	SpriteRenderer* _gun = nullptr;
 	Transform* _gunPivot = nullptr;
+	Collider* _col= nullptr;
 
 	float _shootTimer = 0;
 
@@ -24,7 +25,12 @@ class Tank : public Component
 	void createParticles();
 
 	void update() override;
-	void shoot() const;
+	void shoot();
+
+public:
+	bool didShoot = false;
+
+	Transform* gunPivot() const;
 
 	friend class GameObject;
 	friend class TankRemoteController;

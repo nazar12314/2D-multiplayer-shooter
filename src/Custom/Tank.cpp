@@ -24,7 +24,7 @@ void Tank::start()
 
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), Color::randomLight().darken(0.15f));
-	addComponent<BoxCollider>(glm::vec2(1, 1.2f));
+	_col = addComponent<BoxCollider>(glm::vec2(1, 1.2f));
 	addComponent<Rigidbody>(4, 8);
 
 	createGun();
@@ -84,12 +84,16 @@ void Tank::update()
 		_shootTimer -= Time::deltaTime();
 }
 
-void Tank::shoot() const
+void Tank::shoot()
 {
+	didShoot = true;
+
 	float angle = glm::radians(_gun->transform()->getRot());
 	auto dir = glm::vec2(cos(angle), sin(angle));
 
 	auto spawnPos = _gun->transform()->getPos() + dir * _gun->size().x * 0.5f;
 	auto bullet = GameObject::create("bullet", spawnPos, _gun->transform()->getRot());
-	bullet->addComponent<Bullet>(16, true);
+	bullet->addComponent<Bullet>(_col, 16, true);
 }
+
+Transform* Tank::gunPivot() const { return _gunPivot; }

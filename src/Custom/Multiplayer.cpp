@@ -2,30 +2,32 @@
 
 #include "DOTween.h"
 #include "PlayerManager.h"
+#include "SpriteRenderer.h"
 #include "Tank.h"
 #include "Transform.h"
 #include "glm/gtx/string_cast.hpp"
 #include "Multiplayer/Client.h"
 #include "Multiplayer/Server.h"
+#include "TankRemoteController.h"
 
 Multiplayer::Multiplayer(GameObject* obj, bool isServer): Singleton(obj), _isServer(isServer) {}
 
 void Multiplayer::start()
 {
 	if (_isServer)
-		_server = std::make_unique<Server<net::MessageType>>(6000);
+		_server = std::make_unique<Server<net::MessageType>>(12345);
 
-	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "6000");
+	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "12345");
 	addMainPlayer();
 }
 void Multiplayer::addMainPlayer() const
 {
-	auto self = PlayerManager::instance()->addPlayer("Player 1", true);
+	auto mainPlayer = PlayerManager::instance()->addPlayer("Player 1", true);
 
 	net::PlayerConnectionData data;
-	data.id = self->id();
-	memcpy(data.name, self->name().c_str(), self->name().size());
-	data.name[self->name().size()] = '\0';
+	data.id = mainPlayer->id();
+	memcpy(data.name, mainPlayer->name().c_str(), mainPlayer->name().size());
+	data.name[mainPlayer->name().size()] = '\0';
 
 	_client->send_message(net::MessageType::ADD_PLAYER, data);
 }
@@ -51,8 +53,6 @@ void Multiplayer::updateServerSyncClients() const
 
 		auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
 		_server->message_clients(msg_ptr->msg->header.id, body, msg_ptr->owner);
-
-		std::cout << "Server received message: " << msg_ptr->msg->header.id << std::endl;
 	}
 }
 void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const
@@ -65,6 +65,7 @@ void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_p
 		net::PlayerConnectionData data;
 		data.id = player->id();
 		memcpy(data.name, player->name().c_str(), player->name().size());
+		data.name[player->name().size()] = '\0';
 
 		_server->message_client(msg_ptr->owner, net::MessageType::ADD_PLAYER, data);
 	}
@@ -83,15 +84,18 @@ void Multiplayer::updateClientSend() const
 	data.id = self->id();
 	data.position = self->tank()->transform()->getPos();
 	data.rotation = self->tank()->transform()->getRot();
+	data.gunRotation = self->tank()->gunPivot()->getRot();
+	data.shoot = self->tank()->didShoot;
+	self->tank()->didShoot = false;
 
 	_client->send_message(net::MessageType::UPDATE_PLAYER, data);
 }
 void Multiplayer::updateClientReceive() const
 {
-	net::OwnedMessage<net::MessageType>* omsg_ptr;
-	while (_client->message_queue.pop(omsg_ptr))
+	net::OwnedMessage<net::MessageType>* o_msg_ptr;
+	while (_client->message_queue.pop(o_msg_ptr))
 	{
-		net::Message<net::MessageType>* msg_ptr = omsg_ptr->msg;
+		net::Message<net::MessageType>* msg_ptr = o_msg_ptr->msg;
 
 		switch (msg_ptr->header.id)
 		{
@@ -105,8 +109,11 @@ void Multiplayer::updateClientReceive() const
 				continue;
 			}
 
-			player->tank()->transform()->setPos(body.position);
-			player->tank()->transform()->setRot(body.rotation);
+			auto remoteController = player->tank()->getComponent<TankRemoteController>();
+			remoteController->moveTo(body.position);
+			remoteController->rotateTo(body.rotation);
+			remoteController->rotateGunTo(body.gunRotation);
+			if (body.shoot) remoteController->shoot();
 
 			break;
 		}

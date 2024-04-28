@@ -15,7 +15,7 @@ class TankPlayerController : public Component
 
 	Tank* _tank = nullptr;
 
-	TankPlayerController(GameObject* obj, float moveSpeed = 100, float rotationSpeed = 60);
+	TankPlayerController(GameObject* obj, float moveSpeed = 50, float rotationSpeed = 30);
 
 	void start() override;
 

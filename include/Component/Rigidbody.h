@@ -36,7 +36,7 @@ class Rigidbody : public Component
 	void initCollider();
 
 	void step(float dt);
-	void substep(float dt);
+	void substep(float dt) const;
 
 	void attachCollider(Collider* col);
 	void resetCollider();

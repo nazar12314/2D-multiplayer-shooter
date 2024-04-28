@@ -12,11 +12,11 @@ class Rigidbody;
 
 class Physics
 {
-	constexpr static int SUBSTEPS = 2;  // Increase for precision, decrease for performance
+	constexpr static int SUBSTEPS = 5;  // Increase for precision, decrease for performance
 	constexpr static int TASK_COUNT = 32;
 
 	constexpr static bool MANUAL_UPDATE = false;
-	constexpr static bool DISPLAY_GIZMOS_CONTACTS_DEBUG = true;
+	constexpr static bool DISPLAY_GIZMOS_CONTACTS_DEBUG = false;
 	constexpr static bool DISPLAY_GIZMOS_NORMALS_DEBUG = false;
 
 	inline static VectorSafe<Rigidbody*> rigidbodies;

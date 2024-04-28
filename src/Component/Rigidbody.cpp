@@ -52,8 +52,17 @@ void Rigidbody::step(float dt)
 
 	if (!Math::nearlyZero(_angularVelocity))
 		_angularVelocity *= 1 - _angularDrag * dt;
+
+	// Apply gravity
+	_force += glm::vec2(0, -_gravity * _mass);
+
+	_velocity += _force * _invMass * dt;
+	_force = { 0, 0 };
+
+	_angularVelocity += _angularForce * _invMass * dt;
+	_angularForce = 0;
 }
-void Rigidbody::substep(float dt)
+void Rigidbody::substep(float dt) const
 {
 	if (_isStatic) return;
 	if (_attachedCollider && transform()->hasChanged)
@@ -62,25 +71,18 @@ void Rigidbody::substep(float dt)
 		transform()->hasChanged = false;
 	}
 
-	// Apply gravity
-	_force += glm::vec2(0, -_gravity * _mass);
-
-	_velocity += _force * _invMass * dt;
 	if (!Math::nearlyZero(_velocity))
 	{
 		auto newPos = transform()->getPos() + _velocity * dt;
 		transform()->setPos(newPos);
 	}
-	_force = {0, 0};
 
-	_angularVelocity += _angularForce * _invMass * dt;
 	if (!Math::nearlyZero(_angularVelocity))
 	{
 		float currRot = transform()->getRot();
 		float newRot = currRot + glm::degrees(_angularVelocity) * dt;
 		transform()->setRot(newRot);
 	}
-	_angularForce = 0;
 }
 
 void Rigidbody::setIsStatic(bool isStatic) { _isStatic = isStatic; }

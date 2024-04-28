@@ -16,7 +16,9 @@ class TankRemoteController : public Component
 
 public:
 	void moveTo(const glm::vec2& pos) const;
+	void rotateTo(float angle) const;
 	void rotateGunTo(float angle) const;
+	void shoot() const;
 
 	friend class GameObject;
 };

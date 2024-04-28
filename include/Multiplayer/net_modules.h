@@ -61,6 +61,8 @@ namespace net
 	{
 		glm::vec2 position;
 		float rotation;
+		float gunRotation;
+		bool shoot;
 	};
 
 	struct PlayerConnectionData : Data
