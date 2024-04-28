@@ -83,7 +83,9 @@ add_executable(${PROJECT_NAME}
 	  "include/Multiplayer/Server.h"
 	  "src/Component/Renderer/ParticleSystem.cpp"
 	  "src/Custom/TankRemoteController.cpp"
-	  "src/Custom/PlayerManager.cpp" )
+	  "src/Custom/PlayerManager.cpp"
+	  "src/Custom/Multiplayer.cpp"
+)
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

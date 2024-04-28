@@ -53,17 +53,8 @@ namespace net {
         int id;
         std::string name;
 
-        std::pair<double, double> position;
-        double rotation;
-
-        template<class Archive>
-        void serialize(Archive & ar, ObjectDescription & obj, const unsigned int version) {
-            ar & obj.id;
-            ar & obj.name;
-            ar & obj.position.first;
-            ar & obj.position.second;
-            ar & obj.rotation;
-        }
+        glm::vec2 position;
+        float rotation;
     };
 
     enum class MessageType : uint32_t

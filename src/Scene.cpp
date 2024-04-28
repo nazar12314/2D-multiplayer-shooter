@@ -8,6 +8,7 @@
 #include "ExampleScenes.h"
 #include "Tank.h"
 #include "MapManager.h"
+#include "Multiplayer.h"
 #include "MyMath.h"
 #include "PlayerManager.h"
 
@@ -22,6 +23,7 @@ void game()
 	// Singletons
 	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
+	GameObject::create("Multiplayer")->addComponent<Multiplayer>(true);
 
 	// Players
 	auto player1Main = PlayerManager::instance()->addPlayer("Player 1", true);
