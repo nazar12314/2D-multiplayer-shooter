@@ -1,5 +1,7 @@
 #include "MyMath.h"
 
+#include <sstream>
+
 #include "Gizmos.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include "glm/gtx/closest_point.hpp"
@@ -243,5 +245,28 @@ float Math::evaluateEase(EaseType ease, float t)
 	case EaseType::InOutQuart: return t < 0.5 ? 8 * t * t * t * t : 1 - (float)pow(-2 * t + 2, 4) / 2;
 	}
 
-	throw std::runtime_error("Unknown ease type: " + (int)ease);
+	throw std::runtime_error("Unknown ease type.");
+}
+
+std::string uuid::generate_uuid_v4()
+{
+	std::stringstream ss;
+	int i;
+	ss << std::hex;
+	for (i = 0; i < 8; i++)
+		ss << dis(gen);
+	ss << "-";
+	for (i = 0; i < 4; i++)
+		ss << dis(gen);
+	ss << "-4";
+	for (i = 0; i < 3; i++)
+		ss << dis(gen);
+	ss << "-";
+	ss << dis2(gen);
+	for (i = 0; i < 3; i++)
+		ss << dis(gen);
+	ss << "-";
+	for (i = 0; i < 12; i++)
+		ss << dis(gen);
+	return ss.str();
 }

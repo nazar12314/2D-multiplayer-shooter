@@ -3,6 +3,7 @@
 #include "Singleton.h"
 #include "Multiplayer/Server.h"
 
+class Player;
 template <typename T>
 class Client;
 

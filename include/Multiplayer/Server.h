@@ -2,7 +2,6 @@
 
 #include <boost/asio.hpp>
 #include <boost/lockfree/queue.hpp>
-#include <iostream>
 #include <memory>
 #include <set>
 #include <thread>
@@ -13,14 +12,14 @@ template <typename T> class Server
 	boost::asio::io_context io_context;
 	std::unique_ptr<boost::asio::io_context::work> work;
 	tcp::acceptor acceptor;
-	boost::lockfree::queue<net::Message<T>*> message_queue {1024};
+	boost::lockfree::queue<net::OwnedMessage<T>*> message_queue {1024};
 	std::set<std::shared_ptr<net::Connection<T>>> connections;
 	std::thread io_context_thread;
 	std::thread loop_thread;
 
 	void start_accept()
 	{
-		acceptor.async_accept([this](boost::system::error_code ec, tcp::socket socket)
+		acceptor.async_accept([this](const boost::system::error_code& ec, tcp::socket socket)
 		{
 			if (!ec)
 			{
@@ -33,8 +32,7 @@ template <typename T> class Server
 	}
 
 public:
-	explicit Server(short port) :
-		acceptor(io_context, tcp::endpoint(tcp::v4(), port))
+	explicit Server(short port): acceptor(io_context, tcp::endpoint(tcp::v4(), port))
 	{
 		work = std::make_unique<boost::asio::io_context::work>(io_context);
 		start_accept();
@@ -52,39 +50,17 @@ public:
 			loop_thread.join();
 	}
 
-	template <typename DataType> void message_clients(T msg_type, const DataType& message_body)
+	template <typename DataType> void message_clients(T msg_type, const DataType& message_body, std::shared_ptr<net::Connection<T>> ignore_client = nullptr)
 	{
 		for (auto& connection : connections)
 		{
-			if (connection->is_connected())
-			{
-				net::Message<T> msg;
-				msg.header.id = msg_type;
-				msg.set_body(message_body);
+			if (connection == ignore_client || !connection->is_connected()) continue;
 
-				connection->write(msg);
-			}
-		}
-	}
+			net::Message<T> msg;
+			msg.header.id = msg_type;
+			msg.set_body(message_body);
 
-	void print_messages()
-	{
-		net::Message<T>* msg_ptr;
-
-		while (message_queue.pop(msg_ptr))
-		{
-			if (msg_ptr)
-			{
-				//                std::cout << "Received message ID: " << msg_ptr->header.id << ", Size: " << msg_ptr->header.size << std::endl;
-
-				auto objDesc = msg_ptr->template get_body<net::PlayerGameData>();
-
-				std::cout << "Object ID: " << objDesc.id << std::endl;
-				std::cout << "Object Name: " << objDesc.name << std::endl;
-				std::cout << "Object Position: (" << objDesc.position.x << ", " << objDesc.position.y << ")" << std::endl;
-				std::cout << "Object Rotation: " << objDesc.rotation << std::endl;
-				std::cout << std::endl;
-			}
+			connection->write(msg);
 		}
 	}
 

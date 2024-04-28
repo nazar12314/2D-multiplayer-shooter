@@ -64,7 +64,6 @@ void Multiplayer::updateClientSend() const
 
 	net::PlayerGameData data;
 	data.id = self->id();
-	memcpy(data.name, self->name().c_str(), self->name().size());
 	data.position = self->tank()->transform()->getPos();
 	data.rotation = self->tank()->transform()->getRot();
 
@@ -72,13 +71,14 @@ void Multiplayer::updateClientSend() const
 }
 void Multiplayer::updateClientReceive() const
 {
-	net::Message<net::MessageType>* msg_ptr;
-	while (_client->message_queue.pop(msg_ptr))
+	net::OwnedMessage<net::MessageType>* omsg_ptr;
+	while (_client->message_queue.pop(omsg_ptr))
 	{
 		//auto body = msg_ptr->get_body<net::ObjectDescription>();
 		//std::cout << "Client received message: " << body.id << std::endl;
 		//std::cout << "Client received message: " << body.name << std::endl;
 
+		net::Message<net::MessageType>* msg_ptr = omsg_ptr->msg;
 		switch (msg_ptr->header.id)
 		{
 		case net::MessageType::UPDATE_PLAYER: {
@@ -90,8 +90,9 @@ void Multiplayer::updateClientReceive() const
 			break;
 		}
 		case net::MessageType::ADD_PLAYER: {
-			auto [id, name] = msg_ptr->get_body<net::PlayerConnectionData>();
-			PlayerManager::instance()->addPlayer(name, false);
+			auto body = msg_ptr->get_body<net::PlayerConnectionData>();
+
+			PlayerManager::instance()->addPlayer(body.name, false);
 			break;
 		}
 		}

@@ -9,14 +9,12 @@ template <typename T> class Client
 	tcp::socket socket;
 	net::Message<T> message;
 
-	boost::lockfree::queue<net::Message<T>*> message_queue {1024};
+	boost::lockfree::queue<net::OwnedMessage<T>*> message_queue {1024};
 	std::shared_ptr<net::Connection<T>> connection;
 
 	std::thread io_context_thread;
 
 public:
-	int id = -1;
-
 	Client(const std::string& host, const std::string& port) : socket(io_context)
 	{
 		connect(host, port);

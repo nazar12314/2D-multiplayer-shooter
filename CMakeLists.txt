@@ -78,14 +78,13 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/Bullet.cpp"
 	  "include/Custom/Singleton.h"
 	  "src/Custom/MapManager.cpp"
-	  "include/Multiplayer/net_modules.h"
 	  "include/Multiplayer/Client.h"
 	  "include/Multiplayer/Server.h"
 	  "src/Component/Renderer/ParticleSystem.cpp"
 	  "src/Custom/TankRemoteController.cpp"
 	  "src/Custom/PlayerManager.cpp"
 	  "src/Custom/Multiplayer.cpp"
-)
+	  "src/Multiplayer/net_modules.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
