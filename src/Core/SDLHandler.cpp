@@ -1,7 +1,10 @@
 #include "SDLHandler.h"
 
+#include <string>
+
 #include "Application.h"
 #include "Input.h"
+#include "Multiplayer.h"
 #include "SDL.h"
 #include "SDL_ttf.h"
 
@@ -10,7 +13,8 @@ void SDLHandler::init(const glm::ivec2& windowSize)
 	SDLHandler::windowSize = windowSize;
 	windowAspectRatio = (float)windowSize.x / windowSize.y;
 
-	window = SDL_CreateWindow("2D Multiplayer Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, SDL_WINDOW_RESIZABLE);
+	std::string title = "2D Multiplayer Shooter" + (Multiplayer::isServerCONFIG ? std::string(" Server") : std::string(" Client"));
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	surface = SDL_GetWindowSurface(window);
 	//SDL_SetRelativeMouseMode(SDL_TRUE);

@@ -8,10 +8,10 @@
 #include "Transform.h"
 #include "glm/common.hpp"
 
-CameraResizer::CameraResizer(GameObject* owner, float startSize, float sensitivity, float smoothness, bool zoomTowardsMouse) : Component(owner), targetSize(startSize),
+CameraResizer::CameraResizer(GameObject* owner, float sensitivity, float smoothness, bool zoomTowardsMouse) : Component(owner),
 	sensitivity(sensitivity), smoothness(smoothness), zoomTowardsMouse(zoomTowardsMouse)
 {
-	Camera::getMain()->setSize(startSize);
+	targetSize = Camera::getMain()->size();
 }
 
 void CameraResizer::update()

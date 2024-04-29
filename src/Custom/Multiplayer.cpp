@@ -34,6 +34,9 @@ void Multiplayer::addMainPlayer() const
 
 void Multiplayer::fixedUpdate()
 {
+	if (updatesCounter++ < updatesPerSync) return;
+	updatesCounter = 0;
+
 	if (_isServer)
 		updateServer();
 
@@ -50,10 +53,17 @@ void Multiplayer::updateServerSyncClients() const
 	{
 		if (msg_ptr->msg->header.id == net::MessageType::ADD_PLAYER)
 			syncNewPlayer(msg_ptr);
+		//else if (msg_ptr->msg->header.id == net::MessageType::UPDATE_PLAYER)
+		//{
+		//	auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
+		//	std::cout << body.id << '\n';
+		//}
 
-		auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
-		_server->message_clients(msg_ptr->msg->header.id, body, msg_ptr->owner);
+		_server->message_clients(*msg_ptr->msg, msg_ptr->owner);
+
+		delete msg_ptr;
 	}
+
 }
 void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const
 {
@@ -73,8 +83,8 @@ void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_p
 
 void Multiplayer::updateClient() const
 {
-	updateClientSend();
 	updateClientReceive();
+	updateClientSend();
 }
 void Multiplayer::updateClientSend() const
 {
@@ -89,6 +99,8 @@ void Multiplayer::updateClientSend() const
 	self->tank()->didShoot = false;
 
 	_client->send_message(net::MessageType::UPDATE_PLAYER, data);
+
+	//std::cout << "Client sent message: UPDATE_PLAYER: " << data.id << std::endl;
 }
 void Multiplayer::updateClientReceive() const
 {
@@ -114,6 +126,8 @@ void Multiplayer::updateClientReceive() const
 			remoteController->rotateTo(body.rotation);
 			remoteController->rotateGunTo(body.gunRotation);
 			if (body.shoot) remoteController->shoot();
+
+			//std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 
 			break;
 		}

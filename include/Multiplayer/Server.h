@@ -9,13 +9,12 @@
 
 template <typename T> class Server
 {
-	boost::asio::io_context io_context;
-	std::unique_ptr<boost::asio::io_context::work> work;
+	boost::asio::io_context context;
+	//std::unique_ptr<boost::asio::io_context::work> work;
 	tcp::acceptor acceptor;
 	boost::lockfree::queue<net::OwnedMessage<T>*> message_queue {1024};
 	std::set<std::shared_ptr<net::Connection<T>>> connections;
 	std::thread io_context_thread;
-	std::thread loop_thread;
 
 	void start_accept()
 	{
@@ -23,7 +22,7 @@ template <typename T> class Server
 		{
 			if (!ec)
 			{
-				auto connection = std::make_shared<net::Connection<T>>(std::move(socket), message_queue);
+				auto connection = std::make_shared<net::Connection<T>>(context, std::move(socket), message_queue);
 				connections.insert(connection);
 				connection->start();
 			}
@@ -32,36 +31,25 @@ template <typename T> class Server
 	}
 
 public:
-	explicit Server(short port): acceptor(io_context, tcp::endpoint(tcp::v4(), port))
+	explicit Server(short port): acceptor(context, tcp::endpoint(tcp::v4(), port))
 	{
-		work = std::make_unique<boost::asio::io_context::work>(io_context);
+		//work = std::make_unique<boost::asio::io_context::work>(io_context);
 		start_accept();
-		io_context_thread = std::thread([this] { io_context.run(); });
+		io_context_thread = std::thread([this] { context.run(); });
 	}
 
 	~Server()
 	{
-		work.reset();
+		//work.reset();
 
 		if (io_context_thread.joinable())
 			io_context_thread.join();
-
-		if (loop_thread.joinable())
-			loop_thread.join();
 	}
 
-	template <typename DataType> void message_clients(T msg_type, const DataType& message_body, std::shared_ptr<net::Connection<T>> ignore_client = nullptr)
+	void message_client(std::shared_ptr<net::Connection<T>> client, net::Message<T>& msg)
 	{
-		for (auto& connection : connections)
-		{
-			if (connection == ignore_client || !connection->is_connected()) continue;
-
-			net::Message<T> msg;
-			msg.header.id = msg_type;
-			msg.set_body(message_body);
-
-			connection->write(msg);
-		}
+		if (!client->is_connected())return;
+		client->write(msg);
 	}
 	template <typename DataType> void message_client(std::shared_ptr<net::Connection<T>> client, T msg_type, const DataType& message_body)
 	{
@@ -69,8 +57,27 @@ public:
 		msg.header.id = msg_type;
 		msg.set_body(message_body);
 
-		client->write(msg);
+		message_client(client, msg);
 	}
+
+	void message_clients(net::Message<T>& msg, std::shared_ptr<net::Connection<T>> ignore_client = nullptr)
+	{
+		for (auto& connection : connections)
+		{
+			if (connection == ignore_client) continue;
+
+			message_client(connection, msg);
+		}
+	}
+	template <typename DataType> void message_clients(T msg_type, const DataType& message_body, std::shared_ptr<net::Connection<T>> ignore_client = nullptr)
+	{
+		net::Message<T> msg;
+		msg.header.id = msg_type;
+		msg.set_body(message_body);
+
+		message_clients(msg, ignore_client);
+	}
+
 
 	friend class Multiplayer;
 };

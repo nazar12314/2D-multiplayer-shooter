@@ -17,7 +17,7 @@ Player* PlayerManager::addPlayer(const std::string& name, bool isMain, int id)
 	if (isMain)
 		id = Math::randomInt(0, 999999999);
 
-	auto tank = GameObject::create("Player", Math::randomVec2(-18.0f, 18.0f))->addComponent<Tank>(isMain);
+	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(isMain);
 	auto player = std::make_unique<Player>(id, name, tank);
 
 	auto playerPtr = player.get();

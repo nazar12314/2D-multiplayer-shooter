@@ -13,7 +13,7 @@ class FPSCounter
 	inline static float lastFPSPrintTime = 0;
 
 public:
-	inline static bool showFPS = true;
+	inline static bool showFPS = false;
 	inline static float fps = 0;
 
 	static void tick()

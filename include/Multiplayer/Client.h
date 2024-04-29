@@ -5,7 +5,7 @@
 
 template <typename T> class Client
 {
-	boost::asio::io_context io_context;
+	boost::asio::io_context context;
 	tcp::socket socket;
 	net::Message<T> message;
 
@@ -15,21 +15,28 @@ template <typename T> class Client
 	std::thread io_context_thread;
 
 public:
-	Client(const std::string& host, const std::string& port) : socket(io_context)
+	Client(const std::string& host, const std::string& port) : socket(context)
 	{
 		connect(host, port);
+	}
+	~Client()
+	{
+		close();
+
+		if (io_context_thread.joinable())
+			io_context_thread.join();
 	}
 
 	void connect(const std::string& host, const std::string& port)
 	{
-		tcp::resolver resolver(io_context);
+		tcp::resolver resolver(context);
 		auto endpoints = resolver.resolve(host, port);
 		boost::asio::connect(socket, endpoints);
 
-		connection = std::make_shared<net::Connection<T>>(std::move(socket), message_queue);
+		connection = std::make_shared<net::Connection<T>>(context, std::move(socket), message_queue, net::Connection<T>::owner::client);
 		connection->start();
 
-		io_context_thread = std::thread([this] { io_context.run(); });
+		io_context_thread = std::thread([this] { context.run(); });
 	}
 
 	template <typename DataType> void send_message(T msg_type, const DataType& msg_body)

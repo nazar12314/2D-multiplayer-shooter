@@ -52,6 +52,7 @@ namespace net
 		return result;
 	}
 
+
 	struct Data
 	{
 		int id;
@@ -90,9 +91,11 @@ namespace net
 			client
 		};
 
-	private:
 		tcp::socket socket;
+
+	private:
 		owner parent_type;
+		boost::asio::io_context& context;
 
 		std::array<char, 1024> buffer {};
 		std::deque<Message<T>> write_msgs;
@@ -101,7 +104,7 @@ namespace net
 		boost::lockfree::queue<OwnedMessage<T>*>& messages_queue;
 
 	public:
-		explicit Connection(tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type = owner::server);
+		explicit Connection(boost::asio::io_context& context, tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type = owner::server);
 
 		void start();
 
@@ -124,12 +127,14 @@ namespace net
 		OwnedMessage(Message<T>* msg): msg(msg) {}
 	};
 
-	template <typename T> Connection<T>::Connection(tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type):
-		socket(std::move(socket)), parent_type(parent_type), messages_queue(queue) {}
+	template <typename T> Connection<T>::Connection(boost::asio::io_context& context, tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type):
+		socket(std::move(socket)), parent_type(parent_type), context(context), messages_queue(queue) {}
+
 	template <typename T> void Connection<T>::start()
 	{
 		read_header();
 	}
+
 	template <typename T> void Connection<T>::add_message_to_queue()
 	{
 		auto msg_copy = new Message<T>(read_msg_);
@@ -144,10 +149,8 @@ namespace net
 	}
 	template <typename T> void Connection<T>::read_header()
 	{
-		auto self(this->shared_from_this());
-
 		boost::asio::async_read(socket, boost::asio::buffer(&read_msg_.header, sizeof(MessageHeader<T>)),
-		                        [this, self](boost::system::error_code ec, std::size_t length)
+		                        [this](const boost::system::error_code& ec, std::size_t)
 		                        {
 			                        if (!ec)
 			                        {
@@ -157,27 +160,22 @@ namespace net
 					                        read_body();
 				                        }
 				                        else
-				                        {
 					                        add_message_to_queue();
-				                        }
 			                        }
 			                        else
 			                        {
+				                        std::cerr << "Error on header read: " << ec.message() << std::endl;
 				                        socket.close();
 			                        }
 		                        });
 	}
 	template <typename T> void Connection<T>::read_body()
 	{
-		auto self(this->shared_from_this());
-
 		boost::asio::async_read(socket, boost::asio::buffer(read_msg_.body.data(), read_msg_.body.size()),
-		                        [this, self](boost::system::error_code ec, std::size_t length)
+		                        [this](const boost::system::error_code& ec, std::size_t)
 		                        {
 			                        if (!ec)
-			                        {
 				                        add_message_to_queue();
-			                        }
 			                        else
 			                        {
 				                        std::cerr << "Error on body read: " << ec.message() << std::endl;
@@ -187,25 +185,23 @@ namespace net
 	}
 	template <typename T> void Connection<T>::write(const Message<T>& msg)
 	{
-		bool write_in_progress = !write_msgs.empty();
-		write_msgs.push_back(msg);
+		boost::asio::post(context,
+		                  [this, msg]
+		                  {
+			                  bool write_in_progress = !write_msgs.empty();
+			                  write_msgs.push_back(msg);
 
-		if (!write_in_progress)
-		{
-			write_header();
-		}
+			                  if (!write_in_progress)
+				                  write_header();
+		                  });
 	}
 	template <typename T> void Connection<T>::write_header()
 	{
-		auto self(this->shared_from_this());
-
 		boost::asio::async_write(socket, boost::asio::buffer(&write_msgs.front().header, sizeof(MessageHeader<T>)),
-		                         [this, self](boost::system::error_code ec, std::size_t length)
+		                         [this](const boost::system::error_code& ec, std::size_t)
 		                         {
 			                         if (!ec)
-			                         {
 				                         write_body();
-			                         }
 			                         else
 			                         {
 				                         std::cerr << "Error on header write: " << ec.message() << std::endl;
@@ -215,18 +211,14 @@ namespace net
 	}
 	template <typename T> void Connection<T>::write_body()
 	{
-		auto self(this->shared_from_this());
-
 		boost::asio::async_write(socket, boost::asio::buffer(write_msgs.front().body.data(), write_msgs.front().body.size()),
-		                         [this, self](boost::system::error_code ec, std::size_t length)
+		                         [this](const boost::system::error_code& ec, std::size_t)
 		                         {
 			                         if (!ec)
 			                         {
 				                         write_msgs.pop_front();
 				                         if (!write_msgs.empty())
-				                         {
 					                         write_header();
-				                         }
 			                         }
 			                         else
 			                         {

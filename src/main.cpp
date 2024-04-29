@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "Multiplayer/Server.h"
+#include "Multiplayer.h"
 #include "Multiplayer/Client.h"
 
 //#define NETWORK
@@ -7,7 +7,10 @@
 
 void main_game()
 {
-	Application::start({800, 800});
+    std::cout << "Server (1) or Client (0)? ";
+    std::cin >> Multiplayer::isServerCONFIG;
+
+	Application::start({400, 400});
 
 	Application::loop();
 
