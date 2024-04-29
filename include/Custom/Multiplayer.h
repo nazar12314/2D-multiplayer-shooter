@@ -14,7 +14,7 @@ class Multiplayer : public Singleton<Multiplayer>
 	std::unique_ptr<Client<net::MessageType>> _client = nullptr;
 	std::unique_ptr<Server<net::MessageType>> _server = nullptr;
 
-	int updatesPerSync = 16;
+	int updatesPerSync = 1;
 	int updatesCounter = 0;
 
 	Multiplayer(GameObject* obj, bool isServer);

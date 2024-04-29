@@ -15,9 +15,9 @@ Multiplayer::Multiplayer(GameObject* obj, bool isServer): Singleton(obj), _isSer
 void Multiplayer::start()
 {
 	if (_isServer)
-		_server = std::make_unique<Server<net::MessageType>>(12345);
+		_server = std::make_unique<Server<net::MessageType>>(1234);
 
-	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "12345");
+	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "1234");
 	addMainPlayer();
 }
 void Multiplayer::addMainPlayer() const
