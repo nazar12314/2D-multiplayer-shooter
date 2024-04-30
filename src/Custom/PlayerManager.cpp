@@ -2,23 +2,25 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 
+#include "Camera.h"
+#include "CameraFollow.h"
 #include "MyMath.h"
 #include "Tank.h"
 
-Player::Player(int id, const std::string& name, Tank* tank) : _id(id), _name(name), _tank(tank) {}
+Player::Player(int id, bool isMain, const std::string& name, Tank* tank) : _id(id), _isMain(isMain), _name(name), _tank(tank) {}
 
 int Player::id() const { return _id; }
+bool Player::isMain() const { return _isMain; }
 std::string Player::name() const { return _name; }
 Tank* Player::tank() const { return _tank; }
 
-
-Player* PlayerManager::addPlayer(const std::string& name, bool isMain, int id)
+Player* PlayerManager::addPlayer(const std::string& name, int id, bool isMain)
 {
-	if (isMain)
-		id = Math::randomInt(0, 999999999);
-
 	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(isMain);
-	auto player = std::make_unique<Player>(id, name, tank);
+	auto player = std::make_unique<Player>(id, isMain, name, tank);
+
+	if (isMain)
+		Camera::getMain()->gameObject()->getComponent<CameraFollow>()->setTarget(tank->transform());
 
 	auto playerPtr = player.get();
 	players.push_back(std::move(player));
@@ -35,5 +37,5 @@ Player* PlayerManager::getPlayer(int id) const
 }
 Player* PlayerManager::getMainPlayer() const
 {
-	return players[0].get();
+	return std::ranges::find_if(players, [](const auto& player) { return player->_isMain; })->get();
 }

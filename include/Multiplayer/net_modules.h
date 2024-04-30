@@ -53,31 +53,39 @@ namespace net
 	}
 
 
-	struct Data
+	struct RegisterClientData
+	{
+		char name[20];
+	};
+
+	struct ClientAssignIdData
 	{
 		int id;
 	};
 
-	struct PlayerGameData : Data
+	struct AddPlayerData
 	{
+		int id;
+		char name[20];
+	};
+
+	struct PlayerGameData
+	{
+		int id;
 		glm::vec2 position;
 		float rotation;
 		float gunRotation;
 		bool shoot;
 	};
 
-	struct PlayerConnectionData : Data
-	{
-		char name[20];
-	};
 
 	enum MessageType
 	{
-		SERVER_STATUS,
+		REGISTER_CLIENT,
+		CLIENT_ASSIGN_ID,
 		ADD_PLAYER,
 		REMOVE_PLAYER,
-		UPDATE_PLAYER,
-		PLAYER_MESSAGE
+		UPDATE_PLAYER
 	};
 
 	template <typename T> struct OwnedMessage;
@@ -91,6 +99,7 @@ namespace net
 			client
 		};
 
+		int id = -1;
 		tcp::socket socket;
 
 	private:
@@ -106,7 +115,7 @@ namespace net
 	public:
 		explicit Connection(boost::asio::io_context& context, tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type = owner::server);
 
-		void start();
+		void start(int id = -1);
 
 		void add_message_to_queue();
 		void read_header();
@@ -130,8 +139,9 @@ namespace net
 	template <typename T> Connection<T>::Connection(boost::asio::io_context& context, tcp::socket socket, boost::lockfree::queue<OwnedMessage<T>*>& queue, owner parent_type):
 		socket(std::move(socket)), parent_type(parent_type), context(context), messages_queue(queue) {}
 
-	template <typename T> void Connection<T>::start()
+	template <typename T> void Connection<T>::start(int id)
 	{
+		this->id = id;
 		read_header();
 	}
 

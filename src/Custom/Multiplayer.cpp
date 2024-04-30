@@ -1,3 +1,4 @@
+// ReSharper disable CppUseStructuredBinding
 #include "Multiplayer.h"
 
 #include "DOTween.h"
@@ -18,73 +19,89 @@ void Multiplayer::start()
 		_server = std::make_unique<Server<net::MessageType>>(1234);
 
 	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "1234");
-	addMainPlayer();
+	registerClient();
 }
-void Multiplayer::addMainPlayer() const
+void Multiplayer::registerClient() const
 {
-	auto mainPlayer = PlayerManager::instance()->addPlayer("Player 1", true);
+	std::string name = "Player";
 
-	net::PlayerConnectionData data;
-	data.id = mainPlayer->id();
-	memcpy(data.name, mainPlayer->name().c_str(), mainPlayer->name().size());
-	data.name[mainPlayer->name().size()] = '\0';
+	net::RegisterClientData data;
+	memcpy(data.name, name.c_str(), name.size());
+	data.name[name.size()] = '\0';
 
-	_client->send_message(net::MessageType::ADD_PLAYER, data);
+	_client->send_message(net::MessageType::REGISTER_CLIENT, data);
 }
 
 void Multiplayer::fixedUpdate()
 {
-	if (updatesCounter++ < updatesPerSync) return;
-	updatesCounter = 0;
+	if (_updatesCounter++ < _updatesPerSync) return;
+	_updatesCounter = 0;
 
 	if (_isServer)
 		updateServer();
 
 	updateClient();
 }
-void Multiplayer::updateServer() const
+void Multiplayer::updateServer()
 {
 	updateServerSyncClients();
 }
-void Multiplayer::updateServerSyncClients() const
+void Multiplayer::updateServerSyncClients()
 {
 	net::OwnedMessage<net::MessageType>* msg_ptr;
 	while (_server->message_queue.pop(msg_ptr))
 	{
-		if (msg_ptr->msg->header.id == net::MessageType::ADD_PLAYER)
-			syncNewPlayer(msg_ptr);
-		//else if (msg_ptr->msg->header.id == net::MessageType::UPDATE_PLAYER)
-		//{
-		//	auto body = msg_ptr->msg->get_body<net::PlayerGameData>();
-		//	std::cout << body.id << '\n';
-		//}
-
-		_server->message_clients(*msg_ptr->msg, msg_ptr->owner);
+		if (msg_ptr->msg->header.id == net::MessageType::REGISTER_CLIENT)
+		{
+			registerClient(msg_ptr);
+		}
+		else
+		{
+			_server->message_clients(*msg_ptr->msg, msg_ptr->owner);
+		}
 
 		delete msg_ptr;
 	}
-
 }
-void Multiplayer::syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const
+void Multiplayer::registerClient(const net::OwnedMessage<net::MessageType>* msg_ptr)
 {
-	auto body = msg_ptr->msg->get_body<net::PlayerConnectionData>();
-	for (const auto& player : PlayerManager::instance()->players)
+	auto newPlayerId = msg_ptr->owner->id;
+
+	// Assign an id to the new client
+	net::ClientAssignIdData assignIdData;
+	assignIdData.id = newPlayerId;
+	_server->message_client(msg_ptr->owner, net::MessageType::CLIENT_ASSIGN_ID, assignIdData);
+
+	// Add newly connected player
+	auto data = msg_ptr->msg->get_body<net::RegisterClientData>();
+	ConnectedPlayer newPlayer = {newPlayerId, data.name};
+	_connectedPlayers.push_back(newPlayer);
+
+	// Add new player to all clients
+	net::AddPlayerData addNewPlayerData;
+	addNewPlayerData.id = newPlayerId;
+	memcpy(addNewPlayerData.name, data.name, strlen(data.name));
+	addNewPlayerData.name[strlen(data.name)] = '\0';
+
+	_server->message_clients(net::MessageType::ADD_PLAYER, addNewPlayerData, msg_ptr->owner);
+
+	// Add all players to the new client, including itself
+	for (const auto& player : _connectedPlayers)
 	{
-		if (player->id() == body.id) continue;
+		net::AddPlayerData addPlayerData;
+		addPlayerData.id = player.id;
+		memcpy(addPlayerData.name, player.name.c_str(), player.name.size());
+		addPlayerData.name[player.name.size()] = '\0';
 
-		net::PlayerConnectionData data;
-		data.id = player->id();
-		memcpy(data.name, player->name().c_str(), player->name().size());
-		data.name[player->name().size()] = '\0';
-
-		_server->message_client(msg_ptr->owner, net::MessageType::ADD_PLAYER, data);
+		_server->message_client(msg_ptr->owner, net::MessageType::ADD_PLAYER, addPlayerData);
 	}
 }
 
-void Multiplayer::updateClient() const
+void Multiplayer::updateClient()
 {
 	updateClientReceive();
-	updateClientSend();
+	if (_isConnected)
+		updateClientSend();
 }
 void Multiplayer::updateClientSend() const
 {
@@ -102,7 +119,7 @@ void Multiplayer::updateClientSend() const
 
 	//std::cout << "Client sent message: UPDATE_PLAYER: " << data.id << std::endl;
 }
-void Multiplayer::updateClientReceive() const
+void Multiplayer::updateClientReceive()
 {
 	net::OwnedMessage<net::MessageType>* o_msg_ptr;
 	while (_client->message_queue.pop(o_msg_ptr))
@@ -111,6 +128,25 @@ void Multiplayer::updateClientReceive() const
 
 		switch (msg_ptr->header.id)
 		{
+		case net::MessageType::CLIENT_ASSIGN_ID: {
+			auto body = msg_ptr->get_body<net::ClientAssignIdData>();
+
+			_client->set_id(body.id);
+
+			std::cout << "Client received message: CLIENT_ASSIGN_ID: " << body.id << std::endl;
+			break;
+		}
+		case net::MessageType::ADD_PLAYER: {
+			auto body = msg_ptr->get_body<net::AddPlayerData>();
+
+			bool isMain = body.id == _client->id();
+			PlayerManager::instance()->addPlayer(body.name, body.id, isMain);
+
+			if (isMain) _isConnected = true;
+
+			std::cout << "Client received message: ADD_PLAYER: " << body.name << std::endl;
+			break;
+		}
 		case net::MessageType::UPDATE_PLAYER: {
 			auto body = msg_ptr->get_body<net::PlayerGameData>();
 
@@ -129,14 +165,6 @@ void Multiplayer::updateClientReceive() const
 
 			//std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 
-			break;
-		}
-		case net::MessageType::ADD_PLAYER: {
-			auto body = msg_ptr->get_body<net::PlayerConnectionData>();
-
-			PlayerManager::instance()->addPlayer(body.name, false, body.id);
-
-			std::cout << "Client received message: ADD_PLAYER: " << body.name << std::endl;
 			break;
 		}
 		}

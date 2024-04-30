@@ -4,33 +4,41 @@
 #include "Multiplayer/Server.h"
 
 class Player;
-template <typename T>
-class Client;
+template <typename T> class Client;
 
 class Multiplayer : public Singleton<Multiplayer>
 {
+	struct ConnectedPlayer
+	{
+		int id;
+		std::string name;
+	};
+
 	bool _isServer = false;
+	std::vector<ConnectedPlayer> _connectedPlayers;
 
 	std::unique_ptr<Client<net::MessageType>> _client = nullptr;
 	std::unique_ptr<Server<net::MessageType>> _server = nullptr;
 
-	int updatesPerSync = 1;
-	int updatesCounter = 0;
+	int _updatesPerSync = 1;
+	int _updatesCounter = 0;
+
+	bool _isConnected = false;
 
 	Multiplayer(GameObject* obj, bool isServer);
 
 	void start() override;
-	void addMainPlayer() const;
+	void registerClient() const;
 
 	void fixedUpdate() override;
 
-	void updateServer() const;
-	void updateServerSyncClients() const;
-	void syncNewPlayer(const net::OwnedMessage<net::MessageType>* msg_ptr) const;
+	void updateServer();
+	void updateServerSyncClients();
+	void registerClient(const net::OwnedMessage<net::MessageType>* msg_ptr);
 
-	void updateClient() const;
+	void updateClient();
 	void updateClientSend() const;
-	void updateClientReceive() const;
+	void updateClientReceive();
 
 public:
 	inline static bool isServerCONFIG = true;

@@ -23,8 +23,6 @@ void game()
 	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
 	GameObject::create("Multiplayer")->addComponent<Multiplayer>(Multiplayer::isServerCONFIG);
-
-	follow->setTarget(PlayerManager::instance()->getMainPlayer()->tank()->transform());
 }
 
 void Scene::create()

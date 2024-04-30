@@ -27,6 +27,9 @@ public:
 			io_context_thread.join();
 	}
 
+	int id() const { return connection->id; }
+	void set_id(int id) { connection->id = id; }
+
 	void connect(const std::string& host, const std::string& port)
 	{
 		tcp::resolver resolver(context);

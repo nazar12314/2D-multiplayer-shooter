@@ -9,6 +9,8 @@
 
 template <typename T> class Server
 {
+	inline static int available_id = 0;
+
 	boost::asio::io_context context;
 	//std::unique_ptr<boost::asio::io_context::work> work;
 	tcp::acceptor acceptor;
@@ -23,8 +25,9 @@ template <typename T> class Server
 			if (!ec)
 			{
 				auto connection = std::make_shared<net::Connection<T>>(context, std::move(socket), message_queue);
+
 				connections.insert(connection);
-				connection->start();
+				connection->start(available_id++);
 			}
 			start_accept();
 		});

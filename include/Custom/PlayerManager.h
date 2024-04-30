@@ -8,13 +8,15 @@ class Tank;
 class Player
 {
 	int _id;
+	bool _isMain = false;
 	std::string _name;
 	Tank* _tank;
 
 public:
-	Player(int id, const std::string& name, Tank* tank);
+	Player(int id, bool isMain, const std::string& name, Tank* tank);
 
 	int id() const;
+	bool isMain() const;
 	std::string name() const;
 	Tank* tank() const;
 
@@ -28,9 +30,11 @@ class PlayerManager : public Singleton<PlayerManager>
 	PlayerManager(GameObject* obj) : Singleton(obj) {}
 
 public:
-	Player* addPlayer(const std::string& name, bool isMain, int id = {});
+	Player* addPlayer(const std::string& name, int id, bool isMain);
 	Player* getPlayer(int id) const;
 	Player* getMainPlayer() const;
+
+	static void createPlayerTank(const Player* player);
 
 	friend class GameObject;
 	friend class Multiplayer;
