@@ -62,21 +62,21 @@ void Transform::setParent(Transform* parent)
 	markDirtyRec();
 }
 
-glm::vec2 Transform::getPos()
+glm::vec2 Transform::pos()
 {
 	return getMatrixInv()[2];
 }
-float Transform::getRot()
+float Transform::rot()
 {
 	return glm::degrees(glm::atan(getMatrixInv()[0][1], getMatrixInv()[1][1]));
 }
-glm::vec2 Transform::getScale()
+glm::vec2 Transform::scale()
 {
 	return glm::vec2(length(getMatrixInv()[0]), length(getMatrixInv()[1]));
 }
-float Transform::getZ() const
+float Transform::z() const
 {
-	return _parent ? _localZ + _parent->getZ() : _localZ; // TODO: cache this
+	return _parent ? _localZ + _parent->z() : _localZ; // TODO: cache this
 }
 
 void Transform::setPos(glm::vec2 pos)
@@ -86,12 +86,12 @@ void Transform::setPos(glm::vec2 pos)
 }
 void Transform::setRot(float rot)
 {
-	this->_localRot = _parent ? rot - _parent->getRot() : rot;
+	this->_localRot = _parent ? rot - _parent->rot() : rot;
 	recalculateLocalMatrix();
 }
 void Transform::setScale(glm::vec2 scale)
 {
-	this->_localScale = _parent ? scale / _parent->getScale() : scale;
+	this->_localScale = _parent ? scale / _parent->scale() : scale;
 	recalculateLocalMatrix();
 }
 void Transform::setZ(float z) { this->_localZ = z; }
@@ -118,11 +118,11 @@ glm::mat3 Transform::getMatrixInv()
 
 void Transform::translate(const glm::vec2& v)
 {
-	setPos(_localPos + v);
+	setLocalPos(_localPos + v);
 }
 void Transform::rotate(float degrees)
 {
-	setRot(_localRot + degrees);
+	setLocalRot(_localRot + degrees);
 }
 
 void Transform::lookAt(const glm::vec2& target)
@@ -130,10 +130,10 @@ void Transform::lookAt(const glm::vec2& target)
 	setRot(glm::degrees(glm::atan(target.y - _localPos.y, target.x - _localPos.x)));
 }
 
-glm::vec2 Transform::up() { return glm::rotate(glm::vec2_up, glm::radians(getRot())); }
-glm::vec2 Transform::down() { return glm::rotate(glm::vec2_down, glm::radians(getRot())); }
-glm::vec2 Transform::left() { return glm::rotate(glm::vec2_left, glm::radians(getRot())); }
-glm::vec2 Transform::right() { return glm::rotate(glm::vec2_right, glm::radians(getRot())); }
+glm::vec2 Transform::up() { return glm::rotate(glm::vec2_up, glm::radians(rot())); }
+glm::vec2 Transform::down() { return glm::rotate(glm::vec2_down, glm::radians(rot())); }
+glm::vec2 Transform::left() { return glm::rotate(glm::vec2_left, glm::radians(rot())); }
+glm::vec2 Transform::right() { return glm::rotate(glm::vec2_right, glm::radians(rot())); }
 
 glm::vec2 Transform::localToWorldPos(const glm::vec2& pos)
 {
@@ -146,15 +146,15 @@ glm::vec2 Transform::globalToLocalPos(const glm::vec2& pos)
 
 Tween* Transform::doMove(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(getPos(), endValue, time, [this](glm::vec2 pos) { setPos(pos); })->setTarget(this);
+	return DOVirtual::vec2To(pos(), endValue, time, [this](glm::vec2 pos) { setPos(pos); })->setTarget(this);
 }
 Tween* Transform::doRotate(float endValue, float time)
 {
-	return DOVirtual::floatTo(getRot(), endValue, time, [this](float rot) { setRot(rot); })->setTarget(this);
+	return DOVirtual::floatTo(rot(), endValue, time, [this](float rot) { setRot(rot); })->setTarget(this);
 }
 Tween* Transform::doScale(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(getScale(), endValue, time, [this](glm::vec2 scale) { setScale(scale); })->setTarget(this);
+	return DOVirtual::vec2To(scale(), endValue, time, [this](glm::vec2 scale) { setScale(scale); })->setTarget(this);
 }
 
 Tween* Transform::doLocalMove(const glm::vec2& endValue, float time)
@@ -172,11 +172,11 @@ Tween* Transform::doLocalScale(const glm::vec2& endValue, float time)
 
 Tween* Transform::doMoveX(float endValue, float time)
 {
-	return DOVirtual::floatTo(getPos().x, endValue, time, [this](float x) { setPos({x, getPos().y}); })->setTarget(this);
+	return DOVirtual::floatTo(pos().x, endValue, time, [this](float x) { setPos({x, pos().y}); })->setTarget(this);
 }
 Tween* Transform::doMoveY(float endValue, float time)
 {
-	return DOVirtual::floatTo(getPos().y, endValue, time, [this](float y) { setPos({getPos().x, y}); })->setTarget(this);
+	return DOVirtual::floatTo(pos().y, endValue, time, [this](float y) { setPos({pos().x, y}); })->setTarget(this);
 }
 Tween* Transform::doLocalMoveX(float endValue, float time)
 {

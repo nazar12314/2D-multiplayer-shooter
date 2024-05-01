@@ -25,5 +25,5 @@ void CameraResizer::update()
 
 	if (!zoomTowardsMouse) return;
 	auto mouseWorldPos = cam->screenToWorldPoint(Input::mousePos());
-	cam->transform()->setPos(cam->transform()->getPos() + (prevSize - cam->size()) * (mouseWorldPos - cam->transform()->getPos()) / prevSize);
+	cam->transform()->setPos(cam->transform()->pos() + (prevSize - cam->size()) * (mouseWorldPos - cam->transform()->pos()) / prevSize);
 }

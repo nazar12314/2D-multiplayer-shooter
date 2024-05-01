@@ -21,7 +21,7 @@ Bullet::Bullet(GameObject* obj, Collider* colliderToIgnore, float speed, bool ex
 
 void Bullet::fixedUpdate()
 {
-	rb->moveTo(transform()->getPos() + transform()->right() * _speed * Time::fixedDeltaTime);
+	rb->moveTo(transform()->pos() + transform()->right() * _speed * Time::fixedDeltaTime);
 }
 
 void Bullet::onTriggerEnter(Collider* other)
@@ -32,6 +32,6 @@ void Bullet::onTriggerEnter(Collider* other)
 	if (tag != "Wall" && tag != "Tank") return;
 
 	if (_explode)
-		Physics::createImpact(transform()->getPos(), 5.0f, 10.0f);
+		Physics::createImpact(transform()->pos(), 5.0f, 10.0f);
 	destroy(gameObject());
 }

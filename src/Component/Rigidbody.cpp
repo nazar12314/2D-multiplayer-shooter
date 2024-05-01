@@ -73,13 +73,13 @@ void Rigidbody::substep(float dt) const
 
 	if (!Math::nearlyZero(_velocity))
 	{
-		auto newPos = transform()->getPos() + _velocity * dt;
+		auto newPos = transform()->pos() + _velocity * dt;
 		transform()->setPos(newPos);
 	}
 
 	if (!Math::nearlyZero(_angularVelocity))
 	{
-		float currRot = transform()->getRot();
+		float currRot = transform()->rot();
 		float newRot = currRot + glm::degrees(_angularVelocity) * dt;
 		transform()->setRot(newRot);
 	}
@@ -123,7 +123,7 @@ void Rigidbody::applyImpulse(glm::vec2 pos, glm::vec2 impulse)
 	if (_isStatic) return;
 
 	_velocity += impulse * _invMass;
-	auto r = pos - transform()->getPos();
+	auto r = pos - transform()->pos();
 	_angularVelocity += Math::cross(r, impulse) * _invInertia;
 }
 void Rigidbody::applyImpact(glm::vec2 point, float radius, float force)

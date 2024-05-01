@@ -13,8 +13,8 @@ namespace examples
 	{
 		if (target == nullptr) return;
 
-		auto newPos = mix(transform()->getPos(), target->transform()->getPos(), _smoothness * Time::fixedDeltaTime);
-		if (Math::nearlyEqual(transform()->getPos(), newPos)) return;
+		auto newPos = mix(transform()->pos(), target->transform()->pos(), _smoothness * Time::fixedDeltaTime);
+		if (Math::nearlyEqual(transform()->pos(), newPos)) return;
 		transform()->setPos(newPos);
 	}
 	void ECameraFollow::setTarget(GameObject* obj)

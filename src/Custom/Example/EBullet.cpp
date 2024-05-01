@@ -22,7 +22,7 @@ namespace examples
 
 	void EBullet::fixedUpdate()
 	{
-		rb->moveTo(transform()->getPos() + transform()->right() * _speed * Time::fixedDeltaTime);
+		rb->moveTo(transform()->pos() + transform()->right() * _speed * Time::fixedDeltaTime);
 	}
 
 	void EBullet::onTriggerEnter(Collider* other)
@@ -30,7 +30,7 @@ namespace examples
 		if (other->gameObject()->tag() != "Wall") return;
 
 		if (_explode)
-			Physics::createImpact(transform()->getPos(), 5.0f, 10.0f);
+			Physics::createImpact(transform()->pos(), 5.0f, 10.0f);
 		destroy(gameObject());
 	}
 }

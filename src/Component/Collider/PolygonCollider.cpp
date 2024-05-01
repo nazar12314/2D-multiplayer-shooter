@@ -38,7 +38,7 @@ std::optional<Collision> PolygonCollider::getCollisionWith(PolygonCollider* othe
 }
 std::optional<Collision> PolygonCollider::getCollisionWith(CircleCollider* other)
 {
-	auto [sep, norm] = Math::findMinSeparation(other->transform()->getPos(), other->_globalRadius, _globalVertices);
+	auto [sep, norm] = Math::findMinSeparation(other->transform()->pos(), other->_globalRadius, _globalVertices);
 	auto collided = sep <= 0;
 	if (!collided) return std::nullopt;
 
@@ -55,7 +55,7 @@ std::vector<glm::vec2> PolygonCollider::findContactPoints(const PolygonCollider*
 }
 std::vector<glm::vec2> PolygonCollider::findContactPoints(const CircleCollider* other) const
 {
-	return Math::findContactPoints(other->transform()->getPos(), other->_globalRadius, _globalVertices);
+	return Math::findContactPoints(other->transform()->pos(), other->_globalRadius, _globalVertices);
 }
 
 bool PolygonCollider::isPointInside(const glm::vec2& point) const

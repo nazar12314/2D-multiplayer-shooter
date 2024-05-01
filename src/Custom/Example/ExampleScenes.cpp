@@ -88,7 +88,7 @@ namespace examples
 		DOVirtual::delayedCall([text] { text->setColor(text->getColor().withAlpha(1)); }, 1);
 		DOVirtual::floatTo(0, 1, 3, [text1](float value) { text1->setColor(Color::RED.withAlpha(value)); });
 		DOVirtual::colorTo(Color::WHITE.withAlpha(0), Color::BLUE, 3, [text2](Color value) { text2->setColor(value); });
-		auto tween = DOVirtual::vec2To(text2->transform()->getPos() - glm::vec2(1, 0), text2->transform()->getPos() + glm::vec2(1, 0), 3,
+		auto tween = DOVirtual::vec2To(text2->transform()->pos() - glm::vec2(1, 0), text2->transform()->pos() + glm::vec2(1, 0), 3,
 		                               [text2](glm::vec2 value) { text2->transform()->setPos(value); });
 
 		//DOVirtual::delayedCall([tween] { tween->kill(); }, 1);

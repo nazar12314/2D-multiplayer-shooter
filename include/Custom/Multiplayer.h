@@ -34,17 +34,19 @@ class Multiplayer : public Singleton<Multiplayer>
 	void fixedUpdate() override;
 
 	void updateServer();
-	void updateServerSyncClients();
-	void registerClient(const net::OwnedMessage<net::MessageType>* msg_ptr);
+
+	void serverReceive();
+	void serverRegisterClient(const net::OwnedMessage<net::MessageType>* msg_ptr);
+	static void serverHandlePlayerActions(const net::OwnedMessage<net::MessageType>* msg_ptr);
+
+	void serverShareGameState() const;
 
 	void updateClient();
-	void updateClientSend() const;
-	void updateClientReceive();
+	void clientSendActions() const;
+	void clientReceive();
 
 public:
 	inline static bool isServerCONFIG = true;
-
-	const std::unique_ptr<Client<net::MessageType>>& client() const;
 
 	friend class GameObject;
 };

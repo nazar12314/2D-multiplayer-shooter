@@ -72,7 +72,16 @@ namespace net
 		Color color;
 	};
 
-	struct PlayerGameData
+	struct PlayerRequestData
+	{
+		int id;
+		float moveBy;
+		float rotateBy;
+		float rotateGunBy;
+		bool shoot;
+	};
+
+	struct PlayerUpdateData
 	{
 		int id;
 		glm::vec2 position;
@@ -88,7 +97,8 @@ namespace net
 		CLIENT_ASSIGN_ID,
 		ADD_PLAYER,
 		REMOVE_PLAYER,
-		UPDATE_PLAYER
+		PLAYER_ACTIONS,
+		PLAYER_UPDATE,
 	};
 
 	template <typename T> struct OwnedMessage;

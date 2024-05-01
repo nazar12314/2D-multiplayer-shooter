@@ -32,14 +32,14 @@ void RectRenderer::render(const Camera* camera) const
 	auto texture = _texture->texture();
 	if (texture == nullptr) return;
 
-	auto pos = transform()->getPos();
+	auto pos = transform()->pos();
 	auto size = getFinalSize();
-	float rot = transform()->getRot();
+	float rot = transform()->rot();
 	Renderer::renderTexWorld(texture, pos, size, rot, camera);
 }
 glm::vec2 RectRenderer::getFinalSize() const
 {
-	if (!_preserveAspect) return _size * transform()->getScale();
+	if (!_preserveAspect) return _size * transform()->scale();
 
 	auto size = _size;
 	auto ratio = _texture->getRatio();
@@ -47,7 +47,7 @@ glm::vec2 RectRenderer::getFinalSize() const
 		size.x = size.y * ratio;
 	else
 		size.y = size.x / ratio;
-	return size * transform()->getScale();
+	return size * transform()->scale();
 }
 
 glm::vec2 RectRenderer::size() const { return _size; }

@@ -46,10 +46,10 @@ public:
 
 	void setParent(Transform* parent);
 
-	glm::vec2 getPos();
-	float getRot();
-	glm::vec2 getScale();
-	float getZ() const;
+	glm::vec2 pos();
+	float rot();
+	glm::vec2 scale();
+	float z() const;
 
 	void setPos(glm::vec2 pos);
 	void setRot(float rot);

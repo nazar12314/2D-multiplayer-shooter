@@ -40,7 +40,7 @@ namespace examples
 			for (int i = 0; i < _spawnedShapes.size(); i++)
 			{
 				auto shape = _spawnedShapes[i];
-				if (shape->transform()->getPos().y >= -30) continue;
+				if (shape->transform()->pos().y >= -30) continue;
 
 				destroy(shape.get());
 				_spawnedShapes.erase_delayed(shape);

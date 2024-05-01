@@ -264,7 +264,7 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 Collider* Physics::raycastAt(const glm::vec2& point)
 {
 	colliders.apply_changes();
-	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->transform()->getZ() < b->transform()->getZ(); });
+	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->transform()->z() < b->transform()->z(); });
 
 	for (int i = colliders.size() - 1; i >= 0; i--)
 	{

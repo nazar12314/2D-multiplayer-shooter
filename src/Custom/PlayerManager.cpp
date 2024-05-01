@@ -1,19 +1,17 @@
 #include "PlayerManager.h"
 
-#include <boost/uuid/uuid_generators.hpp>
-
 #include "Camera.h"
 #include "CameraFollow.h"
 #include "Multiplayer.h"
 #include "MyMath.h"
 #include "Tank.h"
-#include "Multiplayer/Client.h"
 #include "Multiplayer/net_modules.h"
 
 Player* PlayerManager::addPlayer(const net::AddPlayerData& data, bool isMain)
 {
-	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(data.name, data.color, isMain);
-	auto player = std::make_unique<Player>(data.id, isMain, data.name, data.color, tank);
+	auto name = std::string(data.name) + " " + std::to_string(data.id);
+	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(name, data.color, isMain);
+	auto player = std::make_unique<Player>(data.id, isMain, name, data.color, tank);
 
 	if (isMain)
 		Camera::getMain()->gameObject()->getComponent<CameraFollow>()->setTarget(tank->transform());

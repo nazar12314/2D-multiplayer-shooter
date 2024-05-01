@@ -2,33 +2,28 @@
 
 #include "Component.h"
 
+class TankRemoteController;
 class Tank;
 class Rigidbody;
 class PolygonCollider;
 
 class TankPlayerController : public Component
 {
-	float _gunRotSpeed = 180;
+	float _moveSpeed = 50;
+	float _rotationSpeed = 30;
 
+	TankRemoteController* _remoteController = nullptr;
 	Rigidbody* _rb = nullptr;
-	bool _isMoving = false;
 
 	Tank* _tank = nullptr;
 
-	TankPlayerController(GameObject* obj, float moveSpeed = 50, float rotationSpeed = 30);
+	TankPlayerController(GameObject* obj, TankRemoteController* remoteController);
 
 	void start() override;
 
-	void update() override;
-	void updateGunPosition() const;
-
 	void fixedUpdate() override;
-
-public:
-	float moveSpeed;
-	float rotationSpeed;
-
-	bool isMoving() const;
+	void updateMovement() const;
+	void updateGunRotation() const;
 
 	friend class GameObject;
 };

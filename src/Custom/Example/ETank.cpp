@@ -66,21 +66,21 @@ namespace examples
 		auto mousePos = Input::mousePos();
 		auto mouseWorldPos = Camera::getMain()->screenToWorldPoint(mousePos);
 
-		auto targetDir = normalize(mouseWorldPos - transform()->getPos());
+		auto targetDir = normalize(mouseWorldPos - transform()->pos());
 
 		float rotateBy = _gunRotSpeed * Time::deltaTime();
-		auto newRot = Math::rotateTowardsDir(gunPivot->transform()->getRot(), targetDir, rotateBy);
-		if (!Math::nearlyEqual(newRot, gunPivot->transform()->getRot()))
+		auto newRot = Math::rotateTowardsDir(gunPivot->transform()->rot(), targetDir, rotateBy);
+		if (!Math::nearlyEqual(newRot, gunPivot->transform()->rot()))
 			gunPivot->transform()->setRot(newRot);
 	}
 
 	void ETank::shoot() const
 	{
-		float angle = glm::radians(gun->transform()->getRot());
+		float angle = glm::radians(gun->transform()->rot());
 		auto dir = glm::vec2(cos(angle), sin(angle));
 
-		auto spawnPos = transform()->getPos() + dir * gun->size().x * 0.85f;
-		auto bullet = GameObject::create("bullet", spawnPos, gun->transform()->getRot());
+		auto spawnPos = transform()->pos() + dir * gun->size().x * 0.85f;
+		auto bullet = GameObject::create("bullet", spawnPos, gun->transform()->rot());
 		bullet->addComponent<EBullet>(16, _explosiveBullets);
 	}
 }

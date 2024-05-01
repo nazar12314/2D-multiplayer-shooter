@@ -79,7 +79,7 @@ void Renderer::renderTexWorld(SDL_Texture* tex, const glm::vec2& pos, const glm:
 
 	auto screenPos = camera->worldToScreenPoint(pos);
 	auto screenSize = camera->worldToScreenSize(size);
-	renderTex(tex, screenPos, screenSize, rot - camera->transform()->getRot());
+	renderTex(tex, screenPos, screenSize, rot - camera->transform()->rot());
 }
 
 void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const Color& color, float width)

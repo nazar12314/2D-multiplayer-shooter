@@ -8,7 +8,7 @@ Particle::Particle(const glm::vec2& pos, float rot, float lifetime, const glm::v
 	pos(pos), rot(rot), lifetime(lifetime), speed(speed), scale(scale), color(color) {}
 
 ParticleSystem::ParticleSystem(GameObject* obj, const Sprite* sprite, const Color& color, int order): BaseRenderer(obj, color, order),
-                                                                                                      _lastDistanceEmitPos(transform()->getPos())
+                                                                                                      _lastDistanceEmitPos(transform()->pos())
 {
 	_texture = new Texture(sprite);
 }
@@ -23,13 +23,13 @@ void ParticleSystem::updateEmission()
 {
 	if (!_emitting)
 	{
-		_lastDistanceEmitPos = transform()->getPos();
+		_lastDistanceEmitPos = transform()->pos();
 		return;
 	}
 
 	if (_rateOverDistance.to != 0)
 	{
-		auto currPos = transform()->getPos();
+		auto currPos = transform()->pos();
 		auto dir = normalize(currPos - _lastDistanceEmitPos);
 		auto dis = distance(currPos, _lastDistanceEmitPos);
 		auto rateDis = 1 / _rateOverDistance.eval();

@@ -34,10 +34,9 @@ void Tank::start()
 	createParticles();
 	createNameTag();
 
+	_remoteController = addComponent<TankRemoteController>();
 	if (_controlledByPlayer)
-		addComponent<TankPlayerController>();
-	else
-		addComponent<TankRemoteController>();
+		_playerController = addComponent<TankPlayerController>(_remoteController);
 }
 void Tank::createGun()
 {
@@ -85,27 +84,30 @@ void Tank::update()
 	if (_shootTimer <= 0 && (Input::isKeyDown(SDLK_SPACE) || Input::isMouseButtonDown(SDL_BUTTON_LEFT)))
 	{
 		_shootTimer = 1.0f / _firerate;
-		shoot();
+		_remoteController->requestShoot();
 	}
 	else
 		_shootTimer -= Time::deltaTime();
 }
 void Tank::lateUpdate()
 {
-	_nameText->transform()->setPos(transform()->getPos() + glm::vec2(0, 2.0f));
+	_nameText->transform()->setPos(transform()->pos() + glm::vec2(0, 2.0f));
 	_nameText->transform()->setRot(0);
 }
 
-void Tank::shoot()
+void Tank::shoot(bool silent)
 {
-	didShoot = true;
+	if (!silent)
+		didShoot = true;
 
-	float angle = glm::radians(_gun->transform()->getRot());
+	float angle = glm::radians(_gun->transform()->rot());
 	auto dir = glm::vec2(cos(angle), sin(angle));
 
-	auto spawnPos = _gun->transform()->getPos() + dir * _gun->size().x * 0.5f;
-	auto bullet = GameObject::create("bullet", spawnPos, _gun->transform()->getRot());
+	auto spawnPos = _gun->transform()->pos() + dir * _gun->size().x * 0.5f;
+	auto bullet = GameObject::create("bullet", spawnPos, _gun->transform()->rot());
 	bullet->addComponent<Bullet>(_col, 16, true);
 }
 
 Transform* Tank::gunPivot() const { return _gunPivot; }
+TankPlayerController* Tank::playerController() const { return _playerController; }
+TankRemoteController* Tank::remoteController() const { return _remoteController; }
