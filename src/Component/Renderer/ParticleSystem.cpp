@@ -7,7 +7,8 @@
 Particle::Particle(const glm::vec2& pos, float rot, float lifetime, const glm::vec2& speed, const Curve<float>& scale, const Curve<Color>& color) :
 	pos(pos), rot(rot), lifetime(lifetime), speed(speed), scale(scale), color(color) {}
 
-ParticleSystem::ParticleSystem(GameObject* obj, const Sprite* sprite, const Color& color, int order): BaseRenderer(obj, color, order), _lastPos(transform()->getPos())
+ParticleSystem::ParticleSystem(GameObject* obj, const Sprite* sprite, const Color& color, int order): BaseRenderer(obj, color, order),
+                                                                                                      _lastDistanceEmitPos(transform()->getPos())
 {
 	_texture = new Texture(sprite);
 }
@@ -22,29 +23,42 @@ void ParticleSystem::updateEmission()
 {
 	if (!_emitting)
 	{
-		_lastPos = transform()->getPos();
+		_lastDistanceEmitPos = transform()->getPos();
 		return;
 	}
 
-	auto currPos = transform()->getPos();
-
-	_emissionTimer += _emissionRate.eval() * Time::deltaTime();
 	if (_rateOverDistance.to != 0)
 	{
-		_emissionTimer += distance(currPos, _lastPos) * _rateOverDistance.eval();
-		_lastPos = currPos;
+		auto currPos = transform()->getPos();
+		auto dir = normalize(currPos - _lastDistanceEmitPos);
+		auto dis = distance(currPos, _lastDistanceEmitPos);
+		auto rateDis = 1 / _rateOverDistance.eval();
+		while (dis >= rateDis)
+		{
+			dis -= rateDis;
+
+			_lastDistanceEmitPos += dir * rateDis;
+			emitParticle(_lastDistanceEmitPos - currPos);
+			rateDis = 1 / _rateOverDistance.eval();
+		}
 	}
 
+	_emissionTimer += _emissionRate.eval() * Time::deltaTime();
 	while (_emissionTimer >= 1)
 	{
 		_emissionTimer -= 1;
 
-		auto localPos = glm::vec2(Math::randomFloat(-shape.x, shape.x), Math::randomFloat(-shape.y, shape.y));
-		auto spawnPos = transform()->localToWorldPos(localPos);
-		auto particle = Particle(spawnPos, _rot.eval(), _lifetime.eval(), Math::randomDir() * _speed.eval(), _scale.eval(), _color.eval());
-		_particles.push_back(particle);
+		emitParticle();
 	}
 }
+void ParticleSystem::emitParticle(const glm::vec2& offset)
+{
+	auto localPos = glm::vec2(Math::randomFloat(-shape.x, shape.x), Math::randomFloat(-shape.y, shape.y));
+	auto spawnPos = transform()->localToWorldPos(localPos) + offset;
+	auto particle = Particle(spawnPos, _rot.eval(), _lifetime.eval(), Math::randomDir() * _speed.eval(), _scale.eval(), _color.eval());
+	_particles.push_back(particle);
+}
+
 void ParticleSystem::updateProperties()
 {
 	auto dt = Time::deltaTime();

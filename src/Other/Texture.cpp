@@ -4,6 +4,7 @@
 
 #include "Assets.h"
 #include "SDLHandler.h"
+#include "glm/common.hpp"
 
 void Texture::setColor(const Color& color)
 {
@@ -12,8 +13,8 @@ void Texture::setColor(const Color& color)
 		_texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, _surface);
 		_usingDefaultTexture = false;
 	}
-	SDL_SetTextureColorMod(_texture, color.r() * 255, color.g() * 255, color.b() * 255);
-	SDL_SetTextureAlphaMod(_texture, color.a() * 255);
+	SDL_SetTextureColorMod(_texture, glm::clamp(color.r(), 0.0f, 1.0f) * 255, glm::clamp(color.g(), 0.0f, 1.0f) * 255, glm::clamp(color.b(), 0.0f, 1.0f) * 255);
+	SDL_SetTextureAlphaMod(_texture, glm::clamp(color.a(), 0.0f, 1.0f) * 255);
 }
 
 Texture::Texture(const Sprite* sprite, const Color& color) : _surface(sprite->surface()), _texture(sprite->defaultTexture()), _usingDefaultTexture(true)

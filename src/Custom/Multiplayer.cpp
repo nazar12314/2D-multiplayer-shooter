@@ -26,8 +26,8 @@ void Multiplayer::registerClient() const
 	std::string name = "Player";
 
 	net::RegisterClientData data;
-	memcpy(data.name, name.c_str(), name.size());
-	data.name[name.size()] = '\0';
+	memcpy(data.name, name.c_str(), name.size() + 1);
+	data.color = Color::randomLight();
 
 	_client->send_message(net::MessageType::REGISTER_CLIENT, data);
 }
@@ -74,14 +74,14 @@ void Multiplayer::registerClient(const net::OwnedMessage<net::MessageType>* msg_
 
 	// Add newly connected player
 	auto data = msg_ptr->msg->get_body<net::RegisterClientData>();
-	ConnectedPlayer newPlayer = {newPlayerId, data.name};
+	ConnectedPlayer newPlayer = {newPlayerId, data.name, data.color};
 	_connectedPlayers.push_back(newPlayer);
 
 	// Add new player to all clients
 	net::AddPlayerData addNewPlayerData;
 	addNewPlayerData.id = newPlayerId;
-	memcpy(addNewPlayerData.name, data.name, strlen(data.name));
-	addNewPlayerData.name[strlen(data.name)] = '\0';
+	memcpy(addNewPlayerData.name, newPlayer.name.c_str(), newPlayer.name.size() + 1);
+	addNewPlayerData.color = newPlayer.color;
 
 	_server->message_clients(net::MessageType::ADD_PLAYER, addNewPlayerData, msg_ptr->owner);
 
@@ -90,8 +90,8 @@ void Multiplayer::registerClient(const net::OwnedMessage<net::MessageType>* msg_
 	{
 		net::AddPlayerData addPlayerData;
 		addPlayerData.id = player.id;
-		memcpy(addPlayerData.name, player.name.c_str(), player.name.size());
-		addPlayerData.name[player.name.size()] = '\0';
+		memcpy(addPlayerData.name, player.name.c_str(), player.name.size() + 1);
+		addPlayerData.color = player.color;
 
 		_server->message_client(msg_ptr->owner, net::MessageType::ADD_PLAYER, addPlayerData);
 	}
@@ -108,12 +108,12 @@ void Multiplayer::updateClientSend() const
 	auto self = PlayerManager::instance()->getMainPlayer();
 
 	net::PlayerGameData data;
-	data.id = self->id();
-	data.position = self->tank()->transform()->getPos();
-	data.rotation = self->tank()->transform()->getRot();
-	data.gunRotation = self->tank()->gunPivot()->getRot();
-	data.shoot = self->tank()->didShoot;
-	self->tank()->didShoot = false;
+	data.id = self->id;
+	data.position = self->tank->transform()->getPos();
+	data.rotation = self->tank->transform()->getRot();
+	data.gunRotation = self->tank->gunPivot()->getRot();
+	data.shoot = self->tank->didShoot;
+	self->tank->didShoot = false;
 
 	_client->send_message(net::MessageType::UPDATE_PLAYER, data);
 
@@ -140,7 +140,7 @@ void Multiplayer::updateClientReceive()
 			auto body = msg_ptr->get_body<net::AddPlayerData>();
 
 			bool isMain = body.id == _client->id();
-			PlayerManager::instance()->addPlayer(body.name, body.id, isMain);
+			PlayerManager::instance()->addPlayer(body, isMain);
 
 			if (isMain) _isConnected = true;
 
@@ -157,7 +157,7 @@ void Multiplayer::updateClientReceive()
 				continue;
 			}
 
-			auto remoteController = player->tank()->getComponent<TankRemoteController>();
+			auto remoteController = player->tank->getComponent<TankRemoteController>();
 			remoteController->moveTo(body.position);
 			remoteController->rotateTo(body.rotation);
 			remoteController->rotateGunTo(body.gunRotation);
@@ -170,3 +170,4 @@ void Multiplayer::updateClientReceive()
 		}
 	}
 }
+const std::unique_ptr<Client<net::MessageType>>& Multiplayer::client() const { return _client; }

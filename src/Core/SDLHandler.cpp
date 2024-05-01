@@ -34,6 +34,11 @@ void SDLHandler::handleEvents()
 			Application::doQuit = true;
 			return;
 		}
+		if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_RESIZED)
+		{
+			windowSize = {e.window.data1, e.window.data2};
+			windowAspectRatio = (float)windowSize.x / windowSize.y;
+		}
 
 		Input::handleInputEvent(e);
 

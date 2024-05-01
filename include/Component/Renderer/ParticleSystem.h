@@ -82,12 +82,13 @@ class ParticleSystem : public BaseRenderer
 	bool _emitting = true;
 	std::vector<Particle> _particles;
 
-	glm::vec2 _lastPos;
 	float _emissionTimer = 0;
+	glm::vec2 _lastDistanceEmitPos;
 
 	ParticleSystem(GameObject* obj, const Sprite* sprite, const Color& color = Color::WHITE, int order = 0);
 
 	void update() override;
+	void emitParticle(const glm::vec2& offset = {0, 0});
 	void updateAlive();
 	void updateProperties();
 	void updateEmission();

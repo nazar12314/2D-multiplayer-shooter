@@ -9,7 +9,7 @@
 
 template <typename T> class Server
 {
-	inline static int available_id = 0;
+	inline static int available_id = 1;
 
 	boost::asio::io_context context;
 	//std::unique_ptr<boost::asio::io_context::work> work;

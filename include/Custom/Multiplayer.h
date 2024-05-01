@@ -12,6 +12,7 @@ class Multiplayer : public Singleton<Multiplayer>
 	{
 		int id;
 		std::string name;
+		Color color;
 	};
 
 	bool _isServer = false;
@@ -42,6 +43,8 @@ class Multiplayer : public Singleton<Multiplayer>
 
 public:
 	inline static bool isServerCONFIG = true;
+
+	const std::unique_ptr<Client<net::MessageType>>& client() const;
 
 	friend class GameObject;
 };

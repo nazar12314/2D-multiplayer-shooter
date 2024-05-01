@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
 
 #include "Color.h"
 #include "Concepts.h"
@@ -25,13 +24,14 @@ class Asset
 	std::string _path;
 
 protected:
-	Asset(const std::string& path) : _path(path) {}
+	Asset(const std::string& path);
 	virtual ~Asset() = default;
 
+	// Returns true if the asset satisfies given properties
 	template <derived<Asset> T, typename... Ts> bool satisfies(const std::string& path, Ts... args) const;
 
 public:
-	const std::string& path() const { return _path; }
+	const std::string& path() const;
 
 	friend class Assets;
 };
@@ -46,10 +46,10 @@ class Sprite : public Asset
 	~Sprite() override;
 
 public:
-	bool satisfies() const { return true; }
+	static bool satisfies();
 
-	SDL_Surface* surface() const { return _surface; }
-	SDL_Texture* defaultTexture() const { return _defaultTex; }
+	SDL_Surface* surface() const;
+	SDL_Texture* defaultTexture() const;
 
 	friend class Assets;
 };
@@ -65,7 +65,7 @@ class Font : public Asset
 public:
 	bool satisfies(int size) const;
 
-	TTF_Font* font() const { return _font; }
+	TTF_Font* font() const;
 
 	friend class Assets;
 };

@@ -1,26 +1,23 @@
 #pragma once
 
+#include "Color.h"
 #include "Component.h"
 #include "Singleton.h"
 
+namespace net
+{
+	struct AddPlayerData;
+}
+
 class Tank;
 
-class Player
+struct Player
 {
-	int _id;
-	bool _isMain = false;
-	std::string _name;
-	Tank* _tank;
-
-public:
-	Player(int id, bool isMain, const std::string& name, Tank* tank);
-
-	int id() const;
-	bool isMain() const;
-	std::string name() const;
-	Tank* tank() const;
-
-	friend class PlayerManager;
+	int id;
+	bool isMain = false;
+	std::string name;
+	Color color;
+	Tank* tank;
 };
 
 class PlayerManager : public Singleton<PlayerManager>
@@ -30,11 +27,9 @@ class PlayerManager : public Singleton<PlayerManager>
 	PlayerManager(GameObject* obj) : Singleton(obj) {}
 
 public:
-	Player* addPlayer(const std::string& name, int id, bool isMain);
+	Player* addPlayer(const net::AddPlayerData& data, bool isMain);
 	Player* getPlayer(int id) const;
 	Player* getMainPlayer() const;
-
-	static void createPlayerTank(const Player* player);
 
 	friend class GameObject;
 	friend class Multiplayer;

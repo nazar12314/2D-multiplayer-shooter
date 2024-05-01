@@ -6,6 +6,7 @@
 #include <memory>
 #include <deque>
 
+#include "Color.h"
 #include "glm/vec2.hpp"
 
 using boost::asio::ip::tcp;
@@ -56,6 +57,7 @@ namespace net
 	struct RegisterClientData
 	{
 		char name[20];
+		Color color;
 	};
 
 	struct ClientAssignIdData
@@ -67,6 +69,7 @@ namespace net
 	{
 		int id;
 		char name[20];
+		Color color;
 	};
 
 	struct PlayerGameData

@@ -4,20 +4,16 @@
 
 #include "Camera.h"
 #include "CameraFollow.h"
+#include "Multiplayer.h"
 #include "MyMath.h"
 #include "Tank.h"
+#include "Multiplayer/Client.h"
+#include "Multiplayer/net_modules.h"
 
-Player::Player(int id, bool isMain, const std::string& name, Tank* tank) : _id(id), _isMain(isMain), _name(name), _tank(tank) {}
-
-int Player::id() const { return _id; }
-bool Player::isMain() const { return _isMain; }
-std::string Player::name() const { return _name; }
-Tank* Player::tank() const { return _tank; }
-
-Player* PlayerManager::addPlayer(const std::string& name, int id, bool isMain)
+Player* PlayerManager::addPlayer(const net::AddPlayerData& data, bool isMain)
 {
-	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(isMain);
-	auto player = std::make_unique<Player>(id, isMain, name, tank);
+	auto tank = GameObject::create("Player", Math::randomVec2(-5.0f, 5.0f))->addComponent<Tank>(data.name, data.color, isMain);
+	auto player = std::make_unique<Player>(data.id, isMain, data.name, data.color, tank);
 
 	if (isMain)
 		Camera::getMain()->gameObject()->getComponent<CameraFollow>()->setTarget(tank->transform());
@@ -30,12 +26,12 @@ Player* PlayerManager::getPlayer(int id) const
 {
 	for (const auto& player : players)
 	{
-		if (player->_id == id)
+		if (player->id == id)
 			return player.get();
 	}
 	return nullptr;
 }
 Player* PlayerManager::getMainPlayer() const
 {
-	return std::ranges::find_if(players, [](const auto& player) { return player->_isMain; })->get();
+	return std::ranges::find_if(players, [](const auto& player) { return player->isMain; })->get();
 }

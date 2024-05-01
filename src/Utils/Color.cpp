@@ -102,8 +102,30 @@ Color Color::lerp(const Color& c1, const Color& c2, float value)
 	auto a = c1.a() + (c2.a() - c1.a()) * value;
 	return {r, g, b, a};
 }
-Color Color::darken(float factor) const { return {x * (1 - factor), y * (1 - factor), z * (1 - factor)}; }
-Color Color::lighten(float factor) const { return {x + (1 - x) * factor, y + (1 - y) * factor, z + (1 - z) * factor}; }
+Color Color::darken(float factor) const
+{
+	Color hsv = ColorUtils::RGBtoHSV(*this);
+	hsv.z -= factor;
+	return ColorUtils::HSVtoRGB(hsv).withAlpha(w);
+}
+Color Color::lighten(float factor) const
+{
+	Color hsv = ColorUtils::RGBtoHSV(*this);
+	hsv.z += factor;
+	return ColorUtils::HSVtoRGB(hsv).withAlpha(w);
+}
+Color Color::saturate(float factor) const
+{
+	Color hsv = ColorUtils::RGBtoHSV(*this);
+	hsv.y += factor;
+	return ColorUtils::HSVtoRGB(hsv).withAlpha(w);
+}
+Color Color::desaturate(float factor) const
+{
+	Color hsv = ColorUtils::RGBtoHSV(*this);
+	hsv.y -= factor;
+	return ColorUtils::HSVtoRGB(hsv).withAlpha(w);
+}
 
 SDL_Color Color::toSDLColor() const
 {
@@ -113,6 +135,115 @@ SDL_Color Color::toSDLColor() const
 		static_cast<Uint8>(glm::clamp(b(), 0.0f, 1.0f) * 255),
 		static_cast<Uint8>(glm::clamp(a(), 0.0f, 1.0f) * 255)
 	};
+}
+
+Color ColorUtils::RGBtoHSV(const Color& in)
+{
+	float r = in.r();
+	float g = in.g();
+	float b = in.b();
+
+	Color out = {0, 0, 0};
+	float& h = out.x;
+	float& s = out.y;
+	float& v = out.z;
+
+	auto fCMax = std::max(std::max(r, g), b);
+	auto fCMin = std::min(std::min(r, g), b);
+	auto fDelta = fCMax - fCMin;
+
+	if (fDelta > 0)
+	{
+		if (fCMax == r)
+			h = 60 * (fmod(((g - b) / fDelta), 6));
+		else if (fCMax == g)
+			h = 60 * (((b - r) / fDelta) + 2);
+		else if (fCMax == b)
+			h = 60 * (((r - g) / fDelta) + 4);
+
+		if (fCMax > 0)
+			s = fDelta / fCMax;
+		else
+			s = 0;
+
+		v = fCMax;
+	}
+	else
+	{
+		h = 0;
+		s = 0;
+		v = fCMax;
+	}
+
+	if (h < 0)
+		h = 360 + h;
+
+	return out;
+}
+Color ColorUtils::HSVtoRGB(const Color& in)
+{
+	float h = in.x;
+	float s = in.y;
+	float v = in.z;
+
+	Color out = {0, 0, 0};
+	float& r = out.x;
+	float& g = out.y;
+	float& b = out.z;
+
+	auto fC = v * s; // Chroma
+	auto fHPrime = (float)fmod(h / 60.0f, 6);
+	auto fX = fC * (1 - (float)fabs(fmod(fHPrime, 2) - 1));
+	auto fM = v - fC;
+
+	if (0 <= fHPrime && fHPrime < 1)
+	{
+		r = fC;
+		g = fX;
+		b = 0;
+	}
+	else if (1 <= fHPrime && fHPrime < 2)
+	{
+		r = fX;
+		g = fC;
+		b = 0;
+	}
+	else if (2 <= fHPrime && fHPrime < 3)
+	{
+		r = 0;
+		g = fC;
+		b = fX;
+	}
+	else if (3 <= fHPrime && fHPrime < 4)
+	{
+		r = 0;
+		g = fX;
+		b = fC;
+	}
+	else if (4 <= fHPrime && fHPrime < 5)
+	{
+		r = fX;
+		g = 0;
+		b = fC;
+	}
+	else if (5 <= fHPrime && fHPrime < 6)
+	{
+		r = fC;
+		g = 0;
+		b = fX;
+	}
+	else
+	{
+		r = 0;
+		g = 0;
+		b = 0;
+	}
+
+	r += fM;
+	g += fM;
+	b += fM;
+
+	return out;
 }
 
 Color operator*(float v, Color c) { return {c.x * v, c.y * v, c.z * v, c.w * v}; }

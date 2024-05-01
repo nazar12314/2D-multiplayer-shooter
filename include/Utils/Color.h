@@ -11,9 +11,9 @@ struct Color
 
 	constexpr Color(float r, float g, float b, float a = 1) : x(r), y(g), z(b), w(a) {}
 	constexpr Color(int r, int g, int b, int a = 255) : x(static_cast<float>(r) / 255.f), y(static_cast<float>(g) / 255.f), z(static_cast<float>(b) / 255.f),
-	                                          w(static_cast<float>(a) / 255.f) {}
+	                                                    w(static_cast<float>(a) / 255.f) {}
 	constexpr Color(glm::vec3 rgb, float a = 1) : x(rgb.x), y(rgb.y), z(rgb.z), w(a) {}
-	constexpr Color() : Color {0, 0, 0, 0} {}
+	constexpr Color() : Color {0.0f, 0.0f, 0.0f, 0.0f} {}
 
 	static const Color WHITE;
 	static const Color BLACK;
@@ -63,6 +63,8 @@ struct Color
 
 	Color darken(float factor) const;
 	Color lighten(float factor) const;
+	Color saturate(float factor) const;
+	Color desaturate(float factor) const;
 
 	SDL_Color toSDLColor() const;
 };
@@ -73,3 +75,10 @@ inline std::ostream& operator<<(std::ostream& os, const Color& c)
 	os << "Color(" << c.r() << ", " << c.g() << ", " << c.b() << ", " << c.a() << ")";
 	return os;
 }
+
+class ColorUtils
+{
+public:
+	static Color RGBtoHSV(const Color& in);
+	static Color HSVtoRGB(const Color& in);
+};
