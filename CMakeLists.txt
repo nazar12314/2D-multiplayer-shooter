@@ -84,7 +84,8 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/TankRemoteController.cpp"
 	  "src/Custom/PlayerManager.cpp"
 	  "src/Custom/Multiplayer.cpp"
-	  "src/Multiplayer/net_modules.cpp")
+	  "src/Multiplayer/net_modules.cpp"
+      "include/Utils/Debug.h")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

@@ -16,6 +16,15 @@ void Texture::setColor(const Color& color)
 	SDL_SetTextureColorMod(_texture, glm::clamp(color.r(), 0.0f, 1.0f) * 255, glm::clamp(color.g(), 0.0f, 1.0f) * 255, glm::clamp(color.b(), 0.0f, 1.0f) * 255);
 	SDL_SetTextureAlphaMod(_texture, glm::clamp(color.a(), 0.0f, 1.0f) * 255);
 }
+void Texture::setAlpha(float alpha)
+{
+	if (_usingDefaultTexture)
+	{
+		_texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, _surface);
+		_usingDefaultTexture = false;
+	}
+	SDL_SetTextureAlphaMod(_texture, glm::clamp(alpha, 0.0f, 1.0f) * 255);
+}
 
 Texture::Texture(const Sprite* sprite, const Color& color) : _surface(sprite->surface()), _texture(sprite->defaultTexture()), _usingDefaultTexture(true)
 {
@@ -31,6 +40,8 @@ Texture::Texture(const Font* font, const std::string& text, const Color& color) 
 
 	_texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, _surface);
 	_size = {_surface->w, _surface->h};
+
+	setAlpha(color.a());
 }
 Texture::~Texture()
 {

@@ -29,4 +29,5 @@ public:
 	float getRatio() const;
 
 	void setColor(const Color& color);
+	void setAlpha(float alpha);
 };

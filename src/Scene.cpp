@@ -6,7 +6,6 @@
 #include "CameraResizer.h"
 #include "Tweener.h"
 #include "ExampleScenes.h"
-#include "Tank.h"
 #include "MapManager.h"
 #include "Multiplayer.h"
 #include "MyMath.h"
@@ -27,7 +26,7 @@ void game()
 
 void Scene::create()
 {
-	//examples::ExampleScenes::shapeSpawnerNoGravityWithTankScene();
+	//examples::ExampleScenes::textAndTweensScene();
 
 	game();
 }

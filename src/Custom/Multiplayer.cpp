@@ -6,8 +6,6 @@
 #include "Rigidbody.h"
 #include "Tank.h"
 #include "Transform.h"
-#include "Multiplayer/Client.h"
-#include "Multiplayer/Server.h"
 #include "TankRemoteController.h"
 
 Multiplayer::Multiplayer(GameObject* obj, bool isServer): Singleton(obj), _isServer(isServer) {}

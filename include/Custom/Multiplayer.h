@@ -2,9 +2,9 @@
 
 #include "Singleton.h"
 #include "Multiplayer/Server.h"
+#include "Multiplayer/Client.h"
 
 class Player;
-template <typename T> class Client;
 
 class Multiplayer : public Singleton<Multiplayer>
 {
@@ -34,11 +34,9 @@ class Multiplayer : public Singleton<Multiplayer>
 	void fixedUpdate() override;
 
 	void updateServer();
-
 	void serverReceive();
 	void serverRegisterClient(const net::OwnedMessage<net::MessageType>* msg_ptr);
 	static void serverHandlePlayerActions(const net::OwnedMessage<net::MessageType>* msg_ptr);
-
 	void serverShareGameState() const;
 
 	void updateClient();
