@@ -65,6 +65,7 @@ public:
 	void setTag(const std::string& tag);
 	void setActive(bool enabled);
 
+	template <derived<Component> T, typename... Ts> T* addComponent(T* component);
 	template <derived<Component> T, typename... Ts> T* addComponent(Ts&&... args);
 	template <derived<Component> T> bool hasComponent() const;
 	template <derived<Component> T> T* getComponent();
@@ -95,16 +96,19 @@ template <typename... Ts> void GameObject::sendCallback(void (Component::*func)(
 }
 
 #include "Component.h"
-template <derived<Component> T, typename... Ts> T* GameObject::addComponent(Ts&&... args)
+template <derived<Component> T, typename ... Ts> T* GameObject::addComponent(T* componentPtr)
 {
-	auto component = std::unique_ptr<T>(new T(this, std::forward<Ts>(args)...));
-	auto componentPtr = component.get();
-	_components.push_back(std::move(component));
+	auto componentUPtr = std::unique_ptr<T>(componentPtr);
+	_components.push_back(std::move(componentUPtr));
 
 	componentPtr->awake();
 	onComponentAddedGlobal(componentPtr);
 	componentPtr->start();
 	return componentPtr;
+}
+template <derived<Component> T, typename... Ts> T* GameObject::addComponent(Ts&&... args)
+{
+	return addComponent(new T(this, std::forward<Ts>(args)...));
 }
 template <derived<Component> T> bool GameObject::hasComponent() const
 {

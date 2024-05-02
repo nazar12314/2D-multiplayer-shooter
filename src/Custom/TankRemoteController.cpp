@@ -15,19 +15,19 @@ void TankRemoteController::start()
 	_tank = gameObject()->getComponent<Tank>();
 }
 
-void TankRemoteController::moveTo(const glm::vec2& pos) const
+void TankRemoteController::updatePos(const glm::vec2& pos) const
 {
 	_rb->moveTo(pos);
 }
-void TankRemoteController::rotateTo(float rot) const
+void TankRemoteController::updateRot(float rot) const
 {
 	_rb->rotateTo(rot);
 }
-void TankRemoteController::rotateGunTo(float rot) const
+void TankRemoteController::updateGunRot(float rot) const
 {
 	_tank->_gunPivot->setRot(rot);
 }
-void TankRemoteController::shoot(bool shoot) const
+void TankRemoteController::updateShoot(bool shoot) const
 {
 	if (shoot) _tank->shoot(true);
 }
@@ -84,7 +84,7 @@ float TankRemoteController::getAndResetRequestedGunRotation()
 	_requestedGunTargetRotation = 0;
 	return rotation;
 }
-bool TankRemoteController::getAndResetRequestShoot()
+bool TankRemoteController::getAndResetRequestedShoot()
 {
 	auto shoot = _requestShoot;
 	_requestShoot = false;

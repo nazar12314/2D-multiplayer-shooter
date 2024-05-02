@@ -7,6 +7,7 @@
 #include "Assets.h"
 #include "CircleCollider.h"
 #include "GameObject.h"
+#include "Gizmos.h"
 #include "Transform.h"
 
 PolygonCollider::PolygonCollider(GameObject* obj, const std::vector<glm::vec2>& vertices, bool isTrigger) : Collider(obj, isTrigger), _vertices(vertices)

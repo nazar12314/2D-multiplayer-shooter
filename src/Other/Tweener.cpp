@@ -1,27 +1,27 @@
-#include "DOTween.h"
+#include "Tweener.h"
 
-void DOVirtual::update(float deltaTime)
+void Tweener::update(float deltaTime)
 {
 	_tweens.apply_changes();
 	for (int i = 0; i < _tweens.size(); i++)
 		_tweens[i]->update(deltaTime);
 }
 
-Tween* DOVirtual::delayedCall(const std::function<void()>& function, float delay)
+Tween* Tweener::delayedCall(const std::function<void()>& function, float delay)
 {
 	auto delayedCall = new DelayedCall(function, delay);
 	_tweens.push_back(delayedCall);
 	return delayedCall;
 }
-Tween* DOVirtual::floatTo(float startValue, float endValue, float time, const std::function<void(float)>& setter)
+Tween* Tweener::floatTo(float startValue, float endValue, float time, const std::function<void(float)>& setter)
 {
 	return valueTo(startValue, endValue, time, setter);
 }
-Tween* DOVirtual::vec2To(const glm::vec2& startValue, const glm::vec2& endValue, float time, const std::function<void(glm::vec2)>& setter)
+Tween* Tweener::vec2To(const glm::vec2& startValue, const glm::vec2& endValue, float time, const std::function<void(glm::vec2)>& setter)
 {
 	return valueTo(startValue, endValue, time, setter);
 }
-Tween* DOVirtual::colorTo(const Color& startValue, const Color& endValue, float time, const std::function<void(Color)>& setter)
+Tween* Tweener::colorTo(const Color& startValue, const Color& endValue, float time, const std::function<void(Color)>& setter)
 {
 	return valueTo(startValue, endValue, time, setter);
 }
@@ -52,12 +52,12 @@ void Tween::finish()
 	if (_onComplete)
 		_onComplete();
 
-	DOVirtual::_tweens.erase_delayed(this);
+	Tweener::_tweens.erase_delayed(this);
 	delete this;
 }
 void Tween::kill()
 {
-	DOVirtual::_tweens.erase_delayed(this);
+	Tweener::_tweens.erase_delayed(this);
 	delete this;
 }
 Tween* Tween::setEase(EaseType ease)

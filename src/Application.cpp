@@ -7,7 +7,7 @@
 #include "SDLHandler.h"
 #include "FPSCounter.h"
 #include "Scene.h"
-#include "DOTween.h"
+#include "Tweener.h"
 
 void Application::start(const glm::ivec2& windowSize)
 {
@@ -30,7 +30,7 @@ void Application::loop()
 		FPSCounter::tick();
 
 		GameObject::sendCallbackAll(&Component::update);
-		DOVirtual::update(Time::deltaTime());
+		Tweener::update(Time::deltaTime());
 		GameObject::sendCallbackAll(&Component::lateUpdate);
 
 		if (doQuit) break;

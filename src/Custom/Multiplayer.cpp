@@ -1,7 +1,7 @@
 // ReSharper disable CppUseStructuredBinding
 #include "Multiplayer.h"
 
-#include "DOTween.h"
+#include "Tweener.h"
 #include "PlayerManager.h"
 #include "Tank.h"
 #include "Transform.h"
@@ -153,7 +153,7 @@ void Multiplayer::clientSendActions() const
 	data.moveBy = self->tank->remoteController()->getAndResetRequestedMovement();
 	data.rotateBy = self->tank->remoteController()->getAndResetRequestedRotation();
 	data.rotateGunBy = self->tank->remoteController()->getAndResetRequestedGunRotation();
-	data.shoot = self->tank->remoteController()->getAndResetRequestShoot();
+	data.shoot = self->tank->remoteController()->getAndResetRequestedShoot();
 
 	_client->send_message(net::MessageType::PLAYER_ACTIONS, data);
 
@@ -199,10 +199,10 @@ void Multiplayer::clientReceive()
 			}
 
 			auto remoteController = player->tank->remoteController();
-			remoteController->moveTo(body.position);
-			remoteController->rotateTo(body.rotation);
-			remoteController->rotateGunTo(body.gunRotation);
-			remoteController->shoot(body.shoot);
+			remoteController->updatePos(body.position);
+			remoteController->updateRot(body.rotation);
+			remoteController->updateGunRot(body.gunRotation);
+			remoteController->updateShoot(body.shoot);
 
 			//std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 			break;

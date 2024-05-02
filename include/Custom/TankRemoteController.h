@@ -24,10 +24,10 @@ class TankRemoteController : public Component
 
 	void start() override;
 
-	void moveTo(const glm::vec2& pos) const;
-	void rotateTo(float rot) const;
-	void rotateGunTo(float rot) const;
-	void shoot(bool shoot) const;
+	void updatePos(const glm::vec2& pos) const;
+	void updateRot(float rot) const;
+	void updateGunRot(float rot) const;
+	void updateShoot(bool shoot) const;
 
 	void applyMovement(float movement) const;
 	void applyRotation(float rotation) const;
@@ -46,7 +46,7 @@ public:
 	float getAndResetRequestedMovement();
 	float getAndResetRequestedRotation();
 	float getAndResetRequestedGunRotation();
-	bool getAndResetRequestShoot();
+	bool getAndResetRequestedShoot();
 
 	friend class GameObject;
 	friend class Multiplayer;

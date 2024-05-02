@@ -67,7 +67,7 @@ add_executable(${PROJECT_NAME}
 	 "include/Utils/Utils.h"
 	 "src/Component/Renderer/TextRenderer.cpp"
 	 "src/Component/Renderer/BaseRenderer.cpp"
-	  "src/Other/DOTween.cpp"
+	  "src/Other/Tweener.cpp"
 	  "src/Object/Object.cpp"
 	  "src/Utils/Utils.cpp"
 	  "src/Custom/Example/ExampleScenes.cpp"

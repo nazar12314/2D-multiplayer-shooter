@@ -47,11 +47,11 @@ class BoxCollider : public PolygonCollider
 {
 	glm::vec2 _size;
 
-	BoxCollider(GameObject* obj, glm::vec2 size = {1, 1}, bool isTrigger = false);
-
 	static std::vector<glm::vec2> calculateBoxVertices(glm::vec2 size);
 
 public:
+	BoxCollider(GameObject* obj, glm::vec2 size = {1, 1}, bool isTrigger = false);
+
 	glm::vec2 size() const;
 	void setSize(glm::vec2 size);
 

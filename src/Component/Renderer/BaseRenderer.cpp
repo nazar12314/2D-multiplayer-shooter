@@ -1,6 +1,7 @@
 #include "BaseRenderer.h"
 
 #include "Camera.h"
+#include "Tweener.h"
 #include "Renderer.h"
 #include "SDLHandler.h"
 #include "Texture.h"
@@ -23,6 +24,10 @@ void BaseRenderer::setColor(const Color& color)
 {
 	this->_color = color;
 	_texture->setColor(color);
+}
+Tween* BaseRenderer::doColor(const Color& endValue, float duration)
+{
+	return Tweener::colorTo(_color, endValue, duration, [this](Color c) { setColor(c); })->setTarget(transform());
 }
 
 RectRenderer::RectRenderer(GameObject* obj, glm::vec2 size, const Color& color, int order) : BaseRenderer(obj, color, order), _size(size) {}

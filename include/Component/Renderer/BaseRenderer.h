@@ -4,6 +4,7 @@
 #include "Color.h"
 #include "Renderer.h"
 
+class Tween;
 class Texture;
 class Camera;
 
@@ -31,6 +32,9 @@ public:
 
 	friend class GameObject;
 	friend class Renderer;
+
+	// DOTween
+	Tween* doColor(const Color& endValue, float duration);
 };
 
 class RectRenderer : public BaseRenderer

@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "DOTween.h"
+#include "Tweener.h"
 #include "GameObject.h"
 #include "Transform.h"
 
@@ -42,7 +42,7 @@ bool Object::isDestroyed() const { return _isDestroyed; }
 
 void Object::doKill() const
 {
-	for (Tween* tween : DOVirtual::_tweens)
+	for (Tween* tween : Tweener::_tweens)
 		if (tween->_target == this)
 			tween->kill();
 }

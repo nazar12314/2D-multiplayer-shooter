@@ -75,6 +75,7 @@ public:
 	Transform* transform() const;
 
 	// Method forwarding to Object
+	template <derived<Component> T, typename... Ts> T* addComponent(T* component);
 	template <derived<Component> T, typename... Ts> T* addComponent(Ts&&... args);
 	template <derived<Component> T> bool hasComponent() const;
 	template <derived<Component> T> T* getComponent();
@@ -87,6 +88,10 @@ public:
 	friend class Input;
 };
 
+template <derived<Component> T, typename ... Ts> T* Component::addComponent(T* component)
+{
+	return gameObject()->addComponent<T>(component);
+}
 template <derived<Component> T, typename... Ts> T* Component::addComponent(Ts&&... args)
 {
 	return gameObject()->addComponent<T>(std::forward<Ts>(args)...);

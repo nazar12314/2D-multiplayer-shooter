@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-#include "DOTween.h"
+#include "Tweener.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include "MyMath.h"
 #include "glm/gtx/matrix_transform_2d.hpp"
@@ -146,43 +146,43 @@ glm::vec2 Transform::globalToLocalPos(const glm::vec2& pos)
 
 Tween* Transform::doMove(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(pos(), endValue, time, [this](glm::vec2 pos) { setPos(pos); })->setTarget(this);
+	return Tweener::vec2To(pos(), endValue, time, [this](glm::vec2 pos) { setPos(pos); })->setTarget(this);
 }
 Tween* Transform::doRotate(float endValue, float time)
 {
-	return DOVirtual::floatTo(rot(), endValue, time, [this](float rot) { setRot(rot); })->setTarget(this);
+	return Tweener::floatTo(rot(), endValue, time, [this](float rot) { setRot(rot); })->setTarget(this);
 }
 Tween* Transform::doScale(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(scale(), endValue, time, [this](glm::vec2 scale) { setScale(scale); })->setTarget(this);
+	return Tweener::vec2To(scale(), endValue, time, [this](glm::vec2 scale) { setScale(scale); })->setTarget(this);
 }
 
 Tween* Transform::doLocalMove(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(_localPos, endValue, time, [this](glm::vec2 pos) { setLocalPos(pos); })->setTarget(this);
+	return Tweener::vec2To(_localPos, endValue, time, [this](glm::vec2 pos) { setLocalPos(pos); })->setTarget(this);
 }
 Tween* Transform::doLocalRotate(float endValue, float time)
 {
-	return DOVirtual::floatTo(_localRot, endValue, time, [this](float rot) { setLocalRot(rot); })->setTarget(this);
+	return Tweener::floatTo(_localRot, endValue, time, [this](float rot) { setLocalRot(rot); })->setTarget(this);
 }
 Tween* Transform::doLocalScale(const glm::vec2& endValue, float time)
 {
-	return DOVirtual::vec2To(_localScale, endValue, time, [this](glm::vec2 scale) { setLocalScale(scale); })->setTarget(this);
+	return Tweener::vec2To(_localScale, endValue, time, [this](glm::vec2 scale) { setLocalScale(scale); })->setTarget(this);
 }
 
 Tween* Transform::doMoveX(float endValue, float time)
 {
-	return DOVirtual::floatTo(pos().x, endValue, time, [this](float x) { setPos({x, pos().y}); })->setTarget(this);
+	return Tweener::floatTo(pos().x, endValue, time, [this](float x) { setPos({x, pos().y}); })->setTarget(this);
 }
 Tween* Transform::doMoveY(float endValue, float time)
 {
-	return DOVirtual::floatTo(pos().y, endValue, time, [this](float y) { setPos({pos().x, y}); })->setTarget(this);
+	return Tweener::floatTo(pos().y, endValue, time, [this](float y) { setPos({pos().x, y}); })->setTarget(this);
 }
 Tween* Transform::doLocalMoveX(float endValue, float time)
 {
-	return DOVirtual::floatTo(_localPos.x, endValue, time, [this](float x) { setLocalPos({x, _localPos.y}); })->setTarget(this);
+	return Tweener::floatTo(_localPos.x, endValue, time, [this](float x) { setLocalPos({x, _localPos.y}); })->setTarget(this);
 }
 Tween* Transform::doLocalMoveY(float endValue, float time)
 {
-	return DOVirtual::floatTo(_localPos.y, endValue, time, [this](float y) { setLocalPos({_localPos.x, y}); })->setTarget(this);
+	return Tweener::floatTo(_localPos.y, endValue, time, [this](float y) { setLocalPos({_localPos.x, y}); })->setTarget(this);
 }

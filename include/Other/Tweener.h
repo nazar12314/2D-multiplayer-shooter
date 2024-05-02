@@ -11,7 +11,7 @@
 class Object;
 class Tween;
 
-class DOVirtual
+class Tweener
 {
 	inline static VectorSafe<Tween*> _tweens;
 
@@ -63,7 +63,7 @@ public:
 	Tween* onComplete(const std::function<void()>& onComplete);
 	Tween* setTarget(Object* target);
 
-	friend class DOVirtual;
+	friend class Tweener;
 	friend class Object;
 };
 
@@ -76,7 +76,7 @@ class DelayedCall : public Tween
 public:
 	void finish() override;
 
-	friend class DOVirtual;
+	friend class Tweener;
 };
 
 template <typename T> class ValueTo : public Tween
@@ -93,10 +93,10 @@ template <typename T> class ValueTo : public Tween
 public:
 	Tween* from(T value);
 
-	friend class DOVirtual;
+	friend class Tweener;
 };
 
-template <typename T> Tween* DOVirtual::valueTo(T startValue, T endValue, float time, const std::function<void(T)>& setter)
+template <typename T> Tween* Tweener::valueTo(T startValue, T endValue, float time, const std::function<void(T)>& setter)
 {
 	auto valueTo = new ValueTo<T>(startValue, endValue, time, setter);
 	_tweens.push_back(valueTo);
