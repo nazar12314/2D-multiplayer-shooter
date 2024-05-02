@@ -18,6 +18,8 @@ struct Player
 	std::string name;
 	Color color;
 	Tank* tank;
+
+	Player(int id, bool isMain, const std::string& name, const Color& color, Tank* tank) : id(id), isMain(isMain), name(name), color(color), tank(tank) {}
 };
 
 class PlayerManager : public Singleton<PlayerManager>

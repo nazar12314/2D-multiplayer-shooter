@@ -28,6 +28,8 @@ class TankRemoteController : public Component
 	void updateRot(float rot) const;
 	void updateGunRot(float rot) const;
 	void updateShoot(bool shoot) const;
+	void updateVelocity(const glm::vec2& vel) const;
+	void updateAngularVelocity(float vel) const;
 
 	void applyMovement(float movement) const;
 	void applyRotation(float rotation) const;

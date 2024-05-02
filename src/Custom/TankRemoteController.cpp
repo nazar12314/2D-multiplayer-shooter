@@ -31,6 +31,14 @@ void TankRemoteController::updateShoot(bool shoot) const
 {
 	if (shoot) _tank->shoot(true);
 }
+void TankRemoteController::updateVelocity(const glm::vec2& vel) const
+{
+	_rb->setVelocity(vel);
+}
+void TankRemoteController::updateAngularVelocity(float vel) const
+{
+	_rb->setAngularVelocity(vel);
+}
 
 void TankRemoteController::applyMovement(float movement) const
 {
@@ -40,7 +48,7 @@ void TankRemoteController::applyRotation(float rotation) const
 {
 	_rb->addAngularForce(rotation);
 }
-void TankRemoteController::applyGunRotation(float rotation) 
+void TankRemoteController::applyGunRotation(float rotation)
 {
 	_targetGunRotation = rotation;
 }

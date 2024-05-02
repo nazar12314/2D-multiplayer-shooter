@@ -88,6 +88,10 @@ namespace net
 		float rotation;
 		float gunRotation;
 		bool shoot;
+
+		// Physics
+		glm::vec2 velocity;
+		float angularVelocity;
 	};
 
 

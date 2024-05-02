@@ -3,6 +3,7 @@
 
 #include "Tweener.h"
 #include "PlayerManager.h"
+#include "Rigidbody.h"
 #include "Tank.h"
 #include "Transform.h"
 #include "Multiplayer/Client.h"
@@ -133,6 +134,8 @@ void Multiplayer::serverShareGameState() const
 		data.gunRotation = playerObj->tank->gunPivot()->rot();
 		data.shoot = playerObj->tank->didShoot;
 		playerObj->tank->didShoot = false;
+		data.velocity = playerObj->tank->rb()->velocity();
+		data.angularVelocity = playerObj->tank->rb()->angularVelocity();
 
 		_server->message_clients(net::MessageType::PLAYER_UPDATE, data);
 	}
@@ -203,6 +206,9 @@ void Multiplayer::clientReceive()
 			remoteController->updateRot(body.rotation);
 			remoteController->updateGunRot(body.gunRotation);
 			remoteController->updateShoot(body.shoot);
+
+			remoteController->updateVelocity(body.velocity);
+			remoteController->updateAngularVelocity(body.angularVelocity);
 
 			//std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 			break;

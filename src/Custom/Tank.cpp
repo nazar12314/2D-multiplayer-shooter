@@ -27,7 +27,7 @@ void Tank::start()
 	auto tex = Assets::load<Sprite>("assets/sprites/square.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(1, 1.2f), _mainColor.darken(0.15f));
 	_col = addComponent<BoxCollider>(glm::vec2(1, 1.2f));
-	addComponent<Rigidbody>(4, 8);
+	_rb = addComponent<Rigidbody>(4, 8);
 
 	createGun();
 	createParts();
@@ -109,5 +109,6 @@ void Tank::shoot(bool silent)
 }
 
 Transform* Tank::gunPivot() const { return _gunPivot; }
+Rigidbody* Tank::rb() const { return _rb; }
 TankPlayerController* Tank::playerController() const { return _playerController; }
 TankRemoteController* Tank::remoteController() const { return _remoteController; }

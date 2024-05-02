@@ -3,6 +3,7 @@
 #include "Color.h"
 #include "Component.h"
 
+class Rigidbody;
 class TankPlayerController;
 class TextRenderer;
 class TankRemoteController;
@@ -18,6 +19,7 @@ class Tank : public Component
 	SpriteRenderer* _gun = nullptr;
 	Transform* _gunPivot = nullptr;
 	Collider* _col = nullptr;
+	Rigidbody* _rb = nullptr;
 	TextRenderer* _nameText = nullptr;
 
 	TankPlayerController* _playerController = nullptr;
@@ -41,7 +43,7 @@ public:
 	bool didShoot = false;
 
 	Transform* gunPivot() const;
-
+	Rigidbody* rb() const;
 	TankPlayerController* playerController() const;
 	TankRemoteController* remoteController() const;
 
