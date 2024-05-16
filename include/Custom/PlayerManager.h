@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "Singleton.h"
 
+class TextRenderer;
+
 namespace net
 {
 	struct AddPlayerData;
@@ -32,6 +34,8 @@ public:
 	Player* addPlayer(const net::AddPlayerData& data, bool isMain);
 	Player* getPlayer(int id) const;
 	Player* getMainPlayer() const;
+
+	void preparePlayerRespawn(Tank* tank);
 
 	friend class GameObject;
 	friend class Multiplayer;

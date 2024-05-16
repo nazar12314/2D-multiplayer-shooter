@@ -38,6 +38,7 @@ public:
 	float localRot() const { return _localRot; }
 	glm::vec2 localScale() const { return _localScale; }
 	float localZ() const { return _localZ; }
+	std::vector<Transform*> children() const { return _children; }
 
 	void setLocalPos(glm::vec2 pos);
 	void setLocalRot(float rot);

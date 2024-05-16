@@ -54,6 +54,8 @@ private:
 
 	template <typename... Ts> void sendCallback(void (Component::*func)(Ts...), Ts... args);
 
+	void setActiveRecursively(bool enabled);
+
 public:
 	std::string name() const;
 	std::string tag() const;
@@ -86,16 +88,23 @@ private:
 template <typename... Ts> void GameObject::sendCallbackAll(void (Component::*func)(Ts...), Ts&&... args)
 {
 	for (int i = 0; i < gameObjects.size(); i++)
+	{
+		if (!gameObjects[i]->_active) continue;
 		gameObjects[i]->sendCallback(func, std::forward<Ts>(args)...);
+	}
 }
+
+#include "Component.h"
 template <typename... Ts> void GameObject::sendCallback(void (Component::*func)(Ts...), Ts... args)
 {
 	throwIfDestroyed();
 	for (const auto& component : _components)
+	{
+		if (!component->_enabled) continue;
 		(component.get()->*func)(std::forward<Ts>(args)...);
+	}
 }
 
-#include "Component.h"
 template <derived<Component> T, typename ... Ts> T* GameObject::addComponent(T* componentPtr)
 {
 	auto componentUPtr = std::unique_ptr<T>(componentPtr);

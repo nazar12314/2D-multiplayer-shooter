@@ -74,6 +74,8 @@ public:
 	GameObject* gameObject() const;
 	Transform* transform() const;
 
+	void setEnabled(bool enabled);
+
 	// Method forwarding to Object
 	template <derived<Component> T, typename... Ts> T* addComponent(T* component);
 	template <derived<Component> T, typename... Ts> T* addComponent(Ts&&... args);

@@ -12,7 +12,7 @@ class Sprite;
 class Texture
 {
 	SDL_Surface* _surface;
-	SDL_Texture* _texture;
+	SDL_Texture* _texture = nullptr;
 	glm::vec2 _size;
 
 	bool _usingDefaultTexture;

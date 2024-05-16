@@ -5,11 +5,11 @@
 #include "CameraFollow.h"
 #include "CameraResizer.h"
 #include "Tweener.h"
-#include "ExampleScenes.h"
 #include "MapManager.h"
 #include "Multiplayer.h"
 #include "MyMath.h"
 #include "PlayerManager.h"
+#include "ScoreDisplayer.h"
 
 void game()
 {
@@ -21,12 +21,12 @@ void game()
 	// Singletons
 	GameObject::create("PlayerManager")->addComponent<PlayerManager>();
 	GameObject::create("MapManager")->addComponent<MapManager>();
+	GameObject::create("ScoreDisplayer")->addComponent<ScoreDisplayer>();
+
 	GameObject::create("Multiplayer")->addComponent<Multiplayer>(Multiplayer::isServerCONFIG);
 }
 
 void Scene::create()
 {
-	//examples::ExampleScenes::textAndTweensScene();
-
 	game();
 }

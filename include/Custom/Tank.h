@@ -3,6 +3,7 @@
 #include "Color.h"
 #include "Component.h"
 
+struct Player;
 class Rigidbody;
 class TankPlayerController;
 class TextRenderer;
@@ -11,11 +12,12 @@ class SpriteRenderer;
 
 class Tank : public Component
 {
-	float _firerate = 4;
+	float _firerate = 1;
 	std::string _name;
 	Color _mainColor;
 	bool _controlledByPlayer;
 
+	Player* _player = nullptr;
 	SpriteRenderer* _gun = nullptr;
 	Transform* _gunPivot = nullptr;
 	Collider* _col = nullptr;
@@ -42,10 +44,16 @@ class Tank : public Component
 public:
 	bool didShoot = false;
 
+	Player* player() const;
 	Transform* gunPivot() const;
 	Rigidbody* rb() const;
 	TankPlayerController* playerController() const;
 	TankRemoteController* remoteController() const;
+
+	void setPlayer(Player* player);
+
+	void kill(const Tank* killer);
+	void respawn(glm::vec2 pos);
 
 	friend class GameObject;
 	friend class TankRemoteController;

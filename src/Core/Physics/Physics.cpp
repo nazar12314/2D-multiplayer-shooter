@@ -68,14 +68,20 @@ void Physics::step(float dt, int substeps)
 	rigidbodies.apply_changes();
 	colliders.apply_changes();
 	for (int i = 0; i < rigidbodies.size(); i++)
+	{
+		if (!rigidbodies[i]->_enabled) continue;
 		rigidbodies[i]->step(dt);
+	}
 
 	for (int i = 0; i < substeps; i++)
 	{
 		rigidbodies.apply_changes();
 		colliders.apply_changes();
 		for (int j = 0; j < rigidbodies.size(); j++)
+		{
+			if (!rigidbodies[j]->_enabled) continue;
 			rigidbodies[j]->substep(dt / substeps);
+		}
 
 		solveCollisions();
 
@@ -138,12 +144,16 @@ void Physics::updateCollisionsSequential()
 
 	for (int i = 0; i < rigidbodies.size(); i++)
 	{
+		if (!rigidbodies[i]->_enabled) continue;
+
 		auto rb1 = rigidbodies[i];
 		auto col1 = rb1->_attachedCollider;
 		if (col1 == nullptr) continue;
 
 		for (int j = i + 1; j < rigidbodies.size(); j++)
 		{
+			if (!rigidbodies[j]->_enabled) continue;
+
 			auto rb2 = rigidbodies[j];
 			auto col2 = rb2->_attachedCollider;
 			if (col2 == nullptr) continue;
@@ -188,9 +198,11 @@ void Physics::updateCollisionsParallel()
 				}
 				auto x = y + j + 1;
 
+				if (!rigidbodies[y]->_enabled) continue;
 				auto col1 = rigidbodies[y]->_attachedCollider;
 				if (col1 == nullptr) continue;
 
+				if (!rigidbodies[x]->_enabled) continue;
 				auto col2 = rigidbodies[x]->_attachedCollider;
 				if (col2 == nullptr) continue;
 

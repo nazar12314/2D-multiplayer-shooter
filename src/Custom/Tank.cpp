@@ -10,9 +10,11 @@
 #include "Assets.h"
 #include "ParticleSystem.h"
 #include "Physics.h"
+#include "PlayerManager.h"
 #include "SpriteRenderer.h"
 #include "TankPlayerController.h"
 #include "Rigidbody.h"
+#include "ScoreDisplayer.h"
 #include "Transform.h"
 #include "TankRemoteController.h"
 #include "TextRenderer.h"
@@ -105,10 +107,30 @@ void Tank::shoot(bool silent)
 
 	auto spawnPos = _gun->transform()->pos() + dir * _gun->size().x * 0.5f;
 	auto bullet = GameObject::create("bullet", spawnPos, _gun->transform()->rot());
-	bullet->addComponent<Bullet>(_col, 16, true);
+	bullet->addComponent<Bullet>(this, _col, 24, true);
 }
 
+Player* Tank::player() const { return _player; }
 Transform* Tank::gunPivot() const { return _gunPivot; }
 Rigidbody* Tank::rb() const { return _rb; }
 TankPlayerController* Tank::playerController() const { return _playerController; }
 TankRemoteController* Tank::remoteController() const { return _remoteController; }
+
+void Tank::setPlayer(Player* player) { _player = player; }
+
+void Tank::kill(const Tank* killer) 
+{
+	Physics::createImpact(transform()->pos(), 5.0f, 12.0f);
+	gameObject()->setActive(false);
+
+	PlayerManager::instance()->preparePlayerRespawn(this);
+	ScoreDisplayer::instance()->addScore(killer->player(), 1);
+}
+void Tank::respawn(glm::vec2 pos)
+{
+	gameObject()->setActive(true);
+	transform()->setPos(pos);
+	_rb->setVelocity(glm::vec2(0));
+	_rb->setAngularVelocity(0);
+	_shootTimer = 0;
+}

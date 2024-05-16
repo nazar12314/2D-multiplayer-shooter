@@ -48,6 +48,18 @@ void GameObject::destroyImmediate()
 	gameObjects.erase_delayed_if([this](const GameObjectSPtr& obj) { return obj.get() == this; });
 }
 
+void GameObject::setActiveRecursively(bool enabled)
+{
+	throwIfDestroyed();
+	_active = enabled;
+
+	for (const auto& comp : _components)
+		comp->setEnabled(enabled);
+
+	for (const auto& child : _transform->children())
+		child->gameObject()->setActiveRecursively(enabled);
+}
+
 std::string GameObject::name() const
 {
 	throwIfDestroyed();
@@ -82,5 +94,5 @@ void GameObject::setTag(const std::string& tag)
 void GameObject::setActive(bool enabled)
 {
 	throwIfDestroyed();
-	_active = enabled;
+	setActiveRecursively(enabled);
 }

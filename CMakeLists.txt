@@ -85,7 +85,8 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/PlayerManager.cpp"
 	  "src/Custom/Multiplayer.cpp"
 	  "src/Multiplayer/net_modules.cpp"
-      "include/Utils/Debug.h")
+      "include/Utils/Debug.h"
+	   "include/Custom/ScoreDisplayer.h" "src/Custom/ScoreDisplayer.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
