@@ -128,9 +128,10 @@ void Tank::kill(const Tank* killer)
 }
 void Tank::respawn(glm::vec2 pos)
 {
-	gameObject()->setActive(true);
 	transform()->setPos(pos);
 	_rb->setVelocity(glm::vec2(0));
 	_rb->setAngularVelocity(0);
 	_shootTimer = 0;
+
+	gameObject()->setActive(true);
 }

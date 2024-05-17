@@ -93,6 +93,8 @@ class ParticleSystem : public BaseRenderer
 	void updateProperties();
 	void updateEmission();
 
+	void onEnable() override;
+
 	void render(const Camera* camera) const override;
 
 public:

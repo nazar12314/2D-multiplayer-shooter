@@ -21,4 +21,13 @@ Transform* Component::transform() const
 {
 	return gameObject()->transform();
 }
-void Component::setEnabled(bool enabled) { _enabled = enabled; }
+void Component::setEnabled(bool enabled)
+{
+	if (enabled == _enabled) return;
+	_enabled = enabled;
+
+	if (_enabled)
+		onEnable();
+	else
+		onDisable();
+}

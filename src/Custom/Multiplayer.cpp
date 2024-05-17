@@ -211,6 +211,21 @@ void Multiplayer::clientReceive()
 			//std::cout << "Client received message: UPDATE_PLAYER: " << body.id << std::endl;
 			break;
 		}
+		case net::MessageType::PLAYER_RESPAWN: {
+			auto body = msg_ptr->get_body<net::PlayerRespawnData>();
+
+			auto player = PlayerManager::instance()->getPlayer(body.id);
+			if (!player)
+			{
+				std::cout << "Player not found: " << body.id << std::endl;
+				continue;
+			}
+
+			player->tank->respawn(body.position);
+
+			//std::cout << "Client received message: PLAYER_RESPAWN: " << body.id << std::endl;
+			break;
+		}
 		}
 	}
 }

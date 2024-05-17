@@ -51,7 +51,14 @@ void PlayerManager::preparePlayerRespawn(Tank* tank)
 	Tweener::floatTo(5, 0, 5, [counter](float value) { counter->setText(std::to_string((int)std::ceil(value))); })->setEase(EaseType::Linear)
 		->onComplete([counter, player]
 		{
-			player->tank->respawn(Math::randomVec2(-5.0f, 5.0f));
+			if (Multiplayer::isServer)
+			{
+				auto respawnPos = Math::randomVec2(-5.0f, 5.0f);
+				player->tank->respawn(respawnPos);
+
+				auto playerRespawnData = net::PlayerRespawnData {player->id, respawnPos};
+				Multiplayer::instance()->sendToClients(net::MessageType::PLAYER_RESPAWN, playerRespawnData);
+			}
 			destroy(counter->gameObject());
 		});
 }

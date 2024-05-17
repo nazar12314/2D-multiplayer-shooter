@@ -47,5 +47,13 @@ public:
 	inline static std::string serverIP = "127.0.0.1";
 	inline static std::string serverPort = "1234";
 
+	template<typename T>
+	void sendToClients(net::MessageType type, T data) const;
+
 	friend class GameObject;
 };
+
+template <typename T> void Multiplayer::sendToClients(net::MessageType type, T data) const
+{
+	_server->message_clients(type, data);
+}

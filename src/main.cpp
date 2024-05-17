@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "Multiplayer.h"
 #include "Multiplayer/Client.h"
 
 void main_game()

@@ -32,6 +32,12 @@ class Component : public Object
 	// Called on component destruction
 	virtual void onDestroy() {}
 
+	// Called when the component is enabled
+	virtual void onEnable() {}
+
+	// Called when the component is disabled
+	virtual void onDisable() {}
+
 	// -- Collision --
 
 	// Called when a collision starts

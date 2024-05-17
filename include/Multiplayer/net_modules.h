@@ -94,6 +94,12 @@ namespace net
 		float angularVelocity;
 	};
 
+	struct PlayerRespawnData
+	{
+		int id;
+		glm::vec2 position;
+	};
+
 
 	enum MessageType
 	{
@@ -103,6 +109,7 @@ namespace net
 		REMOVE_PLAYER,
 		PLAYER_ACTIONS,
 		PLAYER_UPDATE,
+		PLAYER_RESPAWN,
 	};
 
 	template <typename T> struct OwnedMessage;

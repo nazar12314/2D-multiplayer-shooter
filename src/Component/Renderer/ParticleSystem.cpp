@@ -51,6 +51,13 @@ void ParticleSystem::updateEmission()
 		emitParticle();
 	}
 }
+void ParticleSystem::onEnable()
+{
+	_emissionTimer = 0;
+	_lastDistanceEmitPos = transform()->pos();
+	_particles.clear();
+}
+
 void ParticleSystem::emitParticle(const glm::vec2& offset)
 {
 	auto localPos = glm::vec2(Math::randomFloat(-shape.x, shape.x), Math::randomFloat(-shape.y, shape.y));
