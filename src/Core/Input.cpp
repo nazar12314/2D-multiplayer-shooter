@@ -16,26 +16,29 @@ void Input::clear()
 
 void Input::handleInputEvent(const SDL_Event& event)
 {
-	if (event.type == SDL_KEYDOWN)
+	if (!SDL_IsTextInputActive())
 	{
-		keysPressed.push_back(event.key.keysym.sym);
-		keysCurrentlyDown.push_back(event.key.keysym.sym);
-
-		if (event.key.keysym.sym == SDLK_ESCAPE)
+		if (event.type == SDL_KEYDOWN)
 		{
-			Application::windowFocused = !Application::windowFocused;
-			if (Application::windowFocused)
-				SDL_SetRelativeMouseMode(SDL_TRUE);
-			else
-				SDL_SetRelativeMouseMode(SDL_FALSE);
+			keysPressed.push_back(event.key.keysym.sym);
+			keysCurrentlyDown.push_back(event.key.keysym.sym);
+
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+			{
+				Application::windowFocused = !Application::windowFocused;
+				if (Application::windowFocused)
+					SDL_SetRelativeMouseMode(SDL_TRUE);
+				else
+					SDL_SetRelativeMouseMode(SDL_FALSE);
+			}
+		}
+		else if (event.type == SDL_KEYUP)
+		{
+			keysReleased.push_back(event.key.keysym.sym);
+			std::erase(keysCurrentlyDown, event.key.keysym.sym);
 		}
 	}
-	else if (event.type == SDL_KEYUP)
-	{
-		keysReleased.push_back(event.key.keysym.sym);
-		std::erase(keysCurrentlyDown, event.key.keysym.sym);
-	}
-	else if (event.type == SDL_MOUSEBUTTONDOWN)
+	if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
 		mouseButtonsPressed.push_back(event.button.button);
 		mouseButtonsCurrentlyDown.push_back(event.button.button);
@@ -74,6 +77,8 @@ void Input::handleInputEvent(const SDL_Event& event)
 	{
 		_mouseWheelValue = event.wheel.y;
 	}
+
+	onEvent(event);
 }
 
 bool Input::wasKeyPressed(SDL_Keycode key)
@@ -102,5 +107,5 @@ bool Input::isMouseButtonDown(Uint8 button)
 	return std::ranges::find(mouseButtonsCurrentlyDown, button) != mouseButtonsCurrentlyDown.end();
 }
 
-glm::ivec2 Input::mousePos() { return _mousePos; }
+const glm::ivec2& Input::mousePos() { return _mousePos; }
 float Input::mouseWheelValue() { return _mouseWheelValue; }

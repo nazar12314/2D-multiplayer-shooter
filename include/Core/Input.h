@@ -25,7 +25,9 @@ class Input
 
 	static void clear();
 	static void handleInputEvent(const SDL_Event& event);
+
 public:
+	inline static Action<SDL_Event> onEvent {};
 
 	// SDLK_{X} - X key, e.g. SDLK_w - W key
 	static bool wasKeyPressed(SDL_Keycode key);
@@ -37,7 +39,7 @@ public:
 	static bool wasMouseButtonReleased(Uint8 button);
 	static bool isMouseButtonDown(Uint8 button);
 
-	static glm::ivec2 mousePos();
+	static const glm::ivec2& mousePos();
 	static float mouseWheelValue();
 
 	friend class SDLHandler;

@@ -86,7 +86,7 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/Multiplayer.cpp"
 	  "src/Multiplayer/net_modules.cpp"
       "include/Utils/Debug.h"
-	   "include/Custom/ScoreDisplayer.h" "src/Custom/ScoreDisplayer.cpp")
+	   "include/Custom/ScoreDisplayer.h" "src/Custom/ScoreDisplayer.cpp" "include/Component/Renderer/InputField.h" "src/Component/Renderer/InputField.cpp" "include/Component/Renderer/Button.h" "src/Component/Renderer/Button.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)

@@ -8,14 +8,14 @@
 #include "Transform.h"
 #include "TankRemoteController.h"
 
-Multiplayer::Multiplayer(GameObject* obj, bool isServer): Singleton(obj), _isServer(isServer) {}
+Multiplayer::Multiplayer(GameObject* obj): Singleton(obj) {}
 
 void Multiplayer::start()
 {
-	if (_isServer)
-		_server = std::make_unique<Server<net::MessageType>>(1234);
+	if (isServer)
+		_server = std::make_unique<Server<net::MessageType>>(std::stoi(serverPort));
 
-	_client = std::make_unique<Client<net::MessageType>>("127.0.0.1", "1234");
+	_client = std::make_unique<Client<net::MessageType>>(serverIP, serverPort);
 	registerClient();
 }
 void Multiplayer::registerClient() const
@@ -34,7 +34,7 @@ void Multiplayer::fixedUpdate()
 	if (++_updatesCounter < _updatesPerSync) return;
 	_updatesCounter = 0;
 
-	if (_isServer)
+	if (isServer)
 		updateServer();
 
 	updateClient();
@@ -189,7 +189,7 @@ void Multiplayer::clientReceive()
 			break;
 		}
 		case net::MessageType::PLAYER_UPDATE: {
-			if (_isServer) break; // Ignore updates from server to itself
+			if (isServer) break; // Ignore updates from server to itself
 			auto body = msg_ptr->get_body<net::PlayerUpdateData>();
 
 			auto player = PlayerManager::instance()->getPlayer(body.id);

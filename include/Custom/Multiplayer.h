@@ -15,7 +15,6 @@ class Multiplayer : public Singleton<Multiplayer>
 		Color color;
 	};
 
-	bool _isServer = false;
 	std::vector<ConnectedPlayer> _connectedPlayers;
 
 	std::unique_ptr<Client<net::MessageType>> _client = nullptr;
@@ -26,7 +25,7 @@ class Multiplayer : public Singleton<Multiplayer>
 
 	bool _isConnected = false;
 
-	Multiplayer(GameObject* obj, bool isServer);
+	Multiplayer(GameObject* obj);
 
 	void start() override;
 	void registerClient() const;
@@ -44,7 +43,9 @@ class Multiplayer : public Singleton<Multiplayer>
 	void clientReceive();
 
 public:
-	inline static bool isServerCONFIG = true;
+	inline static bool isServer = true;
+	inline static std::string serverIP = "127.0.0.1";
+	inline static std::string serverPort = "1234";
 
 	friend class GameObject;
 };

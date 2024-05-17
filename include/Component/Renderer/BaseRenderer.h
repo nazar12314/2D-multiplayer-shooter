@@ -39,13 +39,12 @@ public:
 
 class RectRenderer : public BaseRenderer
 {
+protected:
 	glm::vec2 _size;
+	bool _preserveAspect = false;
 
 	void render(const Camera* camera) const override;
 	glm::vec2 getFinalSize() const;
-
-protected:
-	bool _preserveAspect = false;
 
 public:
 	RectRenderer(GameObject* obj, glm::vec2 size = {1, 1}, const Color& color = Color::WHITE, int order = 0);

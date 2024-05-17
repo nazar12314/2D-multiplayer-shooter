@@ -14,7 +14,7 @@ public:
 	}
 	void unsubscribe(int id)
 	{
-		callbacks.erase(id);
+		callbacks[id] = nullptr;
 	}
 
 	void operator+=(const std::function<void(Ts...)>& func)
@@ -25,6 +25,9 @@ public:
 	void operator()(Ts... args) const
 	{
 		for (auto& func : callbacks)
+		{
+			if (func == nullptr) continue;
 			func(args...);
+		}
 	}
 };

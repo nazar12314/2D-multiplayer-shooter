@@ -12,7 +12,8 @@ class TextRenderer : public RectRenderer
 	std::string _text;
 	Font* _font;
 
-	TextRenderer(GameObject* obj, const std::string& text = "", glm::vec2 size = {1, 1}, const Color& color = Color::WHITE, int order = 0, Font* font = nullptr);
+protected:
+	TextRenderer(GameObject* obj, const std::string& text = "", const glm::vec2& size = {1, 1}, const Color& color = Color::WHITE, int order = 0, Font* font = nullptr);
 
 	void updateTexture();
 

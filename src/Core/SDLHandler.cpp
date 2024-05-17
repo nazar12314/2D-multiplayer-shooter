@@ -13,13 +13,14 @@ void SDLHandler::init(const glm::ivec2& windowSize)
 	SDLHandler::windowSize = windowSize;
 	windowAspectRatio = (float)windowSize.x / windowSize.y;
 
-	std::string title = "2D Multiplayer Shooter" + (Multiplayer::isServerCONFIG ? std::string(" Server") : std::string(" Client"));
+	std::string title = "2D Multiplayer Shooter" + (Multiplayer::isServer ? std::string(" Server") : std::string(" Client"));
 	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, SDL_WINDOW_RESIZABLE);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	surface = SDL_GetWindowSurface(window);
 	//SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	TTF_Init();
+	SDL_StopTextInput();
 }
 
 void SDLHandler::handleEvents()

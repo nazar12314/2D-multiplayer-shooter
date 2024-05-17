@@ -28,6 +28,7 @@ void Texture::setAlpha(float alpha)
 
 Texture::Texture(const Sprite* sprite, const Color& color) : _surface(sprite->surface()), _texture(sprite->defaultTexture()), _usingDefaultTexture(true)
 {
+	if (_surface == nullptr) return;
 	_size = {_surface->w, _surface->h};
 
 	if (color != Color::WHITE)
@@ -35,9 +36,9 @@ Texture::Texture(const Sprite* sprite, const Color& color) : _surface(sprite->su
 }
 Texture::Texture(const Font* font, const std::string& text, const Color& color) : _usingDefaultTexture(false)
 {
-	_surface = TTF_RenderText_Blended(font->font(), text.data(), color.toSDLColor());
-	if (_surface == nullptr) return;
+	if (text.empty()) return;
 
+	_surface = TTF_RenderText_Blended(font->font(), text.data(), color.toSDLColor());
 	_texture = SDL_CreateTextureFromSurface(SDLHandler::renderer, _surface);
 	_size = {_surface->w, _surface->h};
 
