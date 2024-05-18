@@ -8,11 +8,12 @@
 #include "Assets.h"
 #include "CircleCollider.h"
 #include "Physics.h"
+#include "PlayerManager.h"
 #include "Tank.h"
 #include "Transform.h"
 
 Bullet::Bullet(GameObject* obj, Tank* shooter, Collider* colliderToIgnore, float speed, bool explode):
-	Component(obj), _speed(speed), _shooter(shooter), _explode(explode), _colliderToIgnore(colliderToIgnore)
+	Component(obj), _speed(speed), _explode(explode), _shooter(shooter), _colliderToIgnore(colliderToIgnore)
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/circle.png");
 	addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), Color::RED);
@@ -35,8 +36,10 @@ void Bullet::onTriggerEnter(Collider* other)
 	if (_explode)
 		Physics::createImpact(transform()->pos(), 5.0f, 10.0f);
 
-	if(tag == "Tank")
+	if (tag == "Tank")
 		other->getComponent<Tank>()->kill(_shooter);
+	else if (tag == "Wall")
+		other->getComponent<SpriteRenderer>()->setColor(_shooter->player()->color);
 
 	destroy(gameObject());
 }

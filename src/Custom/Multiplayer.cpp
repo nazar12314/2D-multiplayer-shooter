@@ -1,6 +1,7 @@
 // ReSharper disable CppUseStructuredBinding
 #include "Multiplayer.h"
 
+#include "MapManager.h"
 #include "Tweener.h"
 #include "PlayerManager.h"
 #include "Rigidbody.h"
@@ -79,6 +80,11 @@ void Multiplayer::serverRegisterClient(const net::OwnedMessage<net::MessageType>
 	auto data = msg_ptr->msg->get_body<net::RegisterClientData>();
 	ConnectedPlayer newPlayer = {newPlayerId, data.name, data.color};
 	_connectedPlayers.push_back(newPlayer);
+
+	// Send map data to the new client
+	net::MapInitData mapData;
+	mapData.mapSeed = MapManager::mapSeed;
+	_server->message_client(msg_ptr->owner, net::MessageType::MAP_INIT, mapData);
 
 	// Add new player to all clients
 	net::AddPlayerData addNewPlayerData;
@@ -224,6 +230,15 @@ void Multiplayer::clientReceive()
 			player->tank->respawn(body.position);
 
 			//std::cout << "Client received message: PLAYER_RESPAWN: " << body.id << std::endl;
+			break;
+		}
+		case net::MessageType::MAP_INIT: {
+			auto body = msg_ptr->get_body<net::MapInitData>();
+
+			auto mapSeed = body.mapSeed;
+			MapManager::createMap(mapSeed);
+
+			//std::cout << "Client received message: MAP_INIT" << std::endl;
 			break;
 		}
 		}

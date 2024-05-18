@@ -4,6 +4,9 @@
 
 class CameraResizer : public Component
 {
+	static constexpr float MIN_SIZE = 10.0f;
+	static constexpr float MAX_SIZE = 100.0f;
+
 	float targetSize;
 	float sensitivity;
 	float smoothness;

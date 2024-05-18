@@ -17,10 +17,11 @@ CameraResizer::CameraResizer(GameObject* owner, float sensitivity, float smoothn
 void CameraResizer::update()
 {
 	auto cam = Camera::getMain();
+	auto prevSize = cam->size();
 
 	//targetSize = glm::clamp(targetSize - sensitivity * Input::mouseWheelValue, 0.1f, 50.0f);
 	targetSize -= targetSize / 10 * sensitivity * Input::mouseWheelValue();
-	auto prevSize = cam->size();
+	targetSize = glm::clamp(targetSize, MIN_SIZE, MAX_SIZE);
 	cam->setSize(Math::lerp(cam->size(), targetSize, smoothness * Time::deltaTime()));
 
 	if (!zoomTowardsMouse) return;

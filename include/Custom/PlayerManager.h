@@ -26,6 +26,8 @@ struct Player
 
 class PlayerManager : public Singleton<PlayerManager>
 {
+	static constexpr float MIN_DIS_TO_OTHER = 10.0f;
+
 	std::vector<std::unique_ptr<Player>> players;
 
 	PlayerManager(GameObject* obj) : Singleton(obj) {}
@@ -35,7 +37,8 @@ public:
 	Player* getPlayer(int id) const;
 	Player* getMainPlayer() const;
 
-	void preparePlayerRespawn(Tank* tank);
+	void preparePlayerRespawn(const Tank* tank) const;
+	glm::vec2 getSpawnPos(Player* player = nullptr) const;
 
 	friend class GameObject;
 	friend class Multiplayer;

@@ -2,7 +2,6 @@
 
 #include "BaseRenderer.h"
 #include "Color.h"
-#include "glm/vec2.hpp"
 
 class Sprite;
 

@@ -56,6 +56,7 @@ public:
 	static int randomInt(int min, int max);
 	static float randomValue();
 	static glm::vec2 randomVec2(float min, float max);
+	static glm::ivec2 randomVec2(int min, int max);
 	static glm::vec2 randomVec2(glm::vec2 min, glm::vec2 max);
 	static glm::vec2 randomDir();
 
@@ -66,6 +67,8 @@ public:
 	static bool nearlyZero(glm::vec2 a, float epsilon = 0.0001f);
 
 	static float evaluateEase(EaseType ease, float t);
+
+	static void setRandomSeed(int seed) { gen.seed(seed); }
 };
 
 template <typename T> requires requires(T& t1, T& t2) { t1 + t2; t1 * t2; }

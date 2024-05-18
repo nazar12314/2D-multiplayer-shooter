@@ -221,8 +221,9 @@ float Math::randomFloat(float min, float max) { return std::uniform_real_distrib
 int Math::randomInt(int min, int max) { return std::uniform_int_distribution(min, max)(gen); }
 float Math::randomValue() { return randomFloat(0, 1); }
 glm::vec2 Math::randomVec2(float min, float max) { return glm::vec2(randomFloat(min, max), randomFloat(min, max)); }
+glm::ivec2 Math::randomVec2(int min, int max) { return glm::ivec2(randomInt(min, max), randomInt(min, max)); }
 glm::vec2 Math::randomVec2(glm::vec2 min, glm::vec2 max) { return glm::vec2(randomFloat(min.x, max.x), randomFloat(min.y, max.y)); }
-glm::vec2 Math::randomDir() { return normalize(randomVec2(-1, 1)); }
+glm::vec2 Math::randomDir() { return normalize(randomVec2(-1.0f, 1.0f)); }
 
 bool Math::nearlyEqual(float a, float b, float epsilon) { return std::abs(a - b) < epsilon; }
 bool Math::nearlyEqual(glm::vec2 a, glm::vec2 b, float epsilon) { return nearlyEqual(a.x, b.x, epsilon) && nearlyEqual(a.y, b.y, epsilon); }

@@ -100,6 +100,11 @@ namespace net
 		glm::vec2 position;
 	};
 
+	struct MapInitData
+	{
+		int mapSeed;
+	};
+
 
 	enum MessageType
 	{
@@ -110,6 +115,7 @@ namespace net
 		PLAYER_ACTIONS,
 		PLAYER_UPDATE,
 		PLAYER_RESPAWN,
+		MAP_INIT,
 	};
 
 	template <typename T> struct OwnedMessage;
