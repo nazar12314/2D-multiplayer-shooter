@@ -32,7 +32,6 @@ ENDIF()
 add_executable(${PROJECT_NAME} 
 	 "src/main.cpp"
 	 "src/Core/Input.cpp"
-	 "src/Object/GameObject.tpp"
 	 "src/Object/GameObject.cpp"
 	 "src/Application.cpp"
 	 "src/Component/Transform.cpp"

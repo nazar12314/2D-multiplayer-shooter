@@ -5,6 +5,8 @@
 #include "glm/fwd.hpp"
 #include "glm/vec2.hpp"
 #include "glm/mat3x3.hpp"
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/mersenne_twister.hpp>
 
 enum class EaseType
 {
@@ -22,7 +24,7 @@ enum class EaseType
 
 class Math
 {
-	inline static std::mt19937_64 gen {std::random_device()()};
+	inline static boost::random::mt19937 gen {std::random_device()()};
 
 	static float shortestAngle(float currentAngle, float targetAngle);
 
