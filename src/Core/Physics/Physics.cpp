@@ -1,7 +1,6 @@
 #include "Physics.h"
 
 #include <execution>
-#include <iostream>
 
 #include "Collider.h"
 #include "Gizmos.h"
@@ -17,18 +16,18 @@ void Physics::init()
 }
 void Physics::subscribeToEvents()
 {
-	GameObject::onComponentAddedGlobal += [](Component* comp)
+	GameObject::onComponentAddedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto rb = dynamic_cast<Rigidbody*>(comp))
+		if (auto rb = dynamic_cast<Rigidbody*>(comp.get()))
 			rigidbodies.push_back(rb);
-		if (auto col = dynamic_cast<Collider*>(comp))
+		if (auto col = dynamic_cast<Collider*>(comp.get()))
 			colliders.push_back(col);
 	};
-	GameObject::onComponentDestroyedGlobal += [](Component* comp)
+	GameObject::onComponentDestroyedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto rb = dynamic_cast<Rigidbody*>(comp))
+		if (auto rb = dynamic_cast<Rigidbody*>(comp.get()))
 			rigidbodies.erase_delayed(rb);
-		if (auto col = dynamic_cast<Collider*>(comp))
+		if (auto col = dynamic_cast<Collider*>(comp.get()))
 			colliders.erase_delayed(col);
 	};
 }

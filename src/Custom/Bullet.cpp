@@ -16,8 +16,8 @@ Bullet::Bullet(GameObject* obj, Tank* shooter, Collider* colliderToIgnore, float
 	Component(obj), _speed(speed), _explode(explode), _shooter(shooter), _colliderToIgnore(colliderToIgnore)
 {
 	auto tex = Assets::load<Sprite>("assets/sprites/circle.png");
-	addComponent<SpriteRenderer>(tex, glm::vec2(0.2f, 0.2f), Color::RED);
-	addComponent<CircleCollider>(0.1f, true);
+	addComponent<SpriteRenderer>(tex, glm::vec2(0.5f, 0.5f), Color::RED);
+	addComponent<CircleCollider>(0.25f, true);
 	_rb = addComponent<Rigidbody>(true);
 }
 

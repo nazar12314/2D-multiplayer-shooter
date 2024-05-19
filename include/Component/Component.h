@@ -7,7 +7,7 @@
 class Collider;
 class Component;
 
-class Component : public Object
+class Component : public Object, public std::enable_shared_from_this<Component>
 {
 	GameObject* _gameObject;
 	bool _enabled = true;

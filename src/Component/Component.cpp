@@ -5,7 +5,8 @@ Component::Component(GameObject* gameObject) : _gameObject(gameObject) { }
 void Component::destroyImmediate()
 {
 	onDestroy();
-	GameObject::onComponentDestroyedGlobal(this);
+	// shared from this
+	GameObject::onComponentDestroyedGlobal(shared_from_this());
 
 	Object::destroyImmediate();
 	// TODO: Fix this

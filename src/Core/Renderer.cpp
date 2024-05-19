@@ -20,17 +20,17 @@ void Renderer::init()
 }
 void Renderer::subscribeToEvents()
 {
-	GameObject::onComponentAddedGlobal += [](Component* comp)
+	GameObject::onComponentAddedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto renderer = dynamic_cast<BaseRenderer*>(comp))
+		if (auto renderer = dynamic_cast<BaseRenderer*>(comp.get()))
 		{
 			renderers.push_back(renderer);
 			sortRenderers();
 		}
 	};
-	GameObject::onComponentDestroyedGlobal += [](Component* comp)
+	GameObject::onComponentDestroyedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto sprite = dynamic_cast<BaseRenderer*>(comp))
+		if (auto sprite = dynamic_cast<BaseRenderer*>(comp.get()))
 			std::erase(renderers, sprite);
 	};
 }
