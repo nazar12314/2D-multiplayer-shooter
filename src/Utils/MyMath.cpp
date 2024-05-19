@@ -7,6 +7,15 @@
 #include "glm/gtx/closest_point.hpp"
 
 
+void Math::srand(unsigned seed)
+{
+	holdrand = (long)seed;
+}
+int Math::rand()
+{
+	return (holdrand = holdrand * 214013L + 2531011L) >> 16 & 0x7fff;
+}
+
 float Math::shortestAngle(float currentAngle, float targetAngle)
 {
 	float angle = fmod(targetAngle - currentAngle, 360.0f);
@@ -217,8 +226,8 @@ int Math::closestVertexToPoint(glm::vec2 point, const std::vector<glm::vec2>& ve
 	return index;
 }
 
-float Math::randomFloat(float min, float max) { return std::uniform_real_distribution(min, max)(gen); }
-int Math::randomInt(int min, int max) { return std::uniform_int_distribution(min, max)(gen); }
+float Math::randomFloat(float min, float max) { return rand() / (float)0x7fff * (max - min) + min; }
+int Math::randomInt(int min, int max) { return rand() % (max - min + 1) + min; }
 float Math::randomValue() { return randomFloat(0, 1); }
 glm::vec2 Math::randomVec2(float min, float max) { return glm::vec2(randomFloat(min, max), randomFloat(min, max)); }
 glm::ivec2 Math::randomVec2(int min, int max) { return glm::ivec2(randomInt(min, max), randomInt(min, max)); }

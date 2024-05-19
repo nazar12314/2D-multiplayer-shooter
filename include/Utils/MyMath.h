@@ -22,6 +22,10 @@ enum class EaseType
 
 class Math
 {
+	inline static long holdrand = 1L;
+	static void srand(unsigned int seed);
+	static int rand();
+
 	inline static std::mt19937 gen {std::random_device()()};
 
 	static float shortestAngle(float currentAngle, float targetAngle);
