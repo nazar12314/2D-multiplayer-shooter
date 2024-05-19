@@ -32,6 +32,7 @@ ENDIF()
 add_executable(${PROJECT_NAME} 
 	 "src/main.cpp"
 	 "src/Core/Input.cpp"
+	 "src/Object/GameObject.tpp"
 	 "src/Object/GameObject.cpp"
 	 "src/Application.cpp"
 	 "src/Component/Transform.cpp"
@@ -85,8 +86,9 @@ add_executable(${PROJECT_NAME}
 	  "src/Custom/PlayerManager.cpp"
 	  "src/Custom/Multiplayer.cpp"
 	  "src/Multiplayer/net_modules.cpp"
-      "include/Utils/Debug.h"
-	   "include/Custom/ScoreDisplayer.h" "src/Custom/ScoreDisplayer.cpp" "include/Component/Renderer/InputField.h" "src/Component/Renderer/InputField.cpp" "include/Component/Renderer/Button.h" "src/Component/Renderer/Button.cpp")
+	  "src/Custom/ScoreDisplayer.cpp"
+	  "src/Component/Renderer/InputField.cpp"
+	  "src/Component/Renderer/Button.cpp")
 
 IF (WIN32)
 	target_link_libraries(${PROJECT_NAME} SDL2main)
@@ -107,19 +109,25 @@ ELSE()
 
 	if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 		find_package(PkgConfig REQUIRED)
+		find_package(TBB REQUIRED COMPONENTS tbb)
 
 		pkg_search_module(SDL2IMAGE REQUIRED SDL2_image)
 		pkg_search_module(SDL2NET REQUIRED SDL2_net)
+		pkg_search_module(SDL2TTF REQUIRED SDL2_ttf)
 
 		include_directories(${SDL2IMAGE_INCLUDE_DIRS})
 		include_directories(${SDL2NET_INCLUDE_DIRS})
+		include_directories(${SDL2TTF_INCLUDE_DIRS})
 
 		target_link_libraries(${PROJECT_NAME} ${SDL2IMAGE_LIBRARIES})
 		target_link_libraries(${PROJECT_NAME} ${SDL2NET_LIBRARIES})
+		target_link_libraries(${PROJECT_NAME} ${SDL2TTF_LIBRARIES})
+		target_link_libraries(${PROJECT_NAME} tbb)
 
 		# Optionally, add the linker flags to your target
 		target_link_options(${PROJECT_NAME} PRIVATE ${SDL2IMAGE_LDFLAGS})
 		target_link_options(${PROJECT_NAME} PRIVATE ${SDL2NET_LDFLAGS})
+		target_link_options(${PROJECT_NAME} PRIVATE ${SDL2TTF_LDFLAGS})
 
 	else ()
 		find_package(SDL2_image REQUIRED)
