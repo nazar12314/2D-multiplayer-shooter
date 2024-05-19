@@ -72,7 +72,7 @@ public:
 
 	static float evaluateEase(EaseType ease, float t);
 
-	static void setRandomSeed(int seed) { gen.seed(seed); }
+	static void setRandomSeed(int seed) { srand(seed); }
 };
 
 template <typename T> requires requires(T& t1, T& t2) { t1 + t2; t1 * t2; }

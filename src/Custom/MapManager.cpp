@@ -12,15 +12,8 @@ MapManager::MapManager(GameObject* obj) : Singleton(obj) {}
 
 void MapManager::createMap(int seed)
 {
-	std::cout << "Creating map with seed " << seed << std::endl;
 	mapSeed = seed;
 	Math::setRandomSeed(seed);
-	std::cout<< Math::randomInt(0, 100) << std::endl;
-	std::cout<< Math::randomInt(0, 100) << std::endl;
-	std::cout<< Math::randomInt(0, 100) << std::endl;
-	std::cout<< Math::randomInt(0, 100) << std::endl;
-	std::cout<< Math::randomInt(0, 100) << std::endl;
-	std::cout<< Math::randomInt(0, 100) << std::endl;
 
 	createGround({0, 0}, {MAP_SIZE + 2, MAP_SIZE + 2});
 

@@ -5,6 +5,7 @@
 #include "Rigidbody.h"
 #include "CameraFollow.h"
 #include "CameraResizer.h"
+#include "ExampleScenes.h"
 #include "InputField.h"
 #include "Tweener.h"
 #include "MapManager.h"

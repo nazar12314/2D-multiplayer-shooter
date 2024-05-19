@@ -67,7 +67,7 @@ public:
 	void setTag(const std::string& tag);
 	void setActive(bool enabled);
 
-	template <derived<Component> T, typename... Ts> T* addComponent(T* component);
+	template <derived<Component> T, typename... Ts> T* addComponent(T* componentPtr);
 	template <derived<Component> T, typename... Ts> T* addComponent(Ts&&... args);
 	template <derived<Component> T> bool hasComponent() const;
 	template <derived<Component> T> T* getComponent();
