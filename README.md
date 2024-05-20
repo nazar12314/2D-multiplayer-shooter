@@ -22,3 +22,4 @@ In order to ease a gameplay for you, here are some rules:
   - ```D``` - to turn right
   - ```A``` - to turn left
   - ```shift``` - to use speed boost
+  - ```mouse left``` - to shoot
