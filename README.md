@@ -2,6 +2,20 @@
 
 ## How to play our game?
 
+### Compilation & launching
+
+Requred libraries:
+
+- SDL2 (SDL2_Image, SDL2_ttf, SDL2_)
+- Boost
+
+Compilation process:
+
+- Go to the root of ```2D-multiplayer-shooter``` repository
+- ```chmod +x ./compile.sh``` - to make compile script executable
+- ```./compile.sh``` - to compile a game executable
+- ```./build/2d_multiplayer_shooter``` - to launch a game
+
 ### After launching, you will see a game menu:
 
 <img width="800" alt="image" src="https://github.com/nazar12314/2D-multiplayer-shooter/assets/59284695/890e7836-be84-4983-89bf-a225681984bd">
