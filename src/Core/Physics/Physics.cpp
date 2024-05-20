@@ -18,16 +18,16 @@ void Physics::subscribeToEvents()
 {
 	GameObject::onComponentAddedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto rb = dynamic_cast<Rigidbody*>(comp.get()))
+		if (auto rb = std::dynamic_pointer_cast<Rigidbody>(comp))
 			rigidbodies.push_back(rb);
-		if (auto col = dynamic_cast<Collider*>(comp.get()))
+		if (auto col = std::dynamic_pointer_cast<Collider>(comp))
 			colliders.push_back(col);
 	};
 	GameObject::onComponentDestroyedGlobal += [](const ComponentSPtr& comp)
 	{
-		if (auto rb = dynamic_cast<Rigidbody*>(comp.get()))
+		if (auto rb = std::dynamic_pointer_cast<Rigidbody>(comp))
 			rigidbodies.erase_delayed(rb);
-		if (auto col = dynamic_cast<Collider*>(comp.get()))
+		if (auto col = std::dynamic_pointer_cast<Collider>(comp))
 			colliders.erase_delayed(col);
 	};
 }
@@ -272,10 +272,10 @@ void Physics::sendTriggerCallbacks(const std::vector<Collision>& triggers)
 	}
 }
 
-Collider* Physics::raycastAt(const glm::vec2& point)
+SPtr<Collider> Physics::raycastAt(const glm::vec2& point)
 {
 	colliders.apply_changes();
-	std::ranges::sort(colliders, [](const Collider* a, const Collider* b) { return a->transform()->z() < b->transform()->z(); });
+	std::ranges::sort(colliders, [](const SPtr<Collider>& a, const SPtr<Collider>& b) { return a->transform()->z() < b->transform()->z(); });
 
 	for (int i = colliders.size() - 1; i >= 0; i--)
 	{

@@ -37,8 +37,10 @@ void InputField::onEvent(const SDL_Event& event)
 	}
 	else if (event.type == SDL_KEYDOWN)
 	{
-		if (event.key.keysym.sym != SDLK_BACKSPACE || text.empty()) return;
-		setText(text.substr(0, text.size() - 1));
+		if (event.key.keysym.sym == SDLK_BACKSPACE && !text.empty())
+			setText(text.substr(0, text.size() - 1));
+		else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+			setText(text + SDL_GetClipboardText());
 	}
 }
 

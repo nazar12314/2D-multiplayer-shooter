@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <SDL_events.h>
 
 #include "Action.h"
+#include "Utils.h"
 #include "glm/vec2.hpp"
 
 class Collider;
@@ -17,8 +19,8 @@ class Input
 	inline static std::vector<Uint8> mouseButtonsReleased {};
 	inline static std::vector<Uint8> mouseButtonsCurrentlyDown {};
 
-	inline static Collider* mouseOverCollider = nullptr;
-	inline static Collider* mouseDownCollider = nullptr;
+	inline static SPtr<Collider> mouseOverCollider = nullptr;
+	inline static SPtr<Collider> mouseDownCollider = nullptr;
 
 	inline static glm::ivec2 _mousePos {};
 	inline static float _mouseWheelValue = 0;
